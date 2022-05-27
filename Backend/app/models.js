@@ -2,9 +2,6 @@
 const Pool = require("pg").Pool;
 const moment = require("moment");
 
-const dotenv = require("dotenv");
-dotenv.config(); //- MYSQL Module
-
 var db_config = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,

@@ -5,6 +5,7 @@ const models = require("../models");
 const sp = require("../sp");
 const utils = require("../utils");
 const perf = require("execution-time")();
+var path = require("path");
 // const Buffer = "buffer";
 
 exports.get = async function (req, res) {
@@ -39,11 +40,14 @@ exports.get = async function (req, res) {
     const check = await models.get_query(query);
     if (!check.error) {
       let data = check.data[0];
-      const file = Buffer.from(data.picdata, "base64");
+      if (!data) {
+        return res.sendFile(path.resolve("app/assets/image/no_image.png"));
+      }
       res.writeHead(200, {
         "Content-Type": "image/png",
         "Content-Length": file.length,
       });
+      const file = Buffer.from(data.picdata, "base64");
       return res.end(file);
     }
     return response.response(check, res, false);

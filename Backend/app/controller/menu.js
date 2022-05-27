@@ -12,18 +12,15 @@ exports.get = async function (req, res) {
     // LINE WAJIB DIBAWA
     perf.start();
 
-    // const require_data = ["billno"];
-    // for (const row of require_data) {
-    //   if (!req.query[`${row}`]) {
-    //     data.error = true;
-    //     data.message = `${row} is required!`;
-    //     return response.response(data, res);
-    //   }
-    // }
-
     // LINE WAJIB DIBAWA
+    let ip = req.connection.localAddress;
+    if (ip.substr(0, 7) == "::ffff:") {
+      ip = ip.substr(7);
+    }
+    let server_ip = `http://${ip}:${process.env.APP_PORT}`;
+
     var query = `    
-    SELECT row_number() OVER() -1 AS index, *, '/api/master/picture?linkno=' || a.itemid AS link_picture 
+    SELECT row_number() OVER() -1 AS index, *, '${server_ip}/api/master/picture?linkno=' || a.itemid AS link_picture 
     FROM vwpricelistall as v 
     left join item AS a on v.itemid =a.itemid 
     left join itgrp as b on a.itgrpid =b.itgrpid
@@ -44,7 +41,6 @@ exports.get = async function (req, res) {
       query += ` LIMIT ${end} OFFSET ${start} `;
     }
     // query += ` ORDER BY b.itgrpname,a.itemdesc ASC  ;`;
-    console.log(req.connection.localAddress);
     const check = await models.get_query(query);
     return response.response(check, res, false);
   } catch (error) {

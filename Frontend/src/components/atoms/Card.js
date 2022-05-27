@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -20,7 +19,6 @@ export default function Card(prop) {
   const {item, selectedItems, onChangeItem, onPress, useDetail, useAddToCart} =
     prop;
   const [itemData, setItemData] = useState(defaultItem);
-  const [endPoint, setEndPoint] = useState(null);
 
   const handleAddToCart = type => {
     let itm = itemData;
@@ -50,11 +48,6 @@ export default function Card(prop) {
         if (index >= 0)
           setItemData({...item, qty: it.qty, ispacked: it.ispacked});
       }
-      (async function () {
-        if (!endPoint) {
-          setEndPoint(await AsyncStorage.getItem('ENDPOINT_API'));
-        }
-      })();
     }
   }, [item, selectedItems]);
 
@@ -72,11 +65,13 @@ export default function Card(prop) {
           justifyContent: 'flex-start',
         }}>
         <View style={styles.imageContainer}>
-          <Image
-            style={{height: 80}}
-            resizeMode={'contain'}
-            source={{uri: `${endPoint}${itemData.link_picture}`}}
-          />
+          {itemData.link_picture ? (
+            <Image
+              style={{height: 80}}
+              resizeMode={'contain'}
+              source={{uri: `${itemData.link_picture}`}}
+            />
+          ) : null}
         </View>
         <View style={{flex: 1, paddingLeft: 10}}>
           <View style={{flex: 1, marginTop: 5}}>
