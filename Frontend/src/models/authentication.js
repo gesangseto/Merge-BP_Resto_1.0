@@ -22,7 +22,7 @@ export const loginSales = async (property = {}, use_alert = true) => {
         }
       })
       .catch(e => {
-        Toaster({message: e.message, type: 'error'});
+        Toaster({message: JSON.stringify(e), type: 'error'});
         return resolve(false);
       });
   });

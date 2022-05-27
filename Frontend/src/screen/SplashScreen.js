@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const SplashScreen = () => {
   useEffect(() => {
     (async function () {
-      await AsyncStorage.setItem('ENDPOINT_API', 'http://192.168.3.146:5000');
+      await AsyncStorage.setItem('ENDPOINT_API', 'https://192.168.3.146:5000');
       let profile = await AsyncStorage.getItem('profile');
       if (profile) {
         setTimeout(() => {
