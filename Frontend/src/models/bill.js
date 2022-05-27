@@ -10,7 +10,6 @@ dan juga akan auto update timmer logout (Update token)
 export const getBill = async (property = {}, use_alert = true) => {
   var query_string = new URLSearchParams(property).toString();
   let url = `/api/transaction/bill?${query_string}`;
-  console.log(url);
   return new Promise(resolve => {
     $axios
       .get(url, JSON.stringify(property))
@@ -30,9 +29,7 @@ export const getBill = async (property = {}, use_alert = true) => {
   });
 };
 export const createBill = async (property = {}, use_alert = true) => {
-  console.log(property);
   let url = `/api/transaction/bill`;
-  console.log(url);
   return new Promise(resolve => {
     $axios
       .put(url, JSON.stringify(property))
@@ -53,7 +50,6 @@ export const createBill = async (property = {}, use_alert = true) => {
 };
 export const cancelBill = async (property = {}, use_alert = true) => {
   let url = `/api/transaction/bill`;
-  console.log(url);
   return new Promise(resolve => {
     $axios
       .delete(url, {data: property})

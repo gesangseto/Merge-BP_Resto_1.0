@@ -32,7 +32,6 @@ export default function OrderMenu(routes) {
   const [modalNote, setModalNote] = useState(false);
 
   const openModalCart = () => {
-    console.log('Open Cart');
     setModalCart(true);
   };
   const closeModalCart = () => {
@@ -74,7 +73,6 @@ export default function OrderMenu(routes) {
   }, []);
 
   const handleChangeItemInCart = item => {
-    console.log(item);
     let menu = hiddenDataMenu;
     let index = menu.findIndex(x => x.itemid === item.itemid);
     menu[index] = item;

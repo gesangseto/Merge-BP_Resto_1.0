@@ -21,7 +21,6 @@ const FormCart = React.forwardRef((props, ref) => {
     } else {
       modalizeCart.current?.close();
     }
-    console.log('isOpen');
   }, [isOpen]);
 
   const handleChangeItemInCart = item => {

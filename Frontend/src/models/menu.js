@@ -9,7 +9,6 @@ dan juga akan auto update timmer logout (Update token)
 export const getMenu = async (property = {}, use_alert = true) => {
   var query_string = new URLSearchParams(property).toString();
   let url = `/api/master/menu?${query_string}`;
-  console.log(url);
   return new Promise(resolve => {
     $axios
       .get(url)
@@ -22,7 +21,6 @@ export const getMenu = async (property = {}, use_alert = true) => {
         }
       })
       .catch(e => {
-        console.log(e);
         return resolve(false);
       });
   });
@@ -30,7 +28,6 @@ export const getMenu = async (property = {}, use_alert = true) => {
 export const getGroupMenu = async (property = {}, use_alert = true) => {
   var query_string = new URLSearchParams(property).toString();
   let url = `/api/master/group-menu?${query_string}`;
-  console.log(url);
   return new Promise(resolve => {
     $axios
       .get(url)
@@ -43,7 +40,6 @@ export const getGroupMenu = async (property = {}, use_alert = true) => {
         }
       })
       .catch(e => {
-        console.log(e);
         return resolve(false);
       });
   });

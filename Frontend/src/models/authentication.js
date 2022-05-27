@@ -9,8 +9,6 @@ dan juga akan auto update timmer logout (Update token)
 
 export const loginSales = async (property = {}, use_alert = true) => {
   let url = `/api/authentication/login-sales`;
-  console.log(url);
-  console.log(property);
   return new Promise(resolve => {
     $axios
       .post(url, JSON.stringify(property))
@@ -25,7 +23,6 @@ export const loginSales = async (property = {}, use_alert = true) => {
       })
       .catch(e => {
         Toaster({message: e.message, type: 'error'});
-        console.log(e);
         return resolve(false);
       });
   });

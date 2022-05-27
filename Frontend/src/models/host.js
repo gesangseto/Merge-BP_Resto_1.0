@@ -9,7 +9,6 @@ dan juga akan auto update timmer logout (Update token)
 export const getHost = async (property = {}, use_alert = true) => {
   var query_string = new URLSearchParams(property).toString();
   let url = `/api/master/host?${query_string}`;
-  console.log(url);
   return new Promise(resolve => {
     $axios
       .get(url)
@@ -22,7 +21,6 @@ export const getHost = async (property = {}, use_alert = true) => {
         }
       })
       .catch(e => {
-        console.log(e);
         return resolve(false);
       });
   });

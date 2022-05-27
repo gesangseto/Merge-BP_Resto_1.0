@@ -8,7 +8,6 @@ dan juga akan auto update timmer logout (Update token)
 */
 
 export const createSo = async (property = {}, use_alert = true) => {
-  console.log(property);
   let url = `/api/transaction/so`;
   return new Promise(resolve => {
     $axios
@@ -30,14 +29,12 @@ export const createSo = async (property = {}, use_alert = true) => {
 };
 
 export const cancelSo = async (property = {}, use_alert = true) => {
-  console.log(property);
   let url = `/api/transaction/so`;
   return new Promise(resolve => {
     $axios
       .delete(url, {data: property})
       .then(result => {
         result = result.data;
-        console.log(result);
         if (result.error) {
           if (use_alert) Toaster({message: result.message, type: 'error'});
           return resolve(false);

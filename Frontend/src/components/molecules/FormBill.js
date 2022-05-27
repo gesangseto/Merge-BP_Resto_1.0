@@ -37,13 +37,11 @@ const FormBill = React.forwardRef((props, ref) => {
   };
 
   const handleCancel = () => {
-    console.log('Batal');
     if (onCancel) {
       onCancel();
     }
   };
   const handleSave = () => {
-    console.log('Simpan');
     if (onSave) {
       onSave(formData);
     }

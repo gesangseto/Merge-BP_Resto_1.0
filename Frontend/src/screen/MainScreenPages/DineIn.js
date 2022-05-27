@@ -92,7 +92,6 @@ export default function DineIn() {
   const handleClickTable = item => {
     if (item.billno) {
       RootNavigation.navigate('Order Menu', item);
-      console.log(item.billno);
     } else {
       setSelectedHost({...item});
       openModal();
