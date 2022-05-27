@@ -87,7 +87,7 @@ export default function Card(prop) {
                 flexWrap: 'wrap',
                 justifyContent: 'space-between',
               }}>
-              <Text style={{color: 'red'}}>
+              <Text style={{color: colors.danger}}>
                 Rp. {curencyFormating(itemData.price1 ?? itemData.listprice)} /{' '}
                 {itemData.unit1 ?? itemData.unit}
               </Text>
@@ -101,7 +101,7 @@ export default function Card(prop) {
                     <TouchableOpacity
                       style={styles.containerMinus}
                       onPress={() => handleAddToCart('remove')}>
-                      <MatComIcon name="minus" color="red" />
+                      <MatComIcon name="minus" color={colors.danger} />
                     </TouchableOpacity>
                   ) : null}
                   <View
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'red',
+    borderColor: colors.danger,
     borderRadius: 5,
   },
   containerPlus: {
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     width: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'red',
+    backgroundColor: colors.danger,
     borderRadius: 5,
   },
 });

@@ -9,6 +9,7 @@ const ButtonFooterModal = React.forwardRef((props, ref) => {
     buttonColor,
     totalText,
     onClickSubmit,
+    useTotal = true,
     useButton = true,
   } = props;
   return (
@@ -27,10 +28,14 @@ const ButtonFooterModal = React.forwardRef((props, ref) => {
           alignItems: 'flex-end',
           paddingRight: 20,
         }}>
-        <Text>Grand Total</Text>
-        <Text style={{fontWeight: 'bold'}}>
-          RP. {curencyFormating(totalText ? totalText : 0)}
-        </Text>
+        {useTotal ? (
+          <>
+            <Text>Grand Total</Text>
+            <Text style={{fontWeight: 'bold'}}>
+              RP. {curencyFormating(totalText ? totalText : 0)}
+            </Text>
+          </>
+        ) : null}
       </View>
       {useButton ? (
         <TouchableOpacity

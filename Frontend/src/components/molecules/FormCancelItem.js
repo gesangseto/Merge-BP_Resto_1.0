@@ -207,7 +207,7 @@ const ModalCancel = props => {
             <TouchableOpacity
               style={styles.containerMinus}
               onPress={() => handleChangeQty('remove')}>
-              <MatComIcon name="minus" color="red" />
+              <MatComIcon name="minus" color={colors.danger} />
             </TouchableOpacity>
             <TextInput
               keyboardType="numeric"
@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'red',
+    borderColor: colors.danger,
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
     marginLeft: 25,
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
     width: 45,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'red',
+    backgroundColor: colors.danger,
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
   },

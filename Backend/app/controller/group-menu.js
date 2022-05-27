@@ -12,20 +12,11 @@ exports.get = async function (req, res) {
     // LINE WAJIB DIBAWA
     perf.start();
 
-    // const require_data = ["billno"];
-    // for (const row of require_data) {
-    //   if (!req.query[`${row}`]) {
-    //     data.error = true;
-    //     data.message = `${row} is required!`;
-    //     return response.response(data, res);
-    //   }
-    // }
-
     // LINE WAJIB DIBAWA
     var query = `
     SELECT  *
     FROM itgrp AS a
-    WHERE 1+1=2 `;
+    WHERE itgrpid != '*' `;
     for (const k in req.query) {
       if (k != "page" && k != "limit") {
         query += ` AND a.${k}='${req.query[k]}'`;
@@ -39,9 +30,9 @@ exports.get = async function (req, res) {
       var end = parseInt(start) + parseInt(req.query.limit);
       query += ` LIMIT ${start},${end} `;
     }
-    console.log(query);
     const check = await models.get_query(query);
-    return response.response(check, res);
+    check.data = utils.treeify(check.data, "itgrpid", "upitgrpid");
+    return response.response(check, res, false);
   } catch (error) {
     data.error = true;
     data.message = `${error}`;

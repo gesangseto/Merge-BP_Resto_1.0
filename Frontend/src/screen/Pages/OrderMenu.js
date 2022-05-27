@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
 import {FlatGrid} from 'react-native-super-grid';
 import {
   Card,
@@ -12,7 +11,7 @@ import {
 import FooterOrder from '../../components/molecules/FooterOrder';
 import {colors} from '../../constants';
 import * as RootNavigation from '../../helper';
-import {mergeArray, Toaster} from '../../helper';
+import {Toaster} from '../../helper';
 import {getBill, getMenu} from '../../models';
 import {cancelSo, createSo} from '../../models/so';
 
@@ -27,6 +26,7 @@ export default function OrderMenu(routes) {
   const host = routes.route.params;
   const boxDimension = 250;
   const [searchText, setSearchText] = useState('');
+  const [filtering, setFiltering] = useState({});
   const [modalOldOrder, setModalOldOrder] = useState(false);
   const [modalCart, setModalCart] = useState(false);
   const [modalNote, setModalNote] = useState(false);
@@ -54,6 +54,7 @@ export default function OrderMenu(routes) {
     let menu = await getMenu(params);
     setDataMenu([...menu]);
     setHiddenDataMenu([...menu]);
+    // handleFiltering(menu);
   };
 
   const get_old_bill = async () => {
@@ -62,6 +63,7 @@ export default function OrderMenu(routes) {
       setOldOrders([...oldOrders[0].so]);
     }
   };
+
   useEffect(() => {
     (async function () {
       setIsLoading(true);
@@ -111,12 +113,22 @@ export default function OrderMenu(routes) {
     setIsLoading(false);
   };
 
-  const handleSearchText = txt => {
-    setSearchText(txt);
-    let mn = hiddenDataMenu;
+  useEffect(() => {
+    handleFiltering();
+  }, [searchText, filtering]);
+
+  const handleFiltering = menu => {
+    let text = searchText;
+    let filter = filtering;
+    let mn = menu ?? hiddenDataMenu;
     mn = mn.filter(function (it) {
-      return it.itemdesc.toLowerCase().includes(txt.toLowerCase());
+      return it.itemdesc.toLowerCase().includes(text.toLowerCase());
     });
+    if (filter.hasOwnProperty('itgrpid')) {
+      mn = mn.filter(function (it) {
+        return it.itgrpid === filter.itgrpid;
+      });
+    }
     setDataMenu([...mn]);
   };
 
@@ -138,9 +150,10 @@ export default function OrderMenu(routes) {
       )} */}
       <HeaderOrder
         selectedItem={selectedMenus}
+        filter={filtering}
         onClickCart={() => openModalCart()}
-        // onSearch={txt => handleSearchText(txt)}
-        onChangeSearch={txt => handleSearchText(txt)}
+        onChangeSearch={txt => setSearchText(txt)}
+        onChangeFilter={item => setFiltering({...item})}
       />
       <FlatGrid
         onRefresh={() => get_menu()}
@@ -227,7 +240,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'red',
+    borderColor: colors.danger,
     borderRadius: 5,
   },
   containerPlus: {
@@ -235,7 +248,7 @@ const styles = StyleSheet.create({
     width: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'red',
+    backgroundColor: colors.danger,
     borderRadius: 5,
   },
 });

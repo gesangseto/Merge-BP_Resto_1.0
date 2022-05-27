@@ -71,9 +71,16 @@ exports.get = async function (req, res) {
     WHERE a.billno = '${header.billno}'`;
     let so = [];
     let get_so = await models.exec_query(query);
+
+    let ip = req.connection.localAddress;
+    if (ip.substr(0, 7) == "::ffff:") {
+      ip = ip.substr(7);
+    }
+    let server_ip = `http://${ip}:${process.env.APP_PORT}`;
+
     let can_cancel = true;
     for (const it of get_so.data) {
-      query = `SELECT *, '/api/master/picture?linkno=' || a.itemid AS link_picture FROM sod AS a WHERE sono = '${it.sono}'`;
+      query = `SELECT *, '${server_ip}/api/master/picture?linkno='  || a.itemid AS link_picture FROM sod AS a WHERE sono = '${it.sono}'`;
       let get_item = await models.exec_query(query);
       for (const sod of get_item.data) {
         if (sod.isclosed === false) {

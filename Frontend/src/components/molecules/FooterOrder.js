@@ -1,6 +1,7 @@
 import React from 'react';
 import {Text} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {colors} from '../../constants';
 
 const Header = React.forwardRef((props, ref) => {
   const {} = props;
@@ -11,7 +12,7 @@ const Header = React.forwardRef((props, ref) => {
         flexWrap: 'wrap',
         height: 50,
         justifyContent: 'center',
-        backgroundColor: 'red',
+        backgroundColor: colors.danger,
         alignContent: 'center',
         alignItems: 'center',
       }}

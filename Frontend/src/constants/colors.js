@@ -7,7 +7,7 @@ export const colors = {
   black: 'black',
   red: '#fa8989',
   success: '#44d941',
-  danger: '#d95041',
+  danger: '#cf6155',
   info: '#fa8989',
   default: '#fa8989',
 };

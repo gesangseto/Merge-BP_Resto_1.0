@@ -9,7 +9,9 @@ const InputTextPressable = React.forwardRef((props, ref) => {
     <View style={{padding: 10}}>
       <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
         <Text style={{fontWeight: 'bold', paddingVertical: 5}}>{title}</Text>
-        {required && <Text style={{color: 'red', paddingVertical: 5}}>*</Text>}
+        {required && (
+          <Text style={{color: colors.danger, paddingVertical: 5}}>*</Text>
+        )}
       </View>
       <View style={styles.searchSection}>
         {icon ? (

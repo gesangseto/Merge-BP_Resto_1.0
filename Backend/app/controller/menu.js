@@ -12,7 +12,6 @@ exports.get = async function (req, res) {
     // LINE WAJIB DIBAWA
     perf.start();
 
-    // LINE WAJIB DIBAWA
     let ip = req.connection.localAddress;
     if (ip.substr(0, 7) == "::ffff:") {
       ip = ip.substr(7);

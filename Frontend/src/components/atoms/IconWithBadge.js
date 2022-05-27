@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {colors} from '../../constants';
 
 export const IconWithBadge = props => {
   const {text, iconName, iconSize, iconColor} = props;
@@ -30,5 +31,5 @@ const styles = StyleSheet.create({
     right: -5,
     top: -5,
   },
-  BadgeTxt: {color: 'red', fontWeight: 'bold'},
+  BadgeTxt: {color: colors.danger, fontWeight: 'bold'},
 });

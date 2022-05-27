@@ -1,26 +1,24 @@
-import React, {useEffect, useState, useRef} from 'react';
+import {Portal} from '@gorhom/portal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Dimensions,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
-  TextInput,
-  Button,
 } from 'react-native';
+import Modal from 'react-native-modal';
+import {Modalize} from 'react-native-modalize';
 import {FlatGrid} from 'react-native-super-grid';
 import {TabView} from 'react-native-tab-view';
+import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {CoupleButton, FormBill} from '../../components';
+import {colors} from '../../constants';
+import * as RootNavigation from '../../helper';
 import {groupingArray, Toaster} from '../../helper';
 import {cancelBill, createBill, getBill, getHost} from '../../models';
-import * as RootNavigation from '../../helper';
-import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Modalize} from 'react-native-modalize';
-import {Portal} from '@gorhom/portal';
-import {CoupleButton, FormBill} from '../../components';
-import Spinner from 'react-native-loading-spinner-overlay';
-import Modal from 'react-native-modal';
-import {colors} from '../../constants';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const heightForm = 45;
 
@@ -214,7 +212,9 @@ export default function DineIn() {
               style={{
                 width: 250,
                 height: 75,
-                backgroundColor: !selectedHost.can_cancel ? 'grey' : 'red',
+                backgroundColor: !selectedHost.can_cancel
+                  ? 'grey'
+                  : colors.danger,
                 borderRadius: 10,
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -225,7 +225,7 @@ export default function DineIn() {
               </Text>
             </TouchableOpacity>
             {!selectedHost.can_cancel && (
-              <Text style={{color: 'red', fontSize: 12}}>
+              <Text style={{color: colors.danger, fontSize: 12}}>
                 Tidak bisa batalkan meja {selectedHost.hostdesc}, silahkan
                 cancel semua order
               </Text>

@@ -93,8 +93,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     height: 40,
-    backgroundColor: 'red',
-    borderColor: 'red',
+    backgroundColor: colors.danger,
+    borderColor: colors.danger,
   },
   itemName: {
     fontSize: 16,
