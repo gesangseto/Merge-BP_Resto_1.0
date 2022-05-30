@@ -154,7 +154,6 @@ async function insert_query({ data, key, table }) {
   val = "'" + val.join("','") + "'";
   _data = _data.join(",");
   var query_sql = `INSERT INTO ${table} (${key}) VALUES (${val})`;
-  console.log(query_sql);
   return await new Promise((resolve) =>
     pool.query(query_sql, function (err, rows) {
       if (err) {

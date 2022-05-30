@@ -426,8 +426,6 @@ exports.delete = async function (req, res) {
     full_query += `\n SELECT spso_item_cancel('${body.sono}' , '${
       body.itemid
     }', '${body.pid ?? 1}', '${body.qty}','${sodno}')`;
-    // console.log(full_query);
-    // return;
     var _res = await models.exec_query(full_query);
     return response.response(_res, res);
   } catch (error) {

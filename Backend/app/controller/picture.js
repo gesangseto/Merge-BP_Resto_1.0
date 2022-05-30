@@ -43,11 +43,11 @@ exports.get = async function (req, res) {
       if (!data) {
         return res.sendFile(path.resolve("app/assets/image/no_image.png"));
       }
+      const file = Buffer.from(data.picdata, "base64");
       res.writeHead(200, {
         "Content-Type": "image/png",
         "Content-Length": file.length,
       });
-      const file = Buffer.from(data.picdata, "base64");
       return res.end(file);
     }
     return response.response(check, res, false);

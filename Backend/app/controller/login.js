@@ -28,7 +28,6 @@ exports.login_sales = async function (req, res) {
   let $query = `
   SELECT * FROM srep AS a 
   WHERE a.email='${body.email}' AND a.passwd='${body.password}' LIMIT 1`;
-  console.log($query);
   var check = await models.exec_query($query);
   if (check.error || check.data.length == 0) {
     check.error = true;
