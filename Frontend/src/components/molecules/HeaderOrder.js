@@ -6,6 +6,7 @@ import {colors} from '../../constants';
 import * as RootNavigation from '../../helper';
 import {IconWithBadge} from '../atoms/IconWithBadge';
 import FilterMenu from './FilterMenu';
+import ModalAlert from './ModalAlert';
 
 const HeaderOrder = React.forwardRef((props, ref) => {
   const {
@@ -19,6 +20,7 @@ const HeaderOrder = React.forwardRef((props, ref) => {
   const [textSearch, setTextSearch] = useState('');
   const [viewModalFilter, setViewModalFilter] = useState(false);
   const [count, setCount] = useState(0);
+  const [alertBack, setAlertBack] = useState(false);
 
   useEffect(() => {}, [filter]);
 
@@ -41,6 +43,15 @@ const HeaderOrder = React.forwardRef((props, ref) => {
     setTextSearch(txt);
   };
 
+  const handleBackButton = () => {
+    if (selectedItem.length > 0) {
+      setAlertBack(true);
+      return;
+    }
+
+    RootNavigation.goBack();
+  };
+
   return (
     <>
       <View
@@ -56,7 +67,7 @@ const HeaderOrder = React.forwardRef((props, ref) => {
         }}>
         <TouchableOpacity
           style={{justifyContent: 'center', paddingLeft: 15}}
-          onPress={() => RootNavigation.goBack()}>
+          onPress={() => handleBackButton()}>
           <MatComIcon name="arrow-left" size={30} color="grey" />
         </TouchableOpacity>
         <View
@@ -111,6 +122,14 @@ const HeaderOrder = React.forwardRef((props, ref) => {
         isOpen={viewModalFilter}
         onClose={() => setViewModalFilter(false)}
         onClickSubmit={item => (onChangeFilter ? onChangeFilter(item) : null)}
+      />
+      <ModalAlert
+        isOpen={alertBack}
+        onCancel={() => setAlertBack(false)}
+        onSave={() => {
+          setAlertBack(false);
+          RootNavigation.goBack();
+        }}
       />
     </>
   );

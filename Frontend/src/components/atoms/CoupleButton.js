@@ -4,7 +4,7 @@ import {colors} from '../../constants';
 import Button from './Button';
 
 const CoupleButton = React.forwardRef((props, ref) => {
-  const {onPressSave, onPressCancel} = props;
+  const {onPressSave, onPressCancel, titleSave, titleCancel} = props;
   useEffect(() => {}, []);
 
   const handleSave = () => {
@@ -28,12 +28,12 @@ const CoupleButton = React.forwardRef((props, ref) => {
       }}>
       <Button
         onPress={() => handleCancel()}
-        title="Batal"
+        title={titleCancel ?? 'Batal'}
         color={colors.danger}
         textColor={'white'}></Button>
       <Button
         onPress={() => handleSave()}
-        title="Simpan"
+        title={titleSave ?? 'Simpan'}
         color={colors.success}
         textColor={'white'}></Button>
     </View>

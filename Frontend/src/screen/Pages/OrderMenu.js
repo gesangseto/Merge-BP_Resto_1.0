@@ -106,7 +106,7 @@ export default function OrderMenu(routes) {
     let exec = await createSo(body);
     if (exec) {
       Toaster({message: 'Berhasil order menu', type: 'success'});
-      RootNavigation.goBack();
+      RootNavigation.navigateReplace('MainScreen');
     }
     setIsLoading(false);
   };

@@ -218,7 +218,7 @@ const ModalCancel = props => {
                 marginVertical: 5,
                 textAlign: 'center',
               }}
-              value={`${parseInt(itemData.qty ?? 0)}`}
+              value={`${parseInt(1 ?? 0)}`}
               onChangeText={val => roleChangeQty(val)}
             />
             <TouchableOpacity
