@@ -4,6 +4,7 @@ import FormCart from './FormCart';
 import FormNoteItem from './FormNoteItem';
 import FormOldOrder from './FormOldOrder';
 import HeaderOrder from './HeaderOrder';
+import CustomDrawer from './CustomDrawer';
 
 export {
   FormBill,
@@ -12,4 +13,5 @@ export {
   FormNoteItem,
   FormOldOrder,
   FormCancelItem,
+  CustomDrawer,
 };

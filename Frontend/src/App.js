@@ -15,7 +15,6 @@ import Router from './router';
 import {PortalProvider} from '@gorhom/portal';
 import Toast from 'react-native-toast-notifications';
 import {RenderToastView} from './components/atoms';
-
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 const App = () => {
   return (
