@@ -124,6 +124,10 @@ const HeaderOrder = React.forwardRef((props, ref) => {
         onClickSubmit={item => (onChangeFilter ? onChangeFilter(item) : null)}
       />
       <ModalAlert
+        title={'Konfirmasi'}
+        message={
+          'Yakin ingin keluar halaman?\nSudah ada order didalam keranjang'
+        }
         isOpen={alertBack}
         onCancel={() => setAlertBack(false)}
         onSave={() => {

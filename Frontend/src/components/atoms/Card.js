@@ -91,10 +91,6 @@ export default function Card(prop) {
                 Rp. {curencyFormating(itemData.price1 ?? itemData.listprice)} /{' '}
                 {itemData.unit1 ?? itemData.unit}
               </Text>
-
-              {itemData.ispacked ? (
-                <MatComIcon name={'hand-coin'} size={20} />
-              ) : null}
               {useAddToCart ? (
                 <View style={styles.containerPlusMinus}>
                   {itemData.qty ? (
@@ -134,28 +130,24 @@ export default function Card(prop) {
               )}
             </View>
           </View>
-          {useDetail ? (
+          <View
+            style={{flex: 1, justifyContent: 'flex-start', marginBottom: 5}}>
             <View
-              style={{flex: 1, justifyContent: 'flex-start', marginBottom: 5}}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                  justifyContent: 'space-between',
-                }}>
-                <View style={styles.containerPlusMinus}>
-                  <MatComIcon name="text" size={20} color="grey" />
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      paddingHorizontal: 7,
-                    }}>
-                    <Text style={{color: 'grey'}}>
-                      {textTrimPerLine(itemData.sodnote, 20)}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.containerPlusMinus}>
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+              }}>
+              <View style={styles.containerPlusMinus}>
+                {itemData.ispacked && (
+                  <>
+                    <MatComIcon name={'package-variant'} size={20} />
+                    <Text> Bungkus</Text>
+                  </>
+                )}
+              </View>
+              <View style={styles.containerPlusMinus}>
+                {useDetail ? (
                   <Text
                     style={{
                       color: itemData.qty ? colors.danger : 'grey',
@@ -166,10 +158,25 @@ export default function Card(prop) {
                       itemData.qty * (itemData.price1 ?? itemData.listprice),
                     )}
                   </Text>
-                </View>
+                ) : null}
               </View>
             </View>
-          ) : null}
+            {itemData.sodnote ? (
+              <View
+                style={{
+                  paddingHorizontal: 5,
+                  paddingVertical: 10,
+                  borderTopWidth: 1,
+                  borderColor: colors.lightGrey,
+                  flexDirection: 'row',
+                }}>
+                <MatComIcon name="file-document-edit" size={20} color="grey" />
+                <Text style={{color: 'grey', paddingHorizontal: 5}}>
+                  {itemData.sodnote}
+                </Text>
+              </View>
+            ) : null}
+          </View>
         </View>
       </TouchableOpacity>
     </>

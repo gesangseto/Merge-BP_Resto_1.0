@@ -8,7 +8,7 @@ import {CoupleButton} from '../atoms';
 const heightForm = 45;
 
 const ModalAlert = React.forwardRef((props, ref) => {
-  const {item, onCancel, onSave, isOpen} = props;
+  const {item, onCancel, onSave, isOpen, title, message} = props;
   const [visibleModal, setVisibleModal] = useState(false);
   const [itemData, setItemData] = useState(item);
 
@@ -44,17 +44,20 @@ const ModalAlert = React.forwardRef((props, ref) => {
             borderRadius: 15,
           }}>
           <View style={{paddingVertical: 15, alignSelf: 'center'}}>
-            <Text style={{textAlign: 'center'}}>
-              Yakin ingin keluar halaman?
+            <Text
+              style={{textAlign: 'center', fontSize: 18, fontWeight: 'bold'}}>
+              {title ?? 'No Title'}
             </Text>
+          </View>
+          <View style={{paddingVertical: 15, alignSelf: 'center'}}>
             <Text style={{textAlign: 'center'}}>
-              Ada order yang belum selesai
+              {message ?? 'Yakin ingin keluar halaman?'}
             </Text>
           </View>
           <View style={{height: 80}}>
             <CoupleButton
-              titleSave="Yakin"
-              titleCancel="Batalkan"
+              titleSave="Ya"
+              titleCancel="Tidak"
               onPressSave={() => (onSave ? onSave() : null)}
               onPressCancel={() => (onCancel ? onCancel() : null)}
             />

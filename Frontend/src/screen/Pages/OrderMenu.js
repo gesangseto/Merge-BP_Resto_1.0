@@ -47,13 +47,14 @@ export default function OrderMenu(routes) {
   };
 
   const get_menu = async () => {
-    let params = {
-      prclvlid: '0',
-    };
-    let menu = await getMenu(params);
-    setDataMenu([...menu]);
-    setHiddenDataMenu([...menu]);
-    // handleFiltering(menu);
+    if (hiddenDataMenu.length == 0) {
+      let params = {
+        prclvlid: '0',
+      };
+      let menu = await getMenu(params);
+      setDataMenu([...menu]);
+      setHiddenDataMenu([...menu]);
+    }
   };
 
   const get_old_bill = async () => {

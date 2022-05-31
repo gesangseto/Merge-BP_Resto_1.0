@@ -5970,6 +5970,11 @@
     "react-freeze" "^1.0.0"
     "warn-once" "^0.1.0"
 
+"react-native-select-dropdown@^1.13.0":
+  "integrity" "sha512-UGXWbuEqsG6B6O+tle77yJH3+DXfmh4cpit0v8az824y0rZLUWuRzlfeLYlaeZ80mqIF6Xtvx/pBtIsG1OdaLg=="
+  "resolved" "https://registry.npmjs.org/react-native-select-dropdown/-/react-native-select-dropdown-1.13.0.tgz"
+  "version" "1.13.0"
+
 "react-native-super-grid@^4.4.0":
   "integrity" "sha512-0msesnKyrOuT0xtlmFzQMgbRLBKnQel/AgJWWh/4UZAnRtLgQufzuVvnuQnyFQQb0ioQa3GkfMwr2ayFn5BHoA=="
   "resolved" "https://registry.npmjs.org/react-native-super-grid/-/react-native-super-grid-4.4.0.tgz"

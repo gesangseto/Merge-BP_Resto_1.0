@@ -13,23 +13,42 @@ import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {colors} from '../../constants';
 import {isInt} from '../../helper';
 import {ButtonFooterModal, Card, InputPlusMinus} from '../atoms';
+import SelectDropdown from 'react-native-select-dropdown';
+import {getNote} from '../../models';
 
 const heightForm = 45;
+const countries = ['Egypt', 'Canada', 'Australia', 'Ireland'];
 
 const FormNoteItem = React.forwardRef((props, ref) => {
   const {item, selectedItems, onCancel, onSave, isOpen} = props;
   const [itemData, setItemData] = useState({});
-  const [selectedMenus, setSelectedMenus] = useState([]);
+  const [listOption, setListOption] = useState([]);
+  const [selectedList, setSelectedList] = useState({});
   const modalizeNote = useRef(null);
+  const dropdownRef = useRef({});
+
+  const get_note = async id => {
+    let _data = await getNote({itemid: id});
+    setListOption([..._data]);
+  };
 
   useEffect(() => {
-    item.qty = item.qty ? item.qty : 1;
-    setItemData({...item});
-  }, [item]);
-
-  useEffect(() => {
-    item.qty = item.qty ? item.qty : 1;
-    setItemData({...item});
+    let _item = {};
+    if (item.hasOwnProperty('itemid')) {
+      _item = item;
+      _item.qty = item.qty ? item.qty : 1;
+      if (item.itemid) get_note(item.itemid);
+    }
+    if (Array.isArray(selectedItems)) {
+      for (const it of selectedItems) {
+        if (item.itemid == it.itemid) {
+          _item = it;
+          _item.qty = it.qty ? it.qty : 1;
+          setItemData({...it});
+        }
+      }
+    }
+    setItemData({..._item});
   }, [item]);
 
   useEffect(() => {
@@ -40,15 +59,6 @@ const FormNoteItem = React.forwardRef((props, ref) => {
     }
   }, [isOpen]);
 
-  const handleAddToCart = type => {
-    let menu = itemData;
-    if (type == 'remove') {
-      menu.qty = menu.qty || menu.qty < 0 ? menu.qty - 1 : 0;
-    } else {
-      menu.qty = menu.qty || menu.qty == 0 ? menu.qty + 1 : 1;
-    }
-    setItemData({...menu});
-  };
   const handleSubmit = () => {
     if (onSave) {
       onSave(itemData);
@@ -116,6 +126,57 @@ const FormNoteItem = React.forwardRef((props, ref) => {
 
           <View>
             <Text style={{marginHorizontal: 25, fontWeight: 'bold'}}>Note</Text>
+            <View
+              style={{
+                marginHorizontal: 25,
+                flexDirection: 'row',
+              }}>
+              <SelectDropdown
+                ref={dropdownRef}
+                buttonStyle={{
+                  borderTopLeftRadius: 10,
+                  borderBottomLeftRadius: 10,
+                  flex: 1,
+                }}
+                data={listOption}
+                onSelect={(selectedItem, index) => {
+                  setSelectedList({...selectedItem});
+                }}
+                buttonTextAfterSelection={(selectedItem, index) => {
+                  // text represented after item is selected
+                  // if data array is an array of objects then return selectedItem.property to render after item is selected
+                  return selectedItem.note;
+                }}
+                defaultButtonText={' '}
+                rowTextForSelection={(item, index) => {
+                  // text represented for each item in dropdown
+                  // if data array is an array of objects then return item.property to represent item in dropdown
+                  return item.note;
+                }}
+              />
+              <TouchableOpacity
+                style={{
+                  backgroundColor: colors.lightGrey,
+                  borderTopRightRadius: 10,
+                  borderBottomRightRadius: 10,
+                  width: 50,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+                onPress={() => {
+                  if (selectedList.hasOwnProperty('note')) {
+                    let _note = itemData.sodnote ? `${itemData.sodnote}, ` : '';
+                    _note += `${selectedList.note}`;
+                    _note = _note.replace(/,\s*$/, '');
+                    setItemData({...itemData, sodnote: _note});
+                    setSelectedList({});
+                  }
+                  dropdownRef.current.reset();
+                }}>
+                <MatComIcon name="plus-box-multiple" size={30} />
+              </TouchableOpacity>
+            </View>
+
             <TextInput
               style={{
                 height: heightForm * 3,
