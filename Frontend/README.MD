@@ -11,11 +11,11 @@ Running Development:
 2. cd ios && pod install && cd ..
    react-native run-ios --simulator="iPhone 8 Plus"
 
-# ANDROID Requirment =>
+Change Icon
 
-node ?
-npm ?
-nvm ?
+# npm i @bam.tech/react-native-make
+
+# react-native set-icon --path <path_to_png> --background <icon_background_color> --platform <android|ios>
 
 Rename Package Android
 
