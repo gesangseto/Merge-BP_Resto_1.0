@@ -1,14 +1,14 @@
-# Base Administrator
+Installation:
 
-Programming Language : Nodejs - Express
+1. Download and install node-js => https://nodejs.org/dist/v14.17.3/node-v14.17.3-x64.msi
+2. Open CMD and run command "npm install pm2 -g"
 
-How to install :
-git clone https://github.com/gesangseto/BASE-ADMINISTRATOR-BE
-npm install
+Running API using CMD with this command:
 
-How to running :
+# npm install
 
-1. Using Node
-   node server.js
-2. Using Pm2
-   pm2 start server.js --name "Your App Name"
+# pm2 start server.js --name "APP-RESTO"
+
+See Log using CMD with this command:
+
+# pm2 logs

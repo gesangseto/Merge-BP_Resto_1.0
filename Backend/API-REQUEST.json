@@ -1,0 +1,565 @@
+{
+	"info": {
+		"_postman_id": "31eed859-383e-4153-a5ba-fa1d418b2ae4",
+		"name": "Resto",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Transaction",
+			"item": [
+				{
+					"name": "SO (Saler Order Item)",
+					"item": [
+						{
+							"name": "New SO",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"billno\": \"BI220518001\",\r\n    \"items\": [\r\n        {\r\n            \"ispacked\": \"\",\r\n            \"itemid\": \"NG007\",\r\n            \"pid\": 1,\r\n            \"qty\": 1,\r\n            \"sodnote\": \"\"\r\n        },\r\n        {\r\n            \"ispacked\": \"\",\r\n            \"itemid\": \"MK012-M\",\r\n            \"pid\": 1,\r\n            \"qty\": 1,\r\n            \"sodnote\": \"TsTst\"\r\n        },\r\n        {\r\n            \"ispacked\": true,\r\n            \"itemid\": \"WF003\",\r\n            \"pid\": 1,\r\n            \"qty\": 1,\r\n            \"sodnote\": \"\"\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:5000/api/transaction/so",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"transaction",
+										"so"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete/Cancel SO",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"baseprice\": \"24545.4545\",\r\n    \"basesubtotal\": \"98181.8182\",\r\n    \"basetotaltaxamt\": \"9818.1818\",\r\n    \"basftotaltaxamt\": \"9818.1818\",\r\n    \"conv\": \"1.0000\",\r\n    \"cost\": \"0.0000\",\r\n    \"deptid\": null,\r\n    \"disc2amt\": \"0.0000\",\r\n    \"discamt\": \"0.0000\",\r\n    \"discexp\": \"0%\",\r\n    \"iscancel\": false,\r\n    \"isclosed\": false,\r\n    \"ispacked\": false,\r\n    \"itemdesc\": \"Nasi Goreng Lada Hitam\",\r\n    \"itemid\": \"NG007\",\r\n    \"link_picture\": \"/api/master/picture?linkno=NG007\",\r\n    \"listprice\": \"27000.0000\",\r\n    \"note\": \"Test android\",\r\n    \"pid\": \"\",\r\n    \"prjid\": null,\r\n    \"qty\": 1,\r\n    \"qtybo\": \"0.0000\",\r\n    \"qtydelivered\": \"0.0000\",\r\n    \"qtydo\": \"0.0000\",\r\n    \"qtyx\": \"0.0000\",\r\n    \"qtyxbo\": \"0.0000\",\r\n    \"qtyxdelivered\": \"0.0000\",\r\n    \"qtyxdo\": \"0.0000\",\r\n    \"reqdate\": null,\r\n    \"scableamt\": \"108000.0000\",\r\n    \"scamt\": \"0.0000\",\r\n    \"scid\": null,\r\n    \"sodno\": 1,\r\n    \"sodnote\": null,\r\n    \"sono\": \"SO220518002\",\r\n    \"srepid\": null,\r\n    \"subtotal\": \"98181.8182\",\r\n    \"taxableamt\": \"98181.8182\",\r\n    \"taxamt\": \"2454.5455\",\r\n    \"taxid\": \"PPN\",\r\n    \"totaldisc2amt\": \"0.0000\",\r\n    \"totaldiscamt\": \"0.0000\",\r\n    \"totalscamt\": \"0.0000\",\r\n    \"totaltaxamt\": \"9818.1818\",\r\n    \"unit\": \"PRS\",\r\n    \"whid\": \"G01\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:5000/api/transaction/so",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"transaction",
+										"so"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Bill (Open Table)",
+					"item": [
+						{
+							"name": "Get Bill",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "127.0.0.1:5000/api/transaction/bill?billno=BI220523001",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"transaction",
+										"bill"
+									],
+									"query": [
+										{
+											"key": "billno",
+											"value": "BI220523001"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "New Bill",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "billno",
+											"value": "2-test-4",
+											"description": "16 (*)",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "bpid",
+											"value": "CASH",
+											"description": "16 (*)",
+											"type": "text"
+										},
+										{
+											"key": "billtype",
+											"value": "DI",
+											"description": "16 (*)",
+											"type": "text"
+										},
+										{
+											"key": "hostid",
+											"value": "53",
+											"description": "5 (*)",
+											"type": "text"
+										},
+										{
+											"key": "billdate",
+											"value": "now()",
+											"description": "13 (*)",
+											"type": "text"
+										},
+										{
+											"key": "billto",
+											"value": "",
+											"description": "16",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "shipto",
+											"value": "",
+											"description": "16",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "pax",
+											"value": "2",
+											"description": "3 (*)",
+											"type": "text"
+										},
+										{
+											"key": "arrivetime",
+											"value": "now()",
+											"description": "14 (*)",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "leavetime",
+											"value": "",
+											"description": "14",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "billnote",
+											"value": "",
+											"description": "16",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "billtotal",
+											"value": "",
+											"description": "10",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "paystatus",
+											"value": "N",
+											"description": "16 (*)",
+											"type": "text"
+										},
+										{
+											"key": "billstatus",
+											"value": "CHECKIN",
+											"description": "16 (*)",
+											"type": "text"
+										},
+										{
+											"key": "srepid",
+											"value": "",
+											"description": "16",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "bpname",
+											"value": "",
+											"description": "16",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "bpphone",
+											"value": "",
+											"description": "16",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "dpamt",
+											"value": "",
+											"description": "10",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "upbillno",
+											"value": "",
+											"description": "16",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "srepname",
+											"value": "",
+											"description": "16",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "hostdesc",
+											"value": "",
+											"description": "16",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "127.0.0.1:5000/api/transaction/bill",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"transaction",
+										"bill"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Bill",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "billno",
+											"value": "BI220523001",
+											"type": "text"
+										},
+										{
+											"key": "note",
+											"value": "Test cancel",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "127.0.0.1:5000/api/transaction/bill",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"transaction",
+										"bill"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Master",
+			"item": [
+				{
+					"name": "Host (Table)",
+					"item": [
+						{
+							"name": "Host",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "127.0.0.1:5000/api/master/host",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"master",
+										"host"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Item Menu",
+					"item": [
+						{
+							"name": "Menu",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "127.0.0.1:5000/api/master/menu?prclvlid=0",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"master",
+										"menu"
+									],
+									"query": [
+										{
+											"key": "prclvlid",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Group Menu",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "127.0.0.1:5000/api/master/group-menu?ispos=true",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"master",
+										"group-menu"
+									],
+									"query": [
+										{
+											"key": "ispos",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Picture",
+					"item": [
+						{
+							"name": "Pic",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "127.0.0.1:5000/api/master/picture?linkno=MK012-M",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"master",
+										"picture"
+									],
+									"query": [
+										{
+											"key": "linkno",
+											"value": "MK012-M"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Employee",
+					"item": [
+						{
+							"name": "employee",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "127.0.0.1:5000/api/master/employee",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"master",
+										"employee"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Item Note",
+					"item": [
+						{
+							"name": "Item Note",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "127.0.0.1:5000/api/master/note?itemid=NG002",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"master",
+										"note"
+									],
+									"query": [
+										{
+											"key": "itemid",
+											"value": "NG002"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login Sales (ANDROID)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "admin@admin.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:5000/api/authentication/login-sales",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"authentication",
+								"login-sales"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
