@@ -8,6 +8,8 @@ import RenderToastView from './RenderToastView';
 import IconWithBadge from './IconWithBadge';
 import Card from './Card';
 import ButtonFooterModal from './ButtonFooterModal';
+import InputPlusMinus from './InputPlusMinus';
+import RequiredText from './RequiredText';
 
 export {
   InputText,
@@ -20,4 +22,6 @@ export {
   RenderToastView,
   IconWithBadge,
   Card,
+  InputPlusMinus,
+  RequiredText,
 };

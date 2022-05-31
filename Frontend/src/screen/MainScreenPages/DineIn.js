@@ -14,7 +14,7 @@ import {Modalize} from 'react-native-modalize';
 import {FlatGrid} from 'react-native-super-grid';
 import {TabView} from 'react-native-tab-view';
 import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {CoupleButton, FormBill} from '../../components';
+import {CoupleButton, FormBill, RequiredText} from '../../components';
 import {colors} from '../../constants';
 import * as RootNavigation from '../../helper';
 import {groupingArray, Toaster} from '../../helper';
@@ -296,9 +296,7 @@ const ModalCancelTable = props => {
             value={itemData.note}
             onChangeText={val => setItemData({...itemData, note: val})}
           />
-          {isError ? (
-            <Text style={styles.textError}>* Note is required</Text>
-          ) : null}
+          <RequiredText style={{paddingLeft: 25}} show={isError} title="Note" />
         </View>
         <View style={{height: 80}}>
           <CoupleButton

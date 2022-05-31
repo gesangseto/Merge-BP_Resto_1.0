@@ -11,7 +11,13 @@ import {
 } from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import {colors} from '../../constants';
-import {ButtonFooterModal, Card, CoupleButton} from '../atoms';
+import {
+  ButtonFooterModal,
+  Card,
+  CoupleButton,
+  InputPlusMinus,
+  RequiredText,
+} from '../atoms';
 import Modal from 'react-native-modal';
 import {isInt, Toaster} from '../../helper';
 
@@ -37,6 +43,9 @@ const FormCancelItem = React.forwardRef((props, ref) => {
   }, [isOpen]);
 
   const handleCancelOrder = () => {
+    if (itemData.iscancel) {
+      return Toaster({message: 'Item sudah dibatalkan', type: 'error'});
+    }
     setVisibleModal(true);
   };
 
@@ -51,6 +60,7 @@ const FormCancelItem = React.forwardRef((props, ref) => {
       <Modalize
         ref={modalizeNote}
         onClosed={() => handleCloseModal()}
+        modalHeight={500}
         FooterComponent={
           <ButtonFooterModal
             buttonTittle="Batalkan Order"
@@ -145,21 +155,14 @@ const ModalCancel = props => {
   const {item, onCancel, onSave} = props;
   const [itemData, setItemData] = useState({});
   const [isError, setIsError] = useState(false);
+  const [maxQty, setMaxQty] = useState(1);
 
   useEffect(() => {
-    setItemData({...item});
+    let data = JSON.parse(JSON.stringify(item));
+    setMaxQty(item.qty);
+    data.qty = 1;
+    setItemData({...data});
   }, [item]);
-
-  const handleChangeQty = type => {
-    let itm = itemData;
-    let qty = parseInt(itm.qty);
-    if (type == 'remove') {
-      qty = qty > 0 ? qty - 1 : 0;
-    } else {
-      qty = qty == 0 ? 1 : qty + 1;
-    }
-    roleChangeQty(qty);
-  };
 
   const roleChangeQty = val => {
     if (isInt(val)) {
@@ -192,58 +195,42 @@ const ModalCancel = props => {
   return (
     <View
       style={{
-        // flex: 1,
-        // justifyContent: 'center',
-        // alignItems: 'center',
         backgroundColor: 'white',
         borderRadius: 15,
       }}>
-      <View style={{paddingVertical: 15}}>
+      <Text
+        style={{
+          paddingTop: 10,
+          textAlign: 'center',
+          fontSize: 18,
+          fontWeight: 'bold',
+        }}>
+        Batalkan Order
+      </Text>
+      <View style={{paddingVertical: 15, marginHorizontal: 25}}>
         <View>
-          <Text style={{marginHorizontal: 25, fontWeight: 'bold'}}>
-            Qty to cancel
-          </Text>
-          <View style={styles.containerPlusMinus}>
-            <TouchableOpacity
-              style={styles.containerMinus}
-              onPress={() => handleChangeQty('remove')}>
-              <MatComIcon name="minus" color={colors.danger} />
-            </TouchableOpacity>
-            <TextInput
-              keyboardType="numeric"
-              style={{
-                width: 100,
-                height: heightForm,
-                backgroundColor: colors.lightGrey,
-                marginVertical: 5,
-                textAlign: 'center',
-              }}
-              value={`${parseInt(1 ?? 0)}`}
-              onChangeText={val => roleChangeQty(val)}
-            />
-            <TouchableOpacity
-              style={styles.containerPlus}
-              onPress={() => handleChangeQty('add')}>
-              <MatComIcon name="plus" color="white" />
-            </TouchableOpacity>
-          </View>
-
-          {isError ? (
-            <Text style={styles.textError}>* Qty must bigger than 0</Text>
-          ) : null}
+          <InputPlusMinus
+            title="Qty"
+            value={`${parseInt(itemData.qty)}`}
+            onChange={val => {
+              setItemData({...itemData, qty: val});
+            }}
+            maxValue={maxQty}
+            minValue={1}
+            isError={isError}
+          />
         </View>
       </View>
-      <View>
-        <Text style={{marginHorizontal: 25, fontWeight: 'bold'}}>Note</Text>
+      <View style={{marginHorizontal: 25}}>
+        <Text style={{fontWeight: 'bold'}}>Note</Text>
         <TextInput
-          style={styles.textNote}
+          style={styles.textNoteCancel}
           multiline={true}
           value={itemData.note}
           onChangeText={val => setItemData({...itemData, note: val})}
         />
-        {isError ? (
-          <Text style={styles.textError}>* Note is required</Text>
-        ) : null}
+
+        <RequiredText show={isError} title={'Note'} />
       </View>
       <View style={{height: 80}}>
         <CoupleButton
@@ -273,9 +260,15 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
     backgroundColor: colors.lightGrey,
     borderRadius: 10,
-    marginLeft: 25,
     marginVertical: 5,
     marginHorizontal: 25,
+  },
+  textNoteCancel: {
+    height: heightForm * 3,
+    textAlignVertical: 'top',
+    backgroundColor: colors.lightGrey,
+    borderRadius: 10,
+    marginVertical: 5,
   },
   boxContainer: {
     elevation: 3,

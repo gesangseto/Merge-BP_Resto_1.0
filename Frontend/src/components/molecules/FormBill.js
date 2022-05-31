@@ -1,9 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  TextInput,
+} from 'react-native';
 import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {colors} from '../../constants';
 import moment from 'moment';
-import {Button, InputText} from '../atoms';
+import {Button, InputPlusMinus, InputText} from '../atoms';
+
+const heightForm = 45;
 
 const FormBill = React.forwardRef((props, ref) => {
   const {host, onCancel, onSave} = props;
@@ -65,13 +73,16 @@ const FormBill = React.forwardRef((props, ref) => {
         title="Kedatangan"
         value={`${formData.billdate} (${formData.arrivetime})`}
       />
-      <InputText
-        title="Jumlah Tamu"
-        value={formData.pax}
-        onChangeText={txt => setFormData({...formData, pax: txt})}
-        required
-        isError={errorForm.pax}
-      />
+      <View style={{margin: 10}}>
+        <InputPlusMinus
+          title="Jumlah Tamu"
+          value={`${formData.pax}`}
+          onChange={val => {
+            setFormData({...formData, pax: val});
+          }}
+          isError={errorForm.pax}
+        />
+      </View>
       <InputText
         title="Keterangan"
         value={formData.billnote}

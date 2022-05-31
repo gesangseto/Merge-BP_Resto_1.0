@@ -12,7 +12,7 @@ import {Modalize} from 'react-native-modalize';
 import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {colors} from '../../constants';
 import {isInt} from '../../helper';
-import {ButtonFooterModal, Card} from '../atoms';
+import {ButtonFooterModal, Card, InputPlusMinus} from '../atoms';
 
 const heightForm = 45;
 
@@ -80,43 +80,18 @@ const FormNoteItem = React.forwardRef((props, ref) => {
           <View
             style={{
               marginVertical: 25,
+              marginHorizontal: 25,
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <View>
-              <Text style={{marginHorizontal: 25, fontWeight: 'bold'}}>
-                Qty
-              </Text>
-              <View style={styles.containerPlusMinus}>
-                <TouchableOpacity
-                  style={styles.containerMinus}
-                  onPress={() => handleAddToCart('remove')}>
-                  <MatComIcon name="minus" color={colors.danger} />
-                </TouchableOpacity>
-                <TextInput
-                  keyboardType="numeric"
-                  style={{
-                    width: 100,
-                    height: heightForm,
-                    backgroundColor: colors.lightGrey,
-                    marginVertical: 5,
-                    textAlign: 'center',
-                  }}
-                  value={`${parseInt(itemData.qty ?? 0)}`}
-                  onChangeText={val =>
-                    setItemData({
-                      ...itemData,
-                      qty: isInt(val) || val > 0 ? val : 0,
-                    })
-                  }
-                />
-                <TouchableOpacity
-                  style={styles.containerPlus}
-                  onPress={() => handleAddToCart(itemData, 'add')}>
-                  <MatComIcon name="plus" color="white" />
-                </TouchableOpacity>
-              </View>
-            </View>
+            <InputPlusMinus
+              title="Qty"
+              value={`${itemData.qty}`}
+              onChange={val => {
+                setItemData({...itemData, qty: val});
+              }}
+              minValue={1}
+            />
             <View>
               <Text style={{marginHorizontal: 25, fontWeight: 'bold'}}>
                 Take away

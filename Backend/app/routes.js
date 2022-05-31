@@ -14,6 +14,8 @@ module.exports = function (app) {
   app.route("/api/master/menu").get(menu.get);
   var group_menu = require("./controller/group-menu");
   app.route("/api/master/group-menu").get(group_menu.get);
+  var note = require("./controller/note");
+  app.route("/api/master/note").get(note.get);
 
   // PICTURE
   var picture = require("./controller/picture");
