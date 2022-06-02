@@ -1,23 +1,18 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {
-  Text,
-  ImageBackground,
-  View,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
-import {splash_image} from '../assets';
-import * as RootNavigation from '../helper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Portal} from '@gorhom/portal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {useEffect, useRef, useState} from 'react';
+import {BackHandler, ImageBackground, StyleSheet, View} from 'react-native';
 import {Modalize} from 'react-native-modalize';
-import {ButtonFooterModal, InputText} from '../components';
+import {splash_image} from '../assets';
+import {ButtonFooterModal, InputText, ModalAlert} from '../components';
 import {colors} from '../constants';
+import * as RootNavigation from '../helper';
 // import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const SplashScreen = () => {
   const modalAddApi = useRef(null);
   const [endpoint, setEndpoint] = useState('http://192.168.3.146:5000');
+  const [alertModal, setAlertModal] = useState(false);
 
   const openModal = () => {
     modalAddApi.current?.open();
@@ -56,6 +51,9 @@ const SplashScreen = () => {
     await checkProfile();
   };
 
+  const handleCloseModalize = () => {
+    setAlertModal(true);
+  };
   return (
     <>
       <View>
@@ -70,6 +68,7 @@ const SplashScreen = () => {
           ref={modalAddApi}
           closeOnOverlayTap={false}
           closeSnapPointStraightEnabled={false}
+          onClosed={() => handleCloseModalize()}
           // modalHeight={isKeyboardOpen ? 400 : 225}
           modalHeight={200}
           FooterComponent={
@@ -85,10 +84,23 @@ const SplashScreen = () => {
             required
             value={endpoint}
             title="Endpoind Api"
-            onChange={val => setEndpoint(val)}
+            onChangeText={val => setEndpoint(val)}
             onSubmitEditing={() => handleSubmitEndpoint()}
           />
         </Modalize>
+        <ModalAlert
+          isOpen={alertModal}
+          title={'Konfirmasi'}
+          message={'Yakin ingin keluar aplikasi?'}
+          onCancel={() => {
+            setAlertModal(false);
+            openModal();
+          }}
+          onSave={() => {
+            setAlertModal(false);
+            BackHandler.exitApp();
+          }}
+        />
       </Portal>
     </>
   );
