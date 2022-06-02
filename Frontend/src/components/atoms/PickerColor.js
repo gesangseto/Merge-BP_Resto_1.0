@@ -1,21 +1,22 @@
 import React, {forwardRef, useEffect, useRef, useState} from 'react';
 import {Text, View} from 'react-native';
 import {Modalize} from 'react-native-modalize';
-import {WhitePortal} from 'react-native-portal';
 import {HueSaturationValuePicker} from 'react-native-reanimated-color-picker';
 import {colors} from '../../constants';
 import Button from './Button';
-import InputTextPressable from './InputTextPressable';
-
-const wheelStyle = {width: '90%'};
+import Modal from 'react-native-modal';
+import ButtonFooterModal from './ButtonFooterModal';
+const wheelStyle = {width: '80%'};
 const sliderStyle = {height: 45, width: '90%'};
 
 const PickerColor = forwardRef((props, ref) => {
-  const {title, required, value, onSubmit, onColorSelected} = props;
+  const {title, required, value, isOpen, onClose, onSubmit, onColorSelected} =
+    props;
   const [colorData, setColorData] = useState('');
   const modalizeRef = useRef(null);
 
   const handleSubmit = () => {
+    // console.log(colorData);
     modalizeRef.current?.close();
     if (onSubmit) {
       onSubmit(colorData);
@@ -23,6 +24,7 @@ const PickerColor = forwardRef((props, ref) => {
       onColorSelected(colorData);
     }
   };
+
   const hslToHex = (h, s, l) => {
     l /= 100;
     const a = (s * Math.min(l, 1 - l)) / 100;
@@ -45,54 +47,58 @@ const PickerColor = forwardRef((props, ref) => {
     setColorData(value);
   }, [value]);
 
-  return (
-    <>
-      <InputTextPressable
-        onPressIn={() => modalizeRef.current?.open()}
-        required={required}
-        title={title}
-        selectTextOnFocus={false}
-        editable={false}
-        bgColor={colorData}
-        value={colorData}
-      />
-      <WhitePortal name="PickerColor">
-        <Modalize ref={modalizeRef}>
-          <View style={{alignItems: 'center'}}>
-            <View
-              style={{
-                marginTop: 15,
-                padding: 10,
-                width: 150,
-                marginHorizontal: 15,
-                borderRadius: 5,
-                justifyContent: 'center',
-                alignContent: 'center',
-                backgroundColor: colorData,
-              }}>
-              <Text style={{textAlign: 'center'}}>{colorData}</Text>
-            </View>
+  useEffect(() => {
+    if (isOpen) {
+      modalizeRef.current?.open();
+    } else {
+      modalizeRef.current?.close();
+    }
+  }, [isOpen]);
 
-            <HueSaturationValuePicker
-              wheelStyle={wheelStyle}
-              sliderStyle={sliderStyle}
-              onColorChangeComplete={colorChanged}
-              onColorChange={colorChanged}
-              initialHue={0}
-              initialSaturation={0}
-              initialValue={0.7}
-            />
-            <View style={{marginVertical: 5}}>
-              <Button
-                title="Simpan"
-                onPress={() => handleSubmit()}
-                color={colors.success}
-              />
-            </View>
-          </View>
-        </Modalize>
-      </WhitePortal>
-    </>
+  return (
+    <Modalize
+      ref={modalizeRef}
+      modalHeight={525}
+      onClosed={() => (onClose ? onClose() : null)}
+      FooterComponent={
+        <ButtonFooterModal
+          buttonTittle={'Simpan'}
+          useTotal={false}
+          onClickSubmit={() => handleSubmit()}
+        />
+      }>
+      <View
+        style={{
+          // backgroundColor: 'red',
+          height: 475,
+          borderRadius: 15,
+          alignItems: 'center',
+        }}>
+        <View
+          style={{
+            marginTop: 15,
+            padding: 10,
+            width: 150,
+            marginHorizontal: 15,
+            borderRadius: 5,
+            justifyContent: 'center',
+            alignContent: 'center',
+            backgroundColor: colorData,
+          }}>
+          <Text style={{textAlign: 'center'}}>{colorData}</Text>
+        </View>
+
+        <HueSaturationValuePicker
+          wheelStyle={wheelStyle}
+          sliderStyle={sliderStyle}
+          onColorChangeComplete={colorChanged}
+          onColorChange={colorChanged}
+          initialHue={0}
+          initialSaturation={0}
+          initialValue={0.7}
+        />
+      </View>
+    </Modalize>
   );
 });
 

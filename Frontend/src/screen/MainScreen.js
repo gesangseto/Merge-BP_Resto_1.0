@@ -1,8 +1,10 @@
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {SafeAreaView, Text, View} from 'react-native';
 import DineIn from './MainScreenPages/DineIn';
 import {CustomDrawer} from '../components';
+import ConfigurationScreen from './MainScreenPages/ConfigurationScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Drawer = createDrawerNavigator();
 
@@ -16,6 +18,15 @@ function Component(props) {
   );
 }
 export default function MainScreen() {
+  const [profile, setProfile] = useState({});
+
+  useEffect(() => {
+    (async function () {
+      let prfl = await AsyncStorage.getItem('profile');
+      setProfile({...JSON.parse(prfl)});
+    })();
+  }, []);
+
   return (
     <SafeAreaView flex={1}>
       <Drawer.Navigator
@@ -28,6 +39,10 @@ export default function MainScreen() {
         }}>
         <Drawer.Screen name="Dine In" component={DineIn} />
         <Drawer.Screen name="Take Away" component={Component} />
+
+        {profile.hasOwnProperty('is_superadmin') && (
+          <Drawer.Screen name="Configuration" component={ConfigurationScreen} />
+        )}
       </Drawer.Navigator>
     </SafeAreaView>
   );

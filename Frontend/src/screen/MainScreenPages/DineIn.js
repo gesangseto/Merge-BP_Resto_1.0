@@ -22,24 +22,6 @@ import {cancelBill, createBill, getBill, getHost} from '../../models';
 
 const heightForm = 45;
 
-const color_mapping = [
-  {
-    code: 'KSNG',
-    color: '#7eed72',
-    icon: 'silverware',
-  },
-  {
-    code: 'DINE',
-    color: 'yellow',
-    icon: 'table-chair',
-  },
-  {
-    code: 'DINE',
-    color: 'yellow',
-    icon: 'table-chair',
-  },
-];
-
 export default function DineIn() {
   const [index, setIndex] = useState(0);
   const [tabData, setTabData] = useState({});
@@ -140,14 +122,6 @@ export default function DineIn() {
   };
 
   const renderBox = item => {
-    let color = '#f54269';
-    let icon = 'account';
-    for (const it of color_mapping) {
-      if (item.hoststatuscode == it.code) {
-        color = it.color;
-        icon = it.icon;
-      }
-    }
     return (
       <TouchableOpacity
         key={index}
@@ -156,13 +130,15 @@ export default function DineIn() {
         style={{
           height: boxDimension,
           borderRadius: 16,
-          backgroundColor: color,
+          backgroundColor: item.hoststatuscolor,
           justifyContent: 'center',
           alignItems: 'center',
         }}>
         <Text style={{fontWeight: 'bold', fontSize: 24}}>{item.hostdesc}</Text>
         <Text>{item.hoststatusdesc}</Text>
-        <MatComIcon name={icon} size={20} color="black" />
+        {item.hoststatusicon && (
+          <MatComIcon name={item.hoststatusicon} size={20} color="black" />
+        )}
       </TouchableOpacity>
     );
   };

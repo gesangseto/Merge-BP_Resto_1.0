@@ -6358,6 +6358,11 @@
   "resolved" "https://registry.npmjs.org/react-native-tab-view/-/react-native-tab-view-3.1.1.tgz"
   "version" "3.1.1"
 
+"react-native-tableview-simple@^4.3.1":
+  "integrity" "sha512-yegMqYR6y79IxfBBosqzZ/B3Ck6Q5piGcUdWqOb4ddOFoMZ1kH/0kjv8O8YTVmKX8ErYhTVNP9C7AFslTkApAw=="
+  "resolved" "https://registry.npmjs.org/react-native-tableview-simple/-/react-native-tableview-simple-4.3.1.tgz"
+  "version" "4.3.1"
+
 "react-native-toast-notifications@^3.2.3":
   "integrity" "sha512-fxIQNAp6xN7inGRb/apE71EyqrW9pPIxnzZ7Cacv1XwLtz0bP1zkC4WvPfpxijZg73fhGi0vHMR/7WJez7PYyw=="
   "resolved" "https://registry.npmjs.org/react-native-toast-notifications/-/react-native-toast-notifications-3.2.3.tgz"
@@ -6371,7 +6376,7 @@
     "prop-types" "^15.7.2"
     "yargs" "^16.1.1"
 
-"react-native@*", "react-native@^0.0.0-0 || 0.60 - 0.68 || 1000.0.0", "react-native@> 0.50.0", "react-native@>= 0.62", "react-native@>=0.55", "react-native@>=0.57", "react-native@>=0.59.0", "react-native@>=0.65.0", "react-native@0.67.4":
+"react-native@*", "react-native@^0.0.0-0 || 0.60 - 0.68 || 1000.0.0", "react-native@> 0.50.0", "react-native@>= 0.62", "react-native@>=0.55", "react-native@>=0.57", "react-native@>=0.59.0", "react-native@>=0.64", "react-native@>=0.65.0", "react-native@0.67.4":
   "integrity" "sha512-NA9d9lNJu9TViEJu2uZxWXUP+QNUilGGA5tdMbVFedNroOH1lnQ3n/FAVoGK1gqGarCgNTtheBxUpEa979Cu8w=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.67.4.tgz"
   "version" "0.67.4"

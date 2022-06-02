@@ -42,6 +42,7 @@
     "react-native-select-dropdown": "^1.13.0",
     "react-native-super-grid": "^4.4.0",
     "react-native-tab-view": "^3.1.1",
+    "react-native-tableview-simple": "^4.3.1",
     "react-native-toast-notifications": "^3.2.3",
     "react-native-vector-icons": "^9.1.0"
   },

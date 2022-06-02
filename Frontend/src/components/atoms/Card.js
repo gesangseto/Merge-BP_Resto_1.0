@@ -171,7 +171,7 @@ export default function Card(prop) {
                   flexDirection: 'row',
                 }}>
                 <MatComIcon name="file-document-edit" size={20} color="grey" />
-                <Text style={{color: 'grey', paddingHorizontal: 5}}>
+                <Text style={{color: 'grey', paddingHorizontal: 20}}>
                   {itemData.sodnote}
                 </Text>
               </View>

@@ -4,8 +4,7 @@ import SplashScreen from '../screen/SplashScreen';
 import LoginScreen from '../screen/LoginScreen';
 import MainScreen from '../screen/MainScreen';
 import OrderMenu from '../screen/Pages/OrderMenu';
-import {Button, Text} from 'react-native';
-import {Header} from '../components';
+import ConfigurationScreen from '../screen/MainScreenPages/ConfigurationScreen';
 
 const Stack = createStackNavigator();
 const Router = () => {
@@ -30,6 +29,11 @@ const Router = () => {
       <Stack.Screen
         name="Order Menu"
         component={OrderMenu}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ConfigurationScreen"
+        component={ConfigurationScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
