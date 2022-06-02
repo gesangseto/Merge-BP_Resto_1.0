@@ -33,4 +33,8 @@ module.exports = function (app) {
   app.route("/api/transaction/so").get(so.get);
   app.route("/api/transaction/so").put(so.insert);
   app.route("/api/transaction/so").delete(so.delete);
+
+  // Utilities
+  var print = require("./controller/print");
+  app.route("/api/utilities/print").get(print.get);
 };

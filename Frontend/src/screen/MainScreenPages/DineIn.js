@@ -134,8 +134,10 @@ export default function DineIn() {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Text style={{fontWeight: 'bold', fontSize: 24}}>{item.hostdesc}</Text>
-        <Text>{item.hoststatusdesc}</Text>
+        <Text style={{fontWeight: 'bold', fontSize: 24, color: 'black'}}>
+          {item.hostdesc}
+        </Text>
+        <Text style={{color: 'black'}}>{item.hoststatusdesc}</Text>
         {item.hoststatusicon && (
           <MatComIcon name={item.hoststatusicon} size={20} color="black" />
         )}

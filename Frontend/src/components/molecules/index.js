@@ -6,6 +6,7 @@ import FormOldOrder from './FormOldOrder';
 import HeaderOrder from './HeaderOrder';
 import CustomDrawer from './CustomDrawer';
 import ModalAlert from './ModalAlert';
+import PrintBill from './PrintBill';
 
 export {
   FormBill,
@@ -16,4 +17,5 @@ export {
   FormCancelItem,
   CustomDrawer,
   ModalAlert,
+  PrintBill,
 };

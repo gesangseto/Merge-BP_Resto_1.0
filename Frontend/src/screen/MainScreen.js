@@ -2,7 +2,7 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView, Text, View} from 'react-native';
 import DineIn from './MainScreenPages/DineIn';
-import {CustomDrawer} from '../components';
+import {CustomDrawer, PrintBill} from '../components';
 import ConfigurationScreen from './MainScreenPages/ConfigurationScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -11,9 +11,7 @@ const Drawer = createDrawerNavigator();
 function Component(props) {
   return (
     <>
-      <Text mt="12" fontSize="18">
-        This is {props.route.name} page.
-      </Text>
+      <PrintBill />
     </>
   );
 }
