@@ -191,15 +191,16 @@ exports.delete = async function (req, res) {
     LEFT JOIN sod AS d ON c.sono = d.sono
     WHERE a.billno = '${req.body.billno}'`;
     get_bill_detail = await models.exec_query(get_bill_detail);
+    console.log(get_bill_detail);
     let cancel = [];
     for (const it of get_bill_detail.data) {
       let sono = it.sono;
-      if (!it.isclosed || !it.iscancel) {
+      if ((!it.isclosed || !it.iscancel) && sono !== null) {
         data.error = true;
-        data.message = `So ${it.sono} masih ada pesanan, silahkan cancel dahulu`;
+        data.message = `So ${sono} masih ada pesanan, silahkan cancel dahulu`;
         return response.response(data, res);
       }
-      cancel.push(`SELECT spso_void('${it.sono}');`);
+      if (sono) cancel.push(`SELECT spso_void('${sono}');`);
     }
     cancel.push(`SELECT spbill_cancel('${body.billno}','${body.note}');`);
     cancel = [...new Set(cancel)];

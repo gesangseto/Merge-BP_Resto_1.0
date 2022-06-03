@@ -7,6 +7,7 @@ import HeaderOrder from './HeaderOrder';
 import CustomDrawer from './CustomDrawer';
 import ModalAlert from './ModalAlert';
 import PrintBill from './PrintBill';
+import SetPrinter from './SetPrinter';
 
 export {
   FormBill,
@@ -18,4 +19,5 @@ export {
   CustomDrawer,
   ModalAlert,
   PrintBill,
+  SetPrinter,
 };

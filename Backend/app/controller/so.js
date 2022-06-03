@@ -321,23 +321,23 @@ exports.insert = async function (req, res) {
       prop_sod.unit = item.saleunit;
       prop_sod.listprice = item.price1;
       prop_sod.taxamt = item.price1 / (1 + tax) || 0;
-      prop_sod.baseprice = item.price1 - prop_sod.taxamt;
-      prop_sod.subtotal = prop_sod.baseprice * it.qty;
-      prop_sod.taxableamt = prop_sod.baseprice * it.qty;
-      prop_sod.totaltaxamt = prop_sod.taxamt * it.qty;
-      prop_sod.basesubtotal = prop_sod.baseprice * it.qty;
-      prop_sod.basetotaltaxamt = prop_sod.taxamt * it.qty;
-      prop_sod.basftotaltaxamt = prop_sod.taxamt * it.qty;
-      prop_sod.scableamt = item.price1 * it.qty;
+      prop_sod.baseprice = (item.price1 - prop_sod.taxamt).toFixed(2);
+      prop_sod.subtotal = (prop_sod.baseprice * it.qty).toFixed(2);
+      prop_sod.taxableamt = (prop_sod.baseprice * it.qty).toFixed(2);
+      prop_sod.totaltaxamt = (prop_sod.taxamt * it.qty).toFixed(2);
+      prop_sod.basesubtotal = (prop_sod.baseprice * it.qty).toFixed(2);
+      prop_sod.basetotaltaxamt = (prop_sod.taxamt * it.qty).toFixed(2);
+      prop_sod.basftotaltaxamt = (prop_sod.taxamt * it.qty).toFixed(2);
+      prop_sod.scableamt = (item.price1 * it.qty).toFixed(2);
       prop_sod.qty = it.qty;
 
-      prop_so.subtotal += prop_sod.subtotal;
-      prop_so.taxamt += prop_sod.totaltaxamt;
-      prop_so.total += prop_sod.scableamt;
-      prop_so.basesubtotal += prop_sod.basesubtotal;
-      prop_so.basetaxamt += prop_sod.basetotaltaxamt;
-      prop_so.basetotal += prop_sod.scableamt;
-      prop_so.basftaxamt += prop_sod.basftotaltaxamt;
+      prop_so.subtotal += prop_sod.subtotal.toFixed(2);
+      prop_so.taxamt += prop_sod.totaltaxamt.toFixed(2);
+      prop_so.total += prop_sod.scableamt.toFixed(2);
+      prop_so.basesubtotal += prop_sod.basesubtotal.toFixed(2);
+      prop_so.basetaxamt += prop_sod.basetotaltaxamt.toFixed(2);
+      prop_so.basetotal += prop_sod.scableamt.toFixed(2);
+      prop_so.basftaxamt += prop_sod.basftotaltaxamt.toFixed(2);
 
       insert_sod += models.generate_query_insert({
         structure: structure_sod,
@@ -382,8 +382,21 @@ exports.delete = async function (req, res) {
       }
     }
     let body = req.body;
-
+    let checkBillStatus = `SELECT * FROM billso AS a LEFT JOIN bill AS b ON a.billno = b.billno WHERE a.sono='${body.sono}' LIMIT 1`;
+    checkBillStatus = await models.exec_query(checkBillStatus);
+    if (checkBillStatus.error) return response.response(checkBillStatus, res);
+    if (checkBillStatus.data.length === 0) {
+      checkBillStatus.error = true;
+      checkBillStatus.message = "SOD not found";
+      return response.response(checkBillStatus, res);
+    }
+    checkBillStatus = checkBillStatus.data[0];
     let check = `SELECT * FROM sod WHERE itemid = '${body.itemid}' AND sono = '${body.sono}' AND sodno = '${body.sodno}' AND itemid = '${body.itemid}'`;
+    if (checkBillStatus.billstatus !== "ORDER") {
+      checkBillStatus.error = true;
+      checkBillStatus.message = `Cannot cancel item with ${checkBillStatus.billstatus} status`;
+      return response.response(checkBillStatus, res);
+    }
     check = await models.exec_query(check);
     if (check.error) return response.response(check, res);
     if (check.data.length === 0) {
@@ -409,11 +422,19 @@ exports.delete = async function (req, res) {
       );
       sodno = sodno.data[0].sodno ?? -1;
 
+      let _data = check.data[0];
       sod_data.sodno = sodno;
       sod_data.qty = body.qty;
       sod_data.sodnote = note;
       sod_data.iscancel = true;
       sod_data.isclosed = true;
+      sod_data.subtotal = _data.baseprice * body.qty;
+      sod_data.taxableamt = _data.baseprice * body.qty;
+      sod_data.totaltaxamt = _data.taxamt * body.qty;
+      sod_data.basesubtotal = _data.baseprice * body.qty;
+      sod_data.basetotaltaxamt = _data.taxamt * body.qty;
+      sod_data.basftotaltaxamt = _data.taxamt * body.qty;
+      sod_data.scableamt = _data.price1 * body.qty;
 
       var full_query = models.generate_query_insert({
         structure: structure_sod,

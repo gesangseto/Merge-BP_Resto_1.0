@@ -37,4 +37,5 @@ module.exports = function (app) {
   // Utilities
   var print = require("./controller/print");
   app.route("/api/utilities/print").get(print.get);
+  app.route("/api/utilities/print-bill").get(print.printBill);
 };

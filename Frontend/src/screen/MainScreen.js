@@ -36,7 +36,7 @@ export default function MainScreen() {
           },
         }}>
         <Drawer.Screen name="Dine In" component={DineIn} />
-        <Drawer.Screen name="Take Away" component={Component} />
+        <Drawer.Screen name="Test Print" component={Component} />
 
         {profile.hasOwnProperty('is_superadmin') && (
           <Drawer.Screen name="Configuration" component={ConfigurationScreen} />

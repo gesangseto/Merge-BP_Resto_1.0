@@ -1,5 +1,8 @@
 const moment = require("moment");
 const models = require("./models");
+const fs = require("fs");
+var path = require("path");
+
 async function nestedData({ data = [], unique = null }) {
   var reformat_obj = {};
   for (const element of data) {
@@ -159,6 +162,17 @@ async function generate_number(type = "BILL") {
   }
 }
 
+async function getFileContent(file_location) {
+  return await new Promise((resolve) =>
+    fs.readFile(path.resolve(file_location), "utf8", function (e, hasil) {
+      if (e) {
+        return resolve(false);
+      }
+      return resolve(hasil);
+    })
+  );
+}
+
 async function generate_query_update_curno(type = "BILL") {
   try {
     let noid = await generate_number(type);
@@ -181,4 +195,5 @@ module.exports = {
   super_menu,
   generate_number,
   generate_query_update_curno,
+  getFileContent,
 };

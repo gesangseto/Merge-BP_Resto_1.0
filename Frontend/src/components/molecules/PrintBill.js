@@ -1,16 +1,9 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  TextInput,
-} from 'react-native';
-import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {colors} from '../../constants';
-import moment from 'moment';
-import {Button, InputPlusMinus, InputText} from '../atoms';
-import {BLEPrinter, USBPrinter} from 'react-native-thermal-receipt-printer';
+import {Text, TouchableOpacity, View} from 'react-native';
+import {BLEPrinter} from 'react-native-thermal-receipt-printer';
+import {Toaster} from '../../helper';
+import {getPrint} from '../../models';
 
 const heightForm = 45;
 
@@ -34,45 +27,37 @@ const PrintBill = React.forwardRef((props, ref) => {
     });
   }, []);
 
-  const _connectPrinter = printer => {
-    //connect printer
-    BLEPrinter.connectPrinter(printer.inner_mac_address).then(
-      setCurrentPrinter,
-      error => console.warn(error),
-    );
-  };
-
-  const printTextTest = () => {
-    var txt = `<B>Test</B>\n <B>Test2</B>`;
-    currentPrinter && BLEPrinter.printText(txt);
-  };
-
-  const printBillTest = () => {
-    currentPrinter && BLEPrinter.printBill('<C>sample bill</C>');
+  const printBillTest = async () => {
+    let _txt = await getPrint();
+    if (!_txt) {
+      return;
+    }
+    let printer = JSON.parse(await AsyncStorage.getItem('printer'));
+    try {
+      await BLEPrinter.connectPrinter(printer.inner_mac_address);
+      BLEPrinter.printText(_txt);
+      await BLEPrinter.closeConn(printer.inner_mac_address);
+    } catch (error) {
+      Toaster({message: error, type: 'error'});
+    }
   };
 
   return (
     <View>
-      {printers.map(printer => (
-        <TouchableOpacity
-          style={{
-            backgroundColor: 'red',
-            borderRadius: 10,
-            height: 50,
-            margin: 10,
-          }}
-          key={printer.inner_mac_address}
-          onPress={() => _connectPrinter(printer)}>
-          <Text>
-            {`device_name: ${printer.device_name}, inner_mac_address: ${printer.inner_mac_address}`}
-          </Text>
-        </TouchableOpacity>
-      ))}
-      <TouchableOpacity onPress={() => printTextTest()}>
-        <Text>Print Text</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => printBillTest()}>
-        <Text>Print Bill Text</Text>
+      <TouchableOpacity
+        style={{
+          backgroundColor: 'green',
+          borderRadius: 15,
+          height: 40,
+          width: 150,
+          justifyContent: 'center',
+          alignSelf: 'center',
+          margin: 20,
+        }}
+        onPress={() => printBillTest()}>
+        <Text style={{color: 'white', alignSelf: 'center'}}>
+          Test Print Bill
+        </Text>
       </TouchableOpacity>
     </View>
   );

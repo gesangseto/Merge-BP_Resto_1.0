@@ -2272,7 +2272,7 @@
     "base64-js" "^1.3.1"
     "ieee754" "^1.1.13"
 
-"buffer@^6.0.3":
+"buffer@^6.0.3", "buffer@6.0.3":
   "integrity" "sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA=="
   "resolved" "https://registry.npmjs.org/buffer/-/buffer-6.0.3.tgz"
   "version" "6.0.3"
@@ -3600,6 +3600,15 @@
     "jsonfile" "^2.1.0"
     "klaw" "^1.0.0"
 
+"fs-extra@^10.0.1":
+  "integrity" "sha512-oRXApq54ETRj4eMiFzGnHWGy+zo5raudjuxN0b8H7s/RU2oW0Wvsx9O0ACRN/kRq9E8Vu/ReskGB5o3ji+FzHQ=="
+  "resolved" "https://registry.npmjs.org/fs-extra/-/fs-extra-10.1.0.tgz"
+  "version" "10.1.0"
+  dependencies:
+    "graceful-fs" "^4.2.0"
+    "jsonfile" "^6.0.1"
+    "universalify" "^2.0.0"
+
 "fs-extra@^8.1.0":
   "integrity" "sha512-yhlQgA6mnOJUKOsRUFsgJdQCvkKhcz8tlZG5HBQfReYZy46OwLcY+Zia0mtdHsOo9y/hP+CxMN0TU9QxoOtG4g=="
   "resolved" "https://registry.npmjs.org/fs-extra/-/fs-extra-8.1.0.tgz"
@@ -4909,6 +4918,15 @@
   "integrity" "sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss="
   "resolved" "https://registry.npmjs.org/jsonfile/-/jsonfile-4.0.0.tgz"
   "version" "4.0.0"
+  optionalDependencies:
+    "graceful-fs" "^4.1.6"
+
+"jsonfile@^6.0.1":
+  "integrity" "sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ=="
+  "resolved" "https://registry.npmjs.org/jsonfile/-/jsonfile-6.1.0.tgz"
+  "version" "6.1.0"
+  dependencies:
+    "universalify" "^2.0.0"
   optionalDependencies:
     "graceful-fs" "^4.1.6"
 
@@ -6254,6 +6272,21 @@
     "flow-parser" "^0.121.0"
     "jscodeshift" "^0.11.0"
     "nullthrows" "^1.1.1"
+
+"react-native-esc-pos-printer-sdk@^1.0.0":
+  "integrity" "sha512-4Ro8YTFbw55j1nHEb7dYyj1W5idgWop6GtPGNy8/ddvXDNGFIEVX0mGG+u/LBXD6Tl66hZpMAQqTftsEDd8nUw=="
+  "resolved" "https://registry.npmjs.org/react-native-esc-pos-printer-sdk/-/react-native-esc-pos-printer-sdk-1.0.0.tgz"
+  "version" "1.0.0"
+
+"react-native-esc-pos-printer@^1.11.0":
+  "integrity" "sha512-a5spNtk9ThrvrImkTe0FF1lnTS83zd8A8AYrdy/nkDA2Xy9elw2xMF4Pifi4ehhrzmZWpnQ6e/OjdDz9lVy2tg=="
+  "resolved" "https://registry.npmjs.org/react-native-esc-pos-printer/-/react-native-esc-pos-printer-1.11.0.tgz"
+  "version" "1.11.0"
+  dependencies:
+    "buffer" "6.0.3"
+    "fs-extra" "^10.0.1"
+    "react-native-esc-pos-printer-sdk" "^1.0.0"
+    "word-wrap" "^1.2.3"
 
 "react-native-gesture-handler@*", "react-native-gesture-handler@^2.4.2", "react-native-gesture-handler@> 1.0.0", "react-native-gesture-handler@>= 1.0.0":
   "integrity" "sha512-K3oMiQV7NOVB5RvNlxkyJxU1Gn6m1cYu53MoFA542FVDSTR491d1eQkWDdqy4lW52rfF7IK7eE1LCi+kTJx7jw=="
@@ -7750,6 +7783,11 @@
   "integrity" "sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg=="
   "resolved" "https://registry.npmjs.org/universalify/-/universalify-0.1.2.tgz"
   "version" "0.1.2"
+
+"universalify@^2.0.0":
+  "integrity" "sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ=="
+  "resolved" "https://registry.npmjs.org/universalify/-/universalify-2.0.0.tgz"
+  "version" "2.0.0"
 
 "unpipe@~1.0.0":
   "integrity" "sha1-sr9O6FFKrmFltIF4KdIbLvSZBOw="
