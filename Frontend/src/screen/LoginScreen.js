@@ -7,18 +7,19 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {RequiredText} from '../components';
 import * as RootNavigation from '../helper';
 import {Toaster} from '../helper';
 import {loginSales} from '../models';
 
 const req = {
-  email: false,
+  phone: false,
   password: false,
 };
 
 const LoginScreen = ({}) => {
   const [data, setData] = React.useState({
-    email: '',
+    phone: '',
     password: '',
   });
   const [err, setErr] = React.useState(req);
@@ -33,8 +34,12 @@ const LoginScreen = ({}) => {
   const validation = () => {
     let rq = JSON.parse(JSON.stringify(req));
     let _ret = true;
-    if (!validateEmail(data.email)) {
-      rq.email = true;
+    if (!validatePhone(data.phone)) {
+      rq.phone = true;
+      _ret = false;
+    }
+    if (!data.password) {
+      rq.password = true;
       _ret = false;
     }
     setErr({...rq});
@@ -44,7 +49,7 @@ const LoginScreen = ({}) => {
   const loginHandle = async () => {
     setInitialLoad(false);
     let body = {
-      email: data.email,
+      phone: data.phone,
       password: data.password,
     };
     if (!validation()) {
@@ -60,36 +65,37 @@ const LoginScreen = ({}) => {
     return;
   };
 
-  const validateEmail = email => {
-    return String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      );
+  const validatePhone = phone => {
+    if (phone)
+      if (phone.match(/\d/g).length <= 15 && phone.match(/\d/g).length >= 10) {
+        return String(phone).match(
+          /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,8}$/im,
+        );
+      } else {
+        return null;
+      }
   };
   return (
     <View style={styles.container}>
       <Text style={styles.inputext}>Welcome</Text>
       <TextInput
-        value={data.email}
-        onChangeText={val => setData({...data, email: val})}
-        placeholder="Email"
+        keyboardType="numeric"
+        value={data.phone}
+        onChangeText={val => setData({...data, phone: val})}
+        placeholder="Phone"
         style={styles.input}
+        maxLength={14}
       />
-      {err.email && (
-        <Text style={{fontSize: 8, color: 'red'}}>
-          Please input valid email
-        </Text>
-      )}
+      <RequiredText show={err.phone} message={'Phone number is not valid'} />
 
       <TextInput
-        keyboardType="numeric"
         value={data.password}
         onChangeText={val => setData({...data, password: val})}
         placeholder="Password"
         secureTextEntry={true}
         style={styles.input}
       />
+      <RequiredText show={err.password} title={'Password'} />
 
       <TouchableOpacity
         style={styles.buttonLogin}

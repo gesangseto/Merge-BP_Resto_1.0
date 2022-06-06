@@ -5,6 +5,7 @@ import {Modalize} from 'react-native-modalize';
 import {colors} from '../../constants';
 import {ButtonFooterModal, Card} from '../atoms';
 import FormNoteItem from './FormNoteItem';
+import FormNoteOpenItem from './FormNoteOpenItem';
 
 const FormCart = React.forwardRef((props, ref) => {
   const {host, selectedItems, onChange, onSubmit, onCancel, isOpen} = props;
@@ -13,6 +14,7 @@ const FormCart = React.forwardRef((props, ref) => {
   const [selectedItem, setSelectedItem] = useState({});
   const [selectedIndexItem, setSelectedIndexItem] = useState(null);
   const [modalNote, setModalNote] = useState(false);
+  const [modalOpenNote, setModalOpenNote] = useState(false);
   const modalizeCart = useRef(null);
 
   useEffect(() => {
@@ -38,8 +40,18 @@ const FormCart = React.forwardRef((props, ref) => {
     setSelectedItem({...item});
     setModalNote(true);
   };
+
+  const openModalOpenNoted = item => {
+    // setSelectedIndexItem(item.index);
+    setSelectedItem({...item});
+    setModalOpenNote(true);
+  };
+
   const closeModalNote = () => {
     setModalNote(false);
+  };
+  const closeModalOpenNote = () => {
+    setModalOpenNote(false);
   };
 
   useEffect(() => {
@@ -91,7 +103,11 @@ const FormCart = React.forwardRef((props, ref) => {
                     item={item}
                     useDetail={true}
                     useAddToCart={false}
-                    onPress={item => openModalNoted(item)}
+                    onPress={item =>
+                      item.hasOwnProperty('is_openmenu')
+                        ? openModalOpenNoted(item)
+                        : openModalNoted(item)
+                    }
                     onChangeItem={item => handleChangeItemInCart(item)}
                   />
                 </View>
@@ -108,6 +124,16 @@ const FormCart = React.forwardRef((props, ref) => {
         onSave={item => {
           handleChangeItemInCart(item);
           closeModalNote();
+        }}
+      />
+      <FormNoteOpenItem
+        isOpen={modalOpenNote}
+        item={selectedItem}
+        index={selectedIndexItem}
+        onCancel={closeModalOpenNote}
+        onSave={item => {
+          handleChangeItemInCart(item);
+          closeModalOpenNote();
         }}
       />
     </>

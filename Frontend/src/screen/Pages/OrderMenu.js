@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
 import {FlatGrid} from 'react-native-super-grid';
 import {
   Card,
   FormCart,
   FormNoteItem,
+  FormNoteOpenItem,
   FormOldOrder,
   HeaderOrder,
 } from '../../components';
@@ -12,13 +13,19 @@ import FooterOrder from '../../components/molecules/FooterOrder';
 import {colors} from '../../constants';
 import * as RootNavigation from '../../helper';
 import {Toaster} from '../../helper';
-import {getBill, getMenu} from '../../models';
+import {getBill, getMenu, getOpenMenu} from '../../models';
 import {cancelSo, createSo} from '../../models/so';
+import {FloatingAction} from 'react-native-floating-action';
+import {ic_open_menu} from '../../assets';
 
+let params = {
+  prclvlid: '0',
+};
 export default function OrderMenu(routes) {
   const [isLoading, setIsLoading] = useState(false);
   const [oldOrders, setOldOrders] = useState([]);
   const [dataMenu, setDataMenu] = useState([]);
+  const [openMenu, setOpenMenu] = useState({});
   const [hiddenDataMenu, setHiddenDataMenu] = useState([]);
   const [selectedMenus, setSelectedMenus] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState({});
@@ -30,7 +37,22 @@ export default function OrderMenu(routes) {
   const [modalOldOrder, setModalOldOrder] = useState(false);
   const [modalCart, setModalCart] = useState(false);
   const [modalNote, setModalNote] = useState(false);
+  const [modalOpenNote, setModalOpenNote] = useState(false);
 
+  const actions = [
+    {
+      text: 'Reset Cart',
+      icon: ic_open_menu,
+      name: 'resetCart',
+      position: 1,
+    },
+    {
+      text: 'Open Menu',
+      icon: ic_open_menu,
+      name: 'openMenu',
+      position: 2,
+    },
+  ];
   const openModalCart = () => {
     setModalCart(true);
   };
@@ -48,9 +70,6 @@ export default function OrderMenu(routes) {
 
   const get_menu = async () => {
     if (hiddenDataMenu.length == 0) {
-      let params = {
-        prclvlid: '0',
-      };
       let menu = await getMenu(params);
       setDataMenu([...menu]);
       setHiddenDataMenu([...menu]);
@@ -77,6 +96,10 @@ export default function OrderMenu(routes) {
     let menu = hiddenDataMenu;
     let index = menu.findIndex(x => x.itemid === item.itemid);
     menu[index] = item;
+    if (item.is_openmenu && index < 0) {
+      menu.push(item);
+    }
+
     updateSelectedMenu(menu);
   };
 
@@ -96,9 +119,13 @@ export default function OrderMenu(routes) {
         qty: it.qty,
         sodnote: it.sodnote ?? '',
         ispacked: it.ispacked ?? '',
+        is_openmenu: it.is_openmenu ?? false,
+        price1: it.price1 ?? 0,
+        itemdesc: it.itemdesc ?? '',
       };
       items.push(item);
     }
+    console.log(items);
     let body = {
       billno: host.billno,
       items: items,
@@ -138,15 +165,25 @@ export default function OrderMenu(routes) {
       await get_old_bill();
     }
   };
+
+  const resetField = () => {
+    setSelectedMenus([]);
+  };
+
+  const handlePressMoreMenu = async name => {
+    if (name === 'resetCart') {
+      resetField();
+    } else if (name === 'openMenu') {
+      if (!openMenu.hasOwnProperty('is_openmenu')) {
+        let _openMenu = await getOpenMenu(params);
+        setOpenMenu({..._openMenu[0]});
+      }
+      setModalOpenNote(true);
+    }
+  };
+
   return (
     <>
-      {/* {isLoading && (
-        <Spinner
-          visible={true}
-          textContent={'Loading...'}
-          textStyle={{color: '#FFF'}}
-        />
-      )} */}
       <HeaderOrder
         selectedItem={selectedMenus}
         filter={filtering}
@@ -198,6 +235,18 @@ export default function OrderMenu(routes) {
           closeModalNote();
         }}
       />
+      <FormNoteOpenItem
+        isOpen={modalOpenNote}
+        item={openMenu}
+        onCancel={() => {
+          setModalOpenNote(false);
+        }}
+        onSave={item => {
+          handleChangeItemInCart(item);
+          setOpenMenu({});
+          setModalOpenNote(false);
+        }}
+      />
 
       <FormOldOrder
         isOpen={modalOldOrder}
@@ -208,6 +257,15 @@ export default function OrderMenu(routes) {
         // onSubmit={items => handleOrder(items)}
         onCancelOrder={item => handleCancelMenu(item)}
       />
+
+      <View style={styles.container}>
+        <FloatingAction
+          actions={actions}
+          onPressItem={name => {
+            handlePressMoreMenu(name);
+          }}
+        />
+      </View>
     </>
   );
 }

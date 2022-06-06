@@ -88,8 +88,11 @@ export default function Card(prop) {
                 justifyContent: 'space-between',
               }}>
               <Text style={{color: colors.danger}}>
-                Rp. {curencyFormating(itemData.price1 ?? itemData.listprice)} /{' '}
-                {itemData.unit1 ?? itemData.unit}
+                Rp.{' '}
+                {itemData.price1
+                  ? curencyFormating(itemData.price1)
+                  : curencyFormating(itemData.listprice ?? 0)}
+                / {itemData.unit1 ?? itemData.unit}
               </Text>
               {useAddToCart ? (
                 <View style={styles.containerPlusMinus}>

@@ -82,7 +82,7 @@ const SplashScreen = () => {
           <InputText
             max={100}
             required
-            value={endpoint}
+            defaultValue={endpoint}
             title="Endpoind Api"
             onChangeText={val => setEndpoint(val)}
             onSubmitEditing={() => handleSubmitEndpoint()}

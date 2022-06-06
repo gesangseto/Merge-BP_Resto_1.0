@@ -252,8 +252,8 @@ exports.insert = async function (req, res) {
       excrate: "1", // ? DEFAULT 1
       fisrate: "1", // ? DEFAULT 1
       costtot: "0", // ? DEFAULT 0
-      subtotal: null, // JUMLAH dari harga item
-      discamt: "0", // ? DEFAULT 0
+      subtotal: 0, // JUMLAH dari harga item
+      discamt: 0, // ? DEFAULT 0
       taxamt: null, // 10 % dari harga subtotal
       freight: "0", // ? DEFAULT 0
       others: "0", // ? DEFAULT 0
@@ -262,11 +262,11 @@ exports.insert = async function (req, res) {
       crtdate: `${moment().format("YYYY-MM-DD HH:mm:ss")}`,
       updby: "Android",
       upddate: `${moment().format("YYYY-MM-DD HH:mm:ss")}`,
-      basesubtotal: null, // JUMLAH dari harga item
-      basetaxamt: null, // 10 % dari harga subtotal
+      basesubtotal: 0, // JUMLAH dari harga item
+      basetaxamt: 0, // 10 % dari harga subtotal
       basediscamt: 0,
-      basetotal: null, //  taxamt + subtotal
-      basftaxamt: null, // 10 % dari harga subtotal
+      basetotal: 0, //  taxamt + subtotal
+      basftaxamt: 0, // 10 % dari harga subtotal
     };
 
     const prop_sod = {
@@ -291,6 +291,7 @@ exports.insert = async function (req, res) {
 
     let sodno = 1;
     let insert_sod = "";
+    let no = 0;
     for (const it of req.body.items) {
       query = `SELECT * FROM vwpricelistall as a 
       left join vwstock as b on a.itemid =b.itemid 
@@ -311,6 +312,15 @@ exports.insert = async function (req, res) {
         return response.response(item, res);
       }
 
+      if (it.is_openmenu) {
+        if (!it.price1 || !it.itemdesc) {
+          data.error = true;
+          data.message = "Open menu must fill price or item desc";
+          return response.response(_resp, res);
+        }
+        item.price1 = it.price1;
+        item.itemdesc = it.itemdesc;
+      }
       prop_sod.sodno = sodno;
       prop_sod.taxid = item.saletaxid;
       prop_sod.whid = wh_id;
@@ -330,15 +340,17 @@ exports.insert = async function (req, res) {
       prop_sod.basftotaltaxamt = (prop_sod.taxamt * it.qty).toFixed(2);
       prop_sod.scableamt = (item.price1 * it.qty).toFixed(2);
       prop_sod.qty = it.qty;
+      no += 1;
+      console.log(no, "==============Between=================", no);
+      console.log(no, "=================================", prop_sod.subtotal);
 
-      prop_so.subtotal += prop_sod.subtotal.toFixed(2);
-      prop_so.taxamt += prop_sod.totaltaxamt.toFixed(2);
-      prop_so.total += prop_sod.scableamt.toFixed(2);
-      prop_so.basesubtotal += prop_sod.basesubtotal.toFixed(2);
-      prop_so.basetaxamt += prop_sod.basetotaltaxamt.toFixed(2);
-      prop_so.basetotal += prop_sod.scableamt.toFixed(2);
-      prop_so.basftaxamt += prop_sod.basftotaltaxamt.toFixed(2);
-
+      prop_so.subtotal += parseInt(prop_sod.subtotal);
+      prop_so.taxamt += parseInt(prop_sod.totaltaxamt);
+      prop_so.total += parseInt(prop_sod.scableamt);
+      prop_so.basesubtotal += parseInt(prop_sod.basesubtotal);
+      prop_so.basetaxamt += parseInt(prop_sod.basetotaltaxamt);
+      prop_so.basetotal += parseInt(prop_sod.scableamt);
+      prop_so.basftaxamt += parseInt(prop_sod.basftotaltaxamt);
       insert_sod += models.generate_query_insert({
         structure: structure_sod,
         table: "sod",

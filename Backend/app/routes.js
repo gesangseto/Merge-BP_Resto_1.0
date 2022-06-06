@@ -14,6 +14,7 @@ module.exports = function (app) {
   app.route("/api/master/host-status").post(host.update_hoststatus);
   var menu = require("./controller/menu");
   app.route("/api/master/menu").get(menu.get);
+  app.route("/api/master/open-menu").get(menu.getOpenMenu);
   var group_menu = require("./controller/group-menu");
   app.route("/api/master/group-menu").get(group_menu.get);
   var note = require("./controller/note");

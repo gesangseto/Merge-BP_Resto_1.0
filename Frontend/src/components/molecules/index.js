@@ -8,6 +8,7 @@ import CustomDrawer from './CustomDrawer';
 import ModalAlert from './ModalAlert';
 import PrintBill from './PrintBill';
 import SetPrinter from './SetPrinter';
+import FormNoteOpenItem from './FormNoteOpenItem';
 
 export {
   FormBill,
@@ -20,4 +21,5 @@ export {
   ModalAlert,
   PrintBill,
   SetPrinter,
+  FormNoteOpenItem,
 };

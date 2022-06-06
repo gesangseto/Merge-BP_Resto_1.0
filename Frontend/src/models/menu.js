@@ -25,6 +25,26 @@ export const getMenu = async (property = {}, use_alert = true) => {
       });
   });
 };
+export const getOpenMenu = async (property = {}, use_alert = true) => {
+  var query_string = new URLSearchParams(property).toString();
+  let url = `/api/master/open-menu?${query_string}`;
+  return new Promise(resolve => {
+    $axios
+      .get(url)
+      .then(result => {
+        result = result.data;
+        if (result.error) {
+          return resolve(false);
+        } else {
+          return resolve(result.data);
+        }
+      })
+      .catch(e => {
+        return resolve(false);
+      });
+  });
+};
+
 export const getGroupMenu = async (property = {}, use_alert = true) => {
   var query_string = new URLSearchParams(property).toString();
   let url = `/api/master/group-menu?${query_string}`;
