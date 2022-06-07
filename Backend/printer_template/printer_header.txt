@@ -1,5 +1,5 @@
-<CM>MEJA: A1 (BI220518003)</CM>
-<C>Time: 03 Jun 2022, 16:20</C>
+[C]<font size='wide'>Meja: A3</font>
+[C]<font size='normal'>Time: 03 Jun 2022, 16:20</font>
 
- Qty  Menu               Ket
- _______________________________
+[L]Qty Menu [R]Ket
+[C]_____________________________________

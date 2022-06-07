@@ -1,10 +1,2 @@
-[ 1 ] Nasi Goreng           bks
-        Tidak Pedas
-[ 0 ] Nasi Goreng           bks
-        CANCEL: Tidak jadi
-[ 1 ] Es Teh Manis          bks
-        Less Ice
-[ 3 ] Es Teh Manis          bks
-        Less Ice
-[ 7 ] Es Teh Manis          bks
-        Less Ice
+[L] <b>1x</b> Nasi Goreng [R]bks
+[C]Tidak Pedas

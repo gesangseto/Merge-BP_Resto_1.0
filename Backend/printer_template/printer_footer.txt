@@ -1,2 +1,1 @@
-
-<C>Terimakasih</C>
+[C]<font size='wide'>Terimakasih</font>

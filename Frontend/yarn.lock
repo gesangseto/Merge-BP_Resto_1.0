@@ -6391,6 +6391,11 @@
   "resolved" "https://registry.npmjs.org/react-native-tableview-simple/-/react-native-tableview-simple-4.3.1.tgz"
   "version" "4.3.1"
 
+"react-native-thermal-printer@^2.3.1":
+  "integrity" "sha512-aLa1fJ9TD5JCmnZjV452NE5m+dmUUzjzf7KD+VnwhWjX8NYmRM7Qymj9d4/we9pwbUuf6Zhkdu5voUzAYu27/Q=="
+  "resolved" "https://registry.npmjs.org/react-native-thermal-printer/-/react-native-thermal-printer-2.3.1.tgz"
+  "version" "2.3.1"
+
 "react-native-thermal-receipt-printer@^1.2.0-rc.1":
   "integrity" "sha512-buahV7n7u9W+V0HAtwyCWRmXYeJ8H1nbR0IRwD83CvsGy/2FLHz/XaNlT9mncmdQjF3p7MVnpGbrG1ybBNqv+w=="
   "resolved" "https://registry.npmjs.org/react-native-thermal-receipt-printer/-/react-native-thermal-receipt-printer-1.2.0-rc.1.tgz"

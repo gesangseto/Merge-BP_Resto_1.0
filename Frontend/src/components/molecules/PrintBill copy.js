@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useEffect, useState} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
+import {BLEPrinter} from 'react-native-thermal-receipt-printer';
 import {Toaster} from '../../helper';
 import {getPrint} from '../../models';
-import ThermalPrinterModule from 'react-native-thermal-printer';
 
 const heightForm = 45;
 
@@ -21,7 +21,11 @@ const PrintBill = React.forwardRef((props, ref) => {
     device_name: 'RPP02N',
     inner_mac_address: '86:67:7A:08:06:77',
   };
-  useEffect(() => {}, []);
+  useEffect(() => {
+    BLEPrinter.init().then(() => {
+      BLEPrinter.getDeviceList().then(setPrinters);
+    });
+  }, []);
 
   const printBillTest = async () => {
     let _txt = await getPrint();
@@ -30,13 +34,9 @@ const PrintBill = React.forwardRef((props, ref) => {
     }
     let printer = JSON.parse(await AsyncStorage.getItem('printer'));
     try {
-      await ThermalPrinterModule.printBluetooth({
-        // ip: '192.168.100.246',
-        // port: 9100,
-        payload: _txt,
-        // printerWidthMM: 50,
-        timeout: 30000, // in milliseconds (version >= 2.2.0)
-      });
+      await BLEPrinter.connectPrinter(printer.inner_mac_address);
+      BLEPrinter.printText(_txt);
+      await BLEPrinter.closeConn(printer.inner_mac_address);
     } catch (error) {
       Toaster({message: error, type: 'error'});
     }

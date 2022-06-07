@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useEffect, useState} from 'react';
 import {
+  ImageBackground,
   StyleSheet,
   Text,
   TextInput,
@@ -11,7 +12,8 @@ import {RequiredText} from '../components';
 import * as RootNavigation from '../helper';
 import {Toaster} from '../helper';
 import {loginSales} from '../models';
-
+import {login_image} from '../assets';
+import {colors} from '../constants';
 const req = {
   phone: false,
   password: false,
@@ -76,50 +78,61 @@ const LoginScreen = ({}) => {
       }
   };
   return (
-    <View style={styles.container}>
-      <Text style={styles.inputext}>Welcome</Text>
-      <TextInput
-        keyboardType="numeric"
-        value={data.phone}
-        onChangeText={val => setData({...data, phone: val})}
-        placeholder="Phone"
-        style={styles.input}
-        maxLength={14}
-      />
-      <RequiredText show={err.phone} message={'Phone number is not valid'} />
+    <ImageBackground source={login_image} style={styles.container}>
+      <View
+        style={{
+          marginTop: -70,
+          backgroundColor: colors.lightGrey,
+          paddingHorizontal: 40,
+          paddingVertical: 20,
+          borderRadius: 15,
+        }}>
+        <Text style={styles.inputext}>Welcome</Text>
+        <TextInput
+          keyboardType="numeric"
+          value={data.phone}
+          onChangeText={val => setData({...data, phone: val})}
+          placeholder="Nomor HP"
+          style={styles.input}
+          maxLength={14}
+        />
+        <RequiredText show={err.phone} message={'Nomor HP salah'} />
 
-      <TextInput
-        value={data.password}
-        onChangeText={val => setData({...data, password: val})}
-        placeholder="Password"
-        secureTextEntry={true}
-        style={styles.input}
-      />
-      <RequiredText show={err.password} title={'Password'} />
+        <TextInput
+          value={data.password}
+          onChangeText={val => setData({...data, password: val})}
+          placeholder="Kata sandi"
+          secureTextEntry={true}
+          style={styles.input}
+        />
+        <RequiredText show={err.password} title={'Kata sandi'} />
 
-      <TouchableOpacity
-        style={styles.buttonLogin}
-        onPress={() => loginHandle()}>
-        <Text style={{color: 'white', fontSize: 18}}>Login</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity
+          style={styles.buttonLogin}
+          onPress={() => loginHandle()}>
+          <Text style={{color: 'white', fontSize: 18}}>Login</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 };
 
 export default LoginScreen;
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'white',
+    width: '100%',
+    height: '100%',
   },
   input: {
     width: 200,
     height: 44,
     paddingBottom: 10,
-    borderBottomWidth: 1,
+    // borderBottomWidth: 1,
     borderColor: 'black',
+    backgroundColor: 'white',
     marginTop: 10,
   },
   buttonLogin: {

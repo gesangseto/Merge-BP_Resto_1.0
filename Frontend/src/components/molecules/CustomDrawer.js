@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {home_logo, splash_image} from '../../assets';
+import {banner_menu, home_logo, splash_image} from '../../assets';
 import * as RootNavigation from '../../helper';
 
 const CustomDrawer = props => {
@@ -38,7 +38,9 @@ const CustomDrawer = props => {
       <DrawerContentScrollView
         {...props}
         contentContainerStyle={{backgroundColor: '#8200d6'}}>
-        <ImageBackground source={splash_image} style={{padding: 20}}>
+        <ImageBackground
+          source={banner_menu}
+          style={{padding: 20, marginTop: -10}}>
           <Image
             source={home_logo}
             style={{height: 80, width: 80, borderRadius: 40, marginBottom: 10}}
