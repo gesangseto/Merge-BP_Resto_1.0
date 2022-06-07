@@ -16,7 +16,8 @@ export default function ConfigurationScreen(props) {
   useEffect(() => {
     (async function () {
       await get_hostStatus();
-      setPrinter(JSON.parse(await AsyncStorage.getItem('printer')));
+      let _printer = JSON.parse(await AsyncStorage.getItem('printer'));
+      if (_printer) setPrinter({..._printer});
     })();
   }, []);
 
@@ -96,7 +97,7 @@ export default function ConfigurationScreen(props) {
         <Section header="Printer Bluetooth Configuration">
           <Cell
             cellStyle="Subtitle"
-            title={printer.device_name}
+            title={printer.device_name ?? 'Not Set'}
             detail={printer.inner_mac_address}
             onPress={() => setOpenModalPrinter(true)}
           />

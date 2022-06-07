@@ -340,9 +340,6 @@ exports.insert = async function (req, res) {
       prop_sod.basftotaltaxamt = (prop_sod.taxamt * it.qty).toFixed(2);
       prop_sod.scableamt = (item.price1 * it.qty).toFixed(2);
       prop_sod.qty = it.qty;
-      no += 1;
-      console.log(no, "==============Between=================", no);
-      console.log(no, "=================================", prop_sod.subtotal);
 
       prop_so.subtotal += parseInt(prop_sod.subtotal);
       prop_so.taxamt += parseInt(prop_sod.totaltaxamt);
@@ -432,9 +429,9 @@ exports.delete = async function (req, res) {
       var sodno = await models.exec_query(
         `SELECT MAX(sodno)+1 AS sodno  FROM sod WHERE sono = '${body.sono}';`
       );
-      sodno = sodno.data[0].sodno ?? -1;
-
+      sodno = sodno.data[0].sodno ?? 1;
       let _data = check.data[0];
+
       sod_data.sodno = sodno;
       sod_data.qty = body.qty;
       sod_data.sodnote = note;
@@ -453,12 +450,31 @@ exports.delete = async function (req, res) {
         table: "sod",
         values: sod_data,
       });
-      full_query += `\n UPDATE sod SET qty='${qty}' WHERE sono='${body.sono}' AND sodno='${body.sodno}'; `;
+
+      let upd_sod = {};
+      upd_sod.sodno = body.sodno;
+      upd_sod.sono = body.sono;
+      upd_sod.qty = qty;
+      upd_sod.subtotal = _data.baseprice * qty;
+      upd_sod.taxableamt = _data.baseprice * qty;
+      upd_sod.totaltaxamt = _data.taxamt * qty;
+      upd_sod.basesubtotal = _data.baseprice * qty;
+      upd_sod.basetotaltaxamt = _data.taxamt * qty;
+      upd_sod.basftotaltaxamt = _data.taxamt * qty;
+      upd_sod.scableamt = _data.price1 * qty;
+
+      full_query += models.generate_query_update({
+        structure: structure_sod,
+        table: "sod",
+        values: upd_sod,
+        key: ["sono", "sodno"],
+      });
+      // full_query += `\n UPDATE sod SET qty='${qty}' WHERE sono='${body.sono}' AND sodno='${body.sodno}'; `;
     }
 
     full_query += `\n SELECT spso_item_cancel('${body.sono}' , '${
       body.itemid
-    }', '${body.pid ?? 1}', '${body.qty}','${sodno}')`;
+    }', '${body.pid ?? 1}', '${body.qty}','${sodno}');`;
     var _res = await models.exec_query(full_query);
     return response.response(_res, res);
   } catch (error) {

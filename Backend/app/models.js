@@ -339,6 +339,33 @@ function generate_query_insert({ table, structure, values }) {
   return query;
 }
 
+function generate_query_update({ table, structure, values, key }) {
+  let column = "";
+  let query = `UPDATE ${table} SET`;
+  if (typeof values === "object" && values !== null) {
+    for (const key_v in values) {
+      for (const key_s in structure) {
+        if (key_v === key_s) {
+          if (values[key_v]) {
+            column += ` ${key_v}= '${values[key_v]}',`;
+          }
+        }
+      }
+    }
+    column = ` ${column.substring(0, column.length - 1)}`;
+    query += ` ${column} WHERE 1+1=2 `;
+    if (key.constructor.name == "Object") {
+      query += `AND ${key}= '${values[key]}';`;
+    } else {
+      for (const it of key) {
+        query += `AND ${it}= '${values[it]}'`;
+      }
+      query += ";";
+    }
+  }
+  return query;
+}
+
 async function rollback() {
   pool.query("ROLLBACK", function () {
     pool.end();
@@ -358,6 +385,7 @@ module.exports = {
   delete_query,
   exec_store_procedure,
   generate_query_insert,
+  generate_query_update,
   rollback,
   commit,
 };
