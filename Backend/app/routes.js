@@ -36,7 +36,7 @@ module.exports = function (app) {
   app.route("/api/transaction/so").delete(so.delete);
 
   // Utilities
-  var print = require("./controller/print");
-  app.route("/api/utilities/print").get(print.get);
-  app.route("/api/utilities/print-bill").get(print.printBill);
+  var utilities = require("./controller/utilities");
+  app.route("/api/utilities/print-bill").get(utilities.printBill);
+  app.route("/api/utilities/kasir-status").get(utilities.getKasirStatus);
 };

@@ -17,8 +17,15 @@ import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {CoupleButton, FormBill, RequiredText} from '../../components';
 import {colors} from '../../constants';
 import * as RootNavigation from '../../helper';
-import {groupingArray, Toaster} from '../../helper';
-import {cancelBill, createBill, getBill, getHost} from '../../models';
+import {groupingArray, isColorBrigthness, Toaster} from '../../helper';
+import moment from 'moment';
+import {
+  cancelBill,
+  createBill,
+  getBill,
+  getHost,
+  getKasirStatus,
+} from '../../models';
 
 const heightForm = 45;
 
@@ -27,6 +34,7 @@ export default function DineIn() {
   const [tabData, setTabData] = useState({});
   const [routes, setRoutes] = useState([]);
   const [selectedHost, setSelectedHost] = useState({});
+  const [kasirStatus, setKasirStatus] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [visibleModalEdit, setVisibleModalEdit] = useState(false);
   const [profile, setProfile] = useState(null);
@@ -51,10 +59,13 @@ export default function DineIn() {
     let prop = {active: true};
     setIsLoading(true);
     let exec = await getHost(prop);
+    let ksr_status = await getKasirStatus();
     setIsLoading(false);
     let grouping = groupingArray(exec, 'hostlocationdesc');
     setTabData({...grouping});
-
+    if (ksr_status) {
+      setKasirStatus({...ksr_status[0]});
+    }
     let newRoutes = [];
     for (const key in grouping) {
       let it = {key: key, title: key};
@@ -71,7 +82,29 @@ export default function DineIn() {
     })();
   }, []);
 
+  const checkKasir = () => {
+    let msg = 'Untuk melanjutkan transaksi mohon buka kasir terlebih dahulu';
+    if (kasirStatus.hasOwnProperty('starttime')) {
+      let dt_start = moment(kasirStatus.starttime).format('DD-MM-YYYY');
+      let today = moment(new Date()).format('DD-MM-YYYY');
+      if (dt_start === today) {
+        return true;
+      } else {
+        msg = `Silahkan tutup kasir pada tanggal ${dt_start}`;
+      }
+    }
+
+    Toaster({
+      message: msg,
+      type: 'error',
+    });
+    return false;
+  };
+
   const handleClickTable = item => {
+    if (!checkKasir()) {
+      return;
+    }
     if (item.billno) {
       RootNavigation.navigate('Order Menu', item);
     } else {
@@ -81,7 +114,7 @@ export default function DineIn() {
   };
 
   const handleOpenMoreMenu = async item => {
-    if (!item.billno) {
+    if (!item.billno || !checkKasir()) {
       return;
     }
     setIsLoading(true);
@@ -122,6 +155,10 @@ export default function DineIn() {
   };
 
   const renderBox = item => {
+    let color = 'white';
+    if (isColorBrigthness(item.hoststatuscolor)) {
+      color = 'black';
+    }
     return (
       <TouchableOpacity
         key={index}
@@ -134,12 +171,22 @@ export default function DineIn() {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Text style={{fontWeight: 'bold', fontSize: 24, color: 'black'}}>
+        <Text
+          style={{
+            fontWeight: 'bold',
+            fontSize: 24,
+            color: color,
+          }}>
           {item.hostdesc}
         </Text>
-        <Text style={{color: 'black'}}>{item.hoststatusdesc}</Text>
+        <Text
+          style={{
+            color: color,
+          }}>
+          {item.hoststatusdesc}
+        </Text>
         {item.hoststatusicon && (
-          <MatComIcon name={item.hoststatusicon} size={20} color="black" />
+          <MatComIcon name={item.hoststatusicon} size={20} color={color} />
         )}
       </TouchableOpacity>
     );

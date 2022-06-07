@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {TextInput, View} from 'react-native';
+import {TextInput, View, BackHandler} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {colors} from '../../constants';
@@ -22,7 +22,8 @@ const HeaderOrder = React.forwardRef((props, ref) => {
   const [count, setCount] = useState(0);
   const [alertBack, setAlertBack] = useState(false);
 
-  useEffect(() => {}, [filter]);
+  // useEffect(() => {
+  // }, [selectedItem]);
 
   useEffect(() => {
     let count = 0;
@@ -30,6 +31,19 @@ const HeaderOrder = React.forwardRef((props, ref) => {
       count += it.qty;
     }
     setCount(count);
+
+    const backHardware = BackHandler.addEventListener(
+      'hardwareBackPress',
+      function () {
+        if (selectedItem.length > 0) {
+          setAlertBack(true);
+          return true;
+        }
+      },
+    );
+    return () => {
+      backHardware.remove();
+    };
   }, [selectedItem]);
 
   const handleClickCart = () => {
@@ -44,12 +58,13 @@ const HeaderOrder = React.forwardRef((props, ref) => {
   };
 
   const handleBackButton = () => {
+    console.log(selectedItem);
     if (selectedItem.length > 0) {
       setAlertBack(true);
-      return;
+      return false;
+    } else {
+      RootNavigation.goBack();
     }
-
-    RootNavigation.goBack();
   };
 
   return (

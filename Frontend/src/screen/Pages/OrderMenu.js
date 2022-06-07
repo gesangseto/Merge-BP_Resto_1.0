@@ -8,6 +8,7 @@ import {
   FormNoteOpenItem,
   FormOldOrder,
   HeaderOrder,
+  ModalAlert,
 } from '../../components';
 import FooterOrder from '../../components/molecules/FooterOrder';
 import {colors} from '../../constants';
@@ -38,6 +39,7 @@ export default function OrderMenu(routes) {
   const [modalCart, setModalCart] = useState(false);
   const [modalNote, setModalNote] = useState(false);
   const [modalOpenNote, setModalOpenNote] = useState(false);
+  const [alertClear, setAlertClear] = useState(false);
 
   const actions = [
     {
@@ -45,12 +47,16 @@ export default function OrderMenu(routes) {
       icon: ic_open_menu,
       name: 'resetCart',
       position: 1,
+      textBackground: '#1253bc',
+      textColor: 'white',
     },
     {
       text: 'Open Menu',
       icon: ic_open_menu,
       name: 'openMenu',
       position: 2,
+      textBackground: '#1253bc',
+      textColor: 'white',
     },
   ];
   const openModalCart = () => {
@@ -172,7 +178,9 @@ export default function OrderMenu(routes) {
 
   const handlePressMoreMenu = async name => {
     if (name === 'resetCart') {
-      resetField();
+      if (selectedMenus.length > 0) {
+        setAlertClear(true);
+      }
     } else if (name === 'openMenu') {
       if (!openMenu.hasOwnProperty('is_openmenu')) {
         let _openMenu = await getOpenMenu(params);
@@ -263,6 +271,20 @@ export default function OrderMenu(routes) {
           actions={actions}
           onPressItem={name => {
             handlePressMoreMenu(name);
+          }}
+          textBackground={'#ffffff'}
+          showBackground={true}
+        />
+        <ModalAlert
+          title={'Konfirmasi'}
+          message={
+            'Yakin ingin hapus keranjang?\nSudah ada order didalam keranjang'
+          }
+          isOpen={alertClear}
+          onCancel={() => setAlertClear(false)}
+          onSave={() => {
+            setAlertClear(false);
+            resetField();
           }}
         />
       </View>
