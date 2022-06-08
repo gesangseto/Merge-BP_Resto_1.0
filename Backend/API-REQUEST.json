@@ -50,7 +50,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"baseprice\": \"24545.4545\",\r\n    \"basesubtotal\": \"98181.8182\",\r\n    \"basetotaltaxamt\": \"9818.1818\",\r\n    \"basftotaltaxamt\": \"9818.1818\",\r\n    \"conv\": \"1.0000\",\r\n    \"cost\": \"0.0000\",\r\n    \"deptid\": null,\r\n    \"disc2amt\": \"0.0000\",\r\n    \"discamt\": \"0.0000\",\r\n    \"discexp\": \"0%\",\r\n    \"iscancel\": false,\r\n    \"isclosed\": false,\r\n    \"ispacked\": false,\r\n    \"itemdesc\": \"Nasi Goreng Lada Hitam\",\r\n    \"itemid\": \"NG007\",\r\n    \"link_picture\": \"/api/master/picture?linkno=NG007\",\r\n    \"listprice\": \"27000.0000\",\r\n    \"note\": \"Test android\",\r\n    \"pid\": \"\",\r\n    \"prjid\": null,\r\n    \"qty\": 1,\r\n    \"qtybo\": \"0.0000\",\r\n    \"qtydelivered\": \"0.0000\",\r\n    \"qtydo\": \"0.0000\",\r\n    \"qtyx\": \"0.0000\",\r\n    \"qtyxbo\": \"0.0000\",\r\n    \"qtyxdelivered\": \"0.0000\",\r\n    \"qtyxdo\": \"0.0000\",\r\n    \"reqdate\": null,\r\n    \"scableamt\": \"108000.0000\",\r\n    \"scamt\": \"0.0000\",\r\n    \"scid\": null,\r\n    \"sodno\": 1,\r\n    \"sodnote\": null,\r\n    \"sono\": \"SO220518002\",\r\n    \"srepid\": null,\r\n    \"subtotal\": \"98181.8182\",\r\n    \"taxableamt\": \"98181.8182\",\r\n    \"taxamt\": \"2454.5455\",\r\n    \"taxid\": \"PPN\",\r\n    \"totaldisc2amt\": \"0.0000\",\r\n    \"totaldiscamt\": \"0.0000\",\r\n    \"totalscamt\": \"0.0000\",\r\n    \"totaltaxamt\": \"9818.1818\",\r\n    \"unit\": \"PRS\",\r\n    \"whid\": \"G01\"\r\n}",
+									"raw": "{\r\n    \"sono\":\"SO220531007\",\r\n    \"itemid\":\"WF003\",\r\n    \"sodno\":\"1\",\r\n    \"qty\":\"1\",\r\n    \"note\":\"TEST-API\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -354,6 +354,61 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Host Status",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "127.0.0.1:5000/api/master/host-status",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"master",
+										"host-status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Host Status",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"hoststatuscode\": \"BILL\",\r\n    \"hoststatusdesc\": \"BILL ON\",\r\n    \"hoststatuscolor\": \"blue\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:5000/api/master/host-status",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"master",
+										"host-status"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -412,6 +467,35 @@
 										{
 											"key": "ispos",
 											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Open Menu",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "127.0.0.1:5000/api/master/open-menu?prclvlid=0",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"master",
+										"open-menu"
+									],
+									"query": [
+										{
+											"key": "prclvlid",
+											"value": "0"
 										}
 									]
 								}
@@ -530,8 +614,8 @@
 							"mode": "urlencoded",
 							"urlencoded": [
 								{
-									"key": "email",
-									"value": "admin@admin.com",
+									"key": "phone",
+									"value": "0123456789",
 									"type": "text"
 								},
 								{
@@ -554,6 +638,161 @@
 								"api",
 								"authentication",
 								"login-sales"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Utilities",
+			"item": [
+				{
+					"name": "Print Field",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "super_admin",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "p@ssw0rd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:5000/api/utilities/print-field?billno=BI220608001&kitchenno=0",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"utilities",
+								"print-field"
+							],
+							"query": [
+								{
+									"key": "billno",
+									"value": "BI220608001"
+								},
+								{
+									"key": "kitchenno",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Print Bill",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:5000/api/utilities/print-bill?billno=BI220530004",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"utilities",
+								"print-bill"
+							],
+							"query": [
+								{
+									"key": "billno",
+									"value": "BI220530004"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "kasir-status",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "super_admin",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "p@ssw0rd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:5000/api/utilities/kasir-status",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"utilities",
+								"kasir-status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Kitchen",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:5000/api/utilities/kitchen?billno=BI220530004",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"utilities",
+								"kitchen"
+							],
+							"query": [
+								{
+									"key": "billno",
+									"value": "BI220530004"
+								}
 							]
 						}
 					},
