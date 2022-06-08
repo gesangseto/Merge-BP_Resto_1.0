@@ -212,3 +212,44 @@ exports.getKasirStatus = async function (req, res) {
     return response.response(data, res);
   }
 };
+
+exports.getKitchen = async function (req, res) {
+  var data = { data: req.query };
+  try {
+    if (!req.query["billno"] && !req.query["sono"]) {
+      data.error = true;
+      data.message = `Billno or Sono is required!`;
+      return response.response(data, res);
+    }
+    var query = `SELECT 
+      max(d.kitchenno) AS kitchenno,
+      max(d.kitchenname) AS kitchenname,
+      max(d.printername) AS printername 
+      FROM billso as a 
+      left join sod as b on a.sono =b.sono 
+      left join itemkitchen as c on b.itemid = c.itemid 
+      left join kitchen as d on c.kitchenno = d.kitchenno 
+      WHERE 1+1=2 `;
+    for (const k in req.query) {
+      if (k != "page" && k != "limit") {
+        query += ` AND a.${k}='${req.query[k]}'`;
+      }
+    }
+    if (req.query.page || req.query.limit) {
+      var start = 0;
+      if (req.query.page > 1) {
+        start = parseInt((req.query.page - 1) * req.query.limit);
+      }
+      var end = parseInt(start) + parseInt(req.query.limit);
+      query += ` LIMIT ${start},${end} `;
+    }
+    query += ` GROUP BY d.kitchenno `;
+    const _data = await models.exec_query(query);
+
+    return response.response(_data, res);
+  } catch (error) {
+    data.error = true;
+    data.message = `${error}`;
+    return response.response(data, res);
+  }
+};

@@ -8,7 +8,8 @@ import FormNoteItem from './FormNoteItem';
 import FormNoteOpenItem from './FormNoteOpenItem';
 
 const FormCart = React.forwardRef((props, ref) => {
-  const {host, selectedItems, onChange, onSubmit, onCancel, isOpen} = props;
+  const {host, selectedItems, onChange, onSubmit, onCancel, isOpen, isLoading} =
+    props;
   const [selectedMenu, setSelectedMenu] = useState([]);
   const [total, setTotal] = useState(0);
   const [selectedItem, setSelectedItem] = useState({});
@@ -91,6 +92,7 @@ const FormCart = React.forwardRef((props, ref) => {
           }
           FooterComponent={
             <ButtonFooterModal
+              isLoading={isLoading}
               totalText={total}
               onClickSubmit={() => (onSubmit ? onSubmit(selectedMenu) : null)}
             />

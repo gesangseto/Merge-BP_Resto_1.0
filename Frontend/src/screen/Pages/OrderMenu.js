@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {FloatingAction} from 'react-native-floating-action';
 import {FlatGrid} from 'react-native-super-grid';
+import {ic_open_menu} from '../../assets';
 import {
   Card,
   FormCart,
@@ -9,15 +11,13 @@ import {
   FormOldOrder,
   HeaderOrder,
   ModalAlert,
+  PrintBill,
 } from '../../components';
 import FooterOrder from '../../components/molecules/FooterOrder';
 import {colors} from '../../constants';
-import * as RootNavigation from '../../helper';
 import {Toaster} from '../../helper';
 import {getBill, getMenu, getOpenMenu} from '../../models';
 import {cancelSo, createSo} from '../../models/so';
-import {FloatingAction} from 'react-native-floating-action';
-import {ic_open_menu} from '../../assets';
 
 let params = {
   prclvlid: '0',
@@ -30,7 +30,6 @@ export default function OrderMenu(routes) {
   const [hiddenDataMenu, setHiddenDataMenu] = useState([]);
   const [selectedMenus, setSelectedMenus] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState({});
-  const [selectedIndexItem, setSelectedIndexItem] = useState(null);
   const host = routes.route.params;
   const boxDimension = 250;
   const [searchText, setSearchText] = useState('');
@@ -40,6 +39,8 @@ export default function OrderMenu(routes) {
   const [modalNote, setModalNote] = useState(false);
   const [modalOpenNote, setModalOpenNote] = useState(false);
   const [alertClear, setAlertClear] = useState(false);
+  const [itemForPrint, setItemForPrint] = useState({});
+  const [modalPrint, setModalPrint] = useState(false);
 
   const actions = [
     {
@@ -66,7 +67,6 @@ export default function OrderMenu(routes) {
     setModalCart(false);
   };
   const openModalNoted = item => {
-    setSelectedIndexItem(item.index);
     setSelectedMenu({...item});
     setModalNote(true);
   };
@@ -105,7 +105,6 @@ export default function OrderMenu(routes) {
     if (item.is_openmenu && index < 0) {
       menu.push(item);
     }
-
     updateSelectedMenu(menu);
   };
 
@@ -131,7 +130,7 @@ export default function OrderMenu(routes) {
       };
       items.push(item);
     }
-    console.log(items);
+    // console.log(items);
     let body = {
       billno: host.billno,
       items: items,
@@ -139,8 +138,12 @@ export default function OrderMenu(routes) {
     setIsLoading(true);
     let exec = await createSo(body);
     if (exec) {
+      setItemForPrint(body);
+      setModalPrint(true);
+      resetField();
+      closeModalCart();
       Toaster({message: 'Berhasil order menu', type: 'success'});
-      RootNavigation.navigateReplace('MainScreen');
+      // RootNavigation.navigateReplace('MainScreen');
     }
     setIsLoading(false);
   };
@@ -174,6 +177,7 @@ export default function OrderMenu(routes) {
 
   const resetField = () => {
     setSelectedMenus([]);
+    setSelectedMenu({});
   };
 
   const handlePressMoreMenu = async name => {
@@ -224,6 +228,7 @@ export default function OrderMenu(routes) {
       ) : null}
 
       <FormCart
+        isLoading={isLoading}
         isOpen={modalCart}
         host={host}
         selectedItems={selectedMenus}
@@ -236,7 +241,6 @@ export default function OrderMenu(routes) {
         isOpen={modalNote}
         item={selectedMenu}
         selectedItems={selectedMenus}
-        index={selectedIndexItem}
         onCancel={closeModalNote}
         onSave={item => {
           handleChangeItemInCart(item);
@@ -286,6 +290,12 @@ export default function OrderMenu(routes) {
             setAlertClear(false);
             resetField();
           }}
+        />
+
+        <PrintBill
+          isOpen={modalPrint}
+          onClose={() => setModalPrint(false)}
+          item={itemForPrint}
         />
       </View>
     </>

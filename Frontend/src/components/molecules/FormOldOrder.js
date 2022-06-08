@@ -1,14 +1,16 @@
 import {Portal} from '@gorhom/portal';
 import React, {useEffect, useRef, useState} from 'react';
 import {LogBox, StyleSheet, Text, View} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Modalize} from 'react-native-modalize';
 import {SectionGrid} from 'react-native-super-grid';
 import {colors} from '../../constants';
 import {Toaster} from '../../helper';
 import {getBill} from '../../models';
 import {cancelSo} from '../../models/so';
-import {ButtonFooterModal, Card} from '../atoms';
+import {Button, ButtonFooterModal, Card} from '../atoms';
 import FormCancelItem from './FormCancelItem';
+import PrintBill from './PrintBill';
 
 const boxDimension = 250;
 const FormOldOrder = React.forwardRef((props, ref) => {
@@ -16,6 +18,8 @@ const FormOldOrder = React.forwardRef((props, ref) => {
     props;
   const [datas, setDatas] = useState([]);
   const [data, setData] = useState({});
+  const [itemForPrint, setItemForPrint] = useState({});
+  const [modalPrint, setModalPrint] = useState(false);
   const [total, setTotal] = useState(0);
   const [modalCancelItem, setModalCancelItem] = useState(false);
   const modalizeOldOrders = useRef(null);
@@ -80,18 +84,35 @@ const FormOldOrder = React.forwardRef((props, ref) => {
           ref={modalizeOldOrders}
           onClosed={() => handleCloseModal()}
           HeaderComponent={
-            <Text
+            <View
               style={{
-                textAlign: 'center',
-                fontSize: 22,
-                fontWeight: 'bold',
-                borderTopLeftRadius: 15,
-                borderTopRightRadius: 15,
+                flexDirection: 'row',
                 backgroundColor: colors.lightGrey,
-                padding: 10,
+                justifyContent: 'space-between',
               }}>
-              MEJA {host.hostdesc} : {host.billno}
-            </Text>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  fontSize: 22,
+                  fontWeight: 'bold',
+                  // borderTopLeftRadius: 15,
+                  // borderTopRightRadius: 15,
+                  backgroundColor: colors.lightGrey,
+                  padding: 10,
+                }}>
+                MEJA {host.hostdesc} : {host.billno}
+              </Text>
+              <Button
+                color={colors.success}
+                marginRight={10}
+                height={30}
+                title={'Print All'}
+                onPress={() => {
+                  setItemForPrint(host);
+                  setModalPrint(true);
+                }}
+              />
+            </View>
           }
           FooterComponent={
             <ButtonFooterModal
@@ -117,16 +138,44 @@ const FormOldOrder = React.forwardRef((props, ref) => {
             renderSectionHeader={({section}) => (
               <View
                 style={{
+                  marginVertical: 25,
+                  flexDirection: 'row',
                   backgroundColor: colors.lightGrey,
-                  marginTop: 10,
-                  paddingLeft: 15,
+                  justifyContent: 'space-between',
                 }}>
-                <Text style={{fontSize: 20}}>{section.sono}</Text>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    backgroundColor: colors.lightGrey,
+                    padding: 5,
+                  }}>
+                  {section.sono}
+                </Text>
+
+                <Button
+                  color={colors.success}
+                  marginRight={10}
+                  height={30}
+                  title={'Print SO'}
+                  onPress={() => {
+                    setItemForPrint(section);
+                    setModalPrint(true);
+                  }}
+                />
               </View>
             )}
           />
         </Modalize>
       </Portal>
+
+      <PrintBill
+        isOpen={modalPrint}
+        onClose={() => setModalPrint(false)}
+        item={itemForPrint}
+      />
+
       <FormCancelItem
         isOpen={modalCancelItem}
         item={data}
