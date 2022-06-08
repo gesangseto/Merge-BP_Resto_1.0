@@ -1,5 +1,11 @@
-[C]<font size='wide'>Meja: A3</font>
-[C]<font size='normal'>Time: 03 Jun 2022, 16:20</font>
 
-[L]Qty Menu [R]Ket
-[C]_____________________________________
+
+
+
+[C]<font size='big'>$SF$hostdesc$EF$</font>
+[C]<font size='normal'>Time: $SF$billdate$EF$, $SF$arrivetime$EF$</font>
+[R]<font size='normal'>Total Variant: $SF$total_variant$EF$</font>
+[R]<font size='normal'>Total Item: $SF$total_quantity$EF$</font>
+
+[L]Qty  Menu [R]Ket
+[C]==========================================

@@ -17,25 +17,25 @@ const PrintBill = React.forwardRef((props, ref) => {
   //     port: number;
   //   }
 
-  const name = {
-    device_name: 'RPP02N',
-    inner_mac_address: '86:67:7A:08:06:77',
-  };
+  // const name = {
+  //   device_name: 'RPP02N',
+  //   inner_mac_address: '86:67:7A:08:06:77',
+  // };
   useEffect(() => {}, []);
 
   const printBillTest = async () => {
-    let _txt = await getPrint();
+    let _txt = await getPrint({billno: 'BI220608001'});
     if (!_txt) {
       return;
     }
-    let printer = JSON.parse(await AsyncStorage.getItem('printer'));
+    // let printer = JSON.parse(await AsyncStorage.getItem('printer'));
     try {
       await ThermalPrinterModule.printBluetooth({
         // ip: '192.168.100.246',
         // port: 9100,
         payload: _txt,
         // printerWidthMM: 50,
-        timeout: 30000, // in milliseconds (version >= 2.2.0)
+        timeout: 5000, // in milliseconds (version >= 2.2.0)
       });
     } catch (error) {
       Toaster({message: error, type: 'error'});

@@ -1,1 +1,2 @@
-[C]<font size='wide'>Terimakasih</font>
+[C] <b>$SF$srepname$EF$</b>
+[C] 
