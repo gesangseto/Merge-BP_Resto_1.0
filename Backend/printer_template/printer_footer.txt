@@ -1,2 +1,3 @@
-[C] <b>$SF$srepname$EF$</b>
+[C]<b>$SF$srepname$EF$</b>
+[C]<b>$SF$print_status$EF$</b>
 [C] 

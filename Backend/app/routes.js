@@ -26,8 +26,8 @@ module.exports = function (app) {
 
   // TRANSACTION
   var bill = require("./controller/bill");
+  app.route("/api/transaction/bill").put(bill.insertBill);
   app.route("/api/transaction/bill").get(bill.get);
-  app.route("/api/transaction/bill").put(bill.insert);
   app.route("/api/transaction/bill").delete(bill.delete);
 
   var so = require("./controller/so");

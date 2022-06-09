@@ -30,14 +30,15 @@ const ModalAlert = React.forwardRef((props, ref) => {
     if (onCancel) {
       onCancel();
     }
+    setVisibleModal(false);
   };
 
   return (
     <Portal>
       <Modal
         isVisible={visibleModal}
-        onBackButtonPress={() => setVisibleModal(false)}
-        onBackdropPress={() => setVisibleModal(false)}>
+        onBackButtonPress={() => handleCloseModal()}
+        onBackdropPress={() => handleCloseModal()}>
         <View
           style={{
             backgroundColor: 'white',
@@ -59,7 +60,7 @@ const ModalAlert = React.forwardRef((props, ref) => {
               titleSave="Ya"
               titleCancel="Tidak"
               onPressSave={() => (onSave ? onSave() : null)}
-              onPressCancel={() => (onCancel ? onCancel() : null)}
+              onPressCancel={() => handleCloseModal()}
             />
           </View>
         </View>

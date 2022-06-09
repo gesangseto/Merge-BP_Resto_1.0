@@ -70,26 +70,6 @@ async function get_query(query_sql) {
   );
 }
 
-async function get_configuration({ property = null }) {
-  var data_set = {
-    error: false,
-    data: [],
-    total: 0,
-    total_row: 0,
-    message: "Success",
-  };
-  return await new Promise((resolve) =>
-    pool.query("SELECT * FROM sys_configuration LIMIT 1", function (err, rows) {
-      if (err) {
-        data_set.error = true;
-        data_set.message = err.message || "Oops, something wrong";
-        return resolve(data_set);
-      }
-      return resolve(rows[0]);
-    })
-  );
-}
-
 async function insert_query({ data, key, table }) {
   var data_set = {
     error: false,
@@ -376,6 +356,21 @@ async function commit() {
   pool.query("COMMIT", pool.end.bind(pool));
 }
 
+async function get_configuration({ regid = String }) {
+  let query = `SELECT * FROM reg WHERE 1+1=2`;
+  if (regid) {
+    query += ` AND regid = '${regid}' LIMIT 1`;
+  }
+
+  return await new Promise((resolve) =>
+    pool.query(query, function (err, rows) {
+      if (err) {
+        return false;
+      }
+      return resolve(rows);
+    })
+  );
+}
 module.exports = {
   get_configuration,
   exec_query,

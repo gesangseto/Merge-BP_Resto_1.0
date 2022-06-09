@@ -31,6 +31,7 @@ const getDataField = async (request) => {
     query += ` LIMIT ${start},${end} `;
   }
   var header = await models.get_query(query);
+
   if (header.error) {
     return header;
   }
@@ -50,9 +51,34 @@ const getDataField = async (request) => {
     srepname: null,
     total_variant: 0,
     total_quantity: 0,
+    print_status: null,
     content: [],
   };
+
+  let print_status = "SEMUA";
+  let _update_printcount = ``;
+
+  let total_so = 0;
+  if (req.query["sono"]) {
+    let _check = `SELECT COUNT(*) as total  FROM billso WHERE billno in ( SELECT billno FROM billso WHERE sono = '${req.query["sono"]}');`;
+    _check = await models.exec_query(_check);
+    if (_check.error || _check.data.length === 0) {
+      return false;
+    }
+    total_so = _check.data[0].total;
+  }
+
   for (const it of header.data) {
+    if (it.printcount == 0 && req.query["sono"] && total_so == 1) {
+      print_status = "BARU";
+    } else if (it.printcount == 0 && req.query["sono"] && total_so > 1) {
+      print_status = "TAMBAHAN";
+    } else if (it.printcount > 0 && req.query["sono"]) {
+      print_status = "COPY";
+    }
+    _update_printcount += `UPDATE so SET printcount='${
+      parseInt(it.printcount) + 1
+    }' WHERE sono='${it.sono}';\n`;
     _field_header.billno = it.billno;
     _field_header.grand_total += parseInt(it.total);
     _field_header.crcid = it.crcid;
@@ -65,6 +91,7 @@ const getDataField = async (request) => {
     _field_header.hostcode = it.hostcode;
     _field_header.hostdesc = it.hostdesc;
     _field_header.srepid = it.srepid;
+    _field_header.print_status = print_status;
     _field_header.srepname = it.srepname ?? "";
     let get_sod = `
     SELECT 
@@ -93,8 +120,10 @@ const getDataField = async (request) => {
     return false;
   }
   // data.data = [_field_header];
+  await models.exec_query(_update_printcount);
   return _field_header;
 };
+
 function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 }
@@ -134,6 +163,9 @@ exports.printBill = async function (req, res) {
         let find = startField + key + endField;
         if (utils.isInt(it[key])) {
           it[key] = parseInt(it[key]);
+        }
+        if (key === "itemdesc2") {
+          let replace = it["itemdesc2"] ?? it["itemdesc"] ?? "";
         }
         let replace = it[key] ?? "";
         txt = replaceAll(txt, find, replace);

@@ -13,7 +13,7 @@ import {Button, InputPlusMinus, InputText} from '../atoms';
 
 const heightForm = 45;
 
-const FormBill = React.forwardRef((props, ref) => {
+const FormTakeAway = React.forwardRef((props, ref) => {
   const {host, onCancel, onSave} = props;
   const [formData, setFormData] = useState({
     bpid: 'CASH',
@@ -109,4 +109,4 @@ const FormBill = React.forwardRef((props, ref) => {
   );
 });
 
-export default React.memo(FormBill);
+export default React.memo(FormTakeAway);

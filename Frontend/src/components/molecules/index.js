@@ -1,4 +1,4 @@
-import FormBill from './FormBill';
+import FormDineIn from './FormDineIn';
 import FormCancelItem from './FormCancelItem';
 import FormCart from './FormCart';
 import FormNoteItem from './FormNoteItem';
@@ -11,7 +11,7 @@ import SetPrinter from './SetPrinter';
 import FormNoteOpenItem from './FormNoteOpenItem';
 
 export {
-  FormBill,
+  FormDineIn,
   HeaderOrder,
   FormCart,
   FormNoteItem,

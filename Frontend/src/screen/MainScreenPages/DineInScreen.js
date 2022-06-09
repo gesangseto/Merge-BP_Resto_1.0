@@ -14,7 +14,7 @@ import {Modalize} from 'react-native-modalize';
 import {FlatGrid} from 'react-native-super-grid';
 import {TabView} from 'react-native-tab-view';
 import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {CoupleButton, FormBill, RequiredText} from '../../components';
+import {CoupleButton, FormDineIn, RequiredText} from '../../components';
 import {colors} from '../../constants';
 import * as RootNavigation from '../../helper';
 import {groupingArray, isColorBrigthness, Toaster} from '../../helper';
@@ -28,8 +28,9 @@ import {
 } from '../../models';
 
 const heightForm = 45;
+const boxDimension = 125;
 
-export default function DineIn() {
+export default function DineInScreen() {
   const [index, setIndex] = useState(0);
   const [tabData, setTabData] = useState({});
   const [routes, setRoutes] = useState([]);
@@ -38,7 +39,6 @@ export default function DineIn() {
   const [isLoading, setIsLoading] = useState(false);
   const [visibleModalEdit, setVisibleModalEdit] = useState(false);
   const [profile, setProfile] = useState(null);
-  const boxDimension = 125;
   const modalizeRef = useRef(null);
   const modalizeMoreMenu = useRef(null);
 
@@ -106,6 +106,7 @@ export default function DineIn() {
       return;
     }
     if (item.billno) {
+      item.sourceScreen = 'DineInScreen';
       RootNavigation.navigate('Order Menu', item);
     } else {
       setSelectedHost({...item});
@@ -217,7 +218,7 @@ export default function DineIn() {
       />
       <Portal>
         <Modalize ref={modalizeRef}>
-          <FormBill
+          <FormDineIn
             host={selectedHost}
             onCancel={() => closeModal()}
             onSave={formData => createNewBill(formData)}

@@ -1,9 +1,10 @@
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView, Text, View} from 'react-native';
-import DineIn from './MainScreenPages/DineIn';
 import {CustomDrawer, PrintBill} from '../components';
+import DineInScreen from './MainScreenPages/DineInScreen';
 import ConfigurationScreen from './MainScreenPages/ConfigurationScreen';
+import TakeAwayScreen from './MainScreenPages/TakeAwayScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Drawer = createDrawerNavigator();
@@ -35,8 +36,8 @@ export default function MainScreen() {
             backgroundColor: 'white',
           },
         }}>
-        <Drawer.Screen name="Dine In" component={DineIn} />
-        <Drawer.Screen name="Test Print" component={Component} />
+        <Drawer.Screen name="Dine In" component={DineInScreen} />
+        <Drawer.Screen name="Take Away" component={TakeAwayScreen} heade />
 
         {profile.hasOwnProperty('is_superadmin') && (
           <Drawer.Screen name="Configuration" component={ConfigurationScreen} />

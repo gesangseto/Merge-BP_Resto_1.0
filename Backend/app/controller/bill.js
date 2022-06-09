@@ -35,23 +35,32 @@ exports.get = async function (req, res) {
   try {
     // LINE WAJIB DIBAWA
     perf.start();
-    const require_data = ["billno"];
-    for (const row of require_data) {
-      if (!req.query[`${row}`]) {
-        data.error = true;
-        data.message = `${row} is required!`;
-        return response.response(data, res);
-      }
+    let _req = req.query;
+    if (!_req[`billno`] && !_req[`billtype`]) {
+      data.error = true;
+      data.message = `billtype or billno is required!`;
+      return response.response(data, res);
     }
+    // if (_req[`billtype`]) {
+    //   if (!_req["billstatus"]) {
+    //     data.error = true;
+    //     data.message = `billtype and billstatus is required!`;
+    //     return response.response(data, res);
+    //   }
+    // }
     // LINE WAJIB DIBAWA
     var query = `
     SELECT  *
     FROM bill AS a
+    LEFT JOIN srep AS b ON a.srepid = b.srepid
     WHERE 1+1=2 `;
     for (const k in req.query) {
-      if (k != "page" && k != "limit") {
+      if (k != "page" && k != "limit" && k != "hiddenso") {
         query += ` AND a.${k}='${req.query[k]}'`;
       }
+    }
+    if (_req.hasOwnProperty("billtype") && _req["billtype"] == "TA") {
+      query += ` AND leavetime IS NULL AND (billstatus ='ORDER' OR billstatus ='CHECKIN')`;
     }
     if (req.query.page || req.query.limit) {
       var start = 0;
@@ -62,8 +71,8 @@ exports.get = async function (req, res) {
       query += ` LIMIT ${start},${end} `;
     }
     var header = await models.get_query(query);
-    if (header.error) {
-      return response.response(header, res);
+    if (header.error || _req["hiddenso"]) {
+      return response.response(header, res, false);
     }
     header = header.data[0];
     query = `SELECT * FROM billso AS a
@@ -104,7 +113,90 @@ exports.get = async function (req, res) {
   }
 };
 
-exports.insert = async function (req, res) {
+exports.insertBill = async function (req, res) {
+  var data = { data: req.body };
+  try {
+    perf.start();
+    req.body.created_by = req.headers.user_id;
+
+    const require_data = [
+      // "billno",
+      // "bpid",
+      "billtype",
+      "billdate",
+      "pax",
+      "arrivetime",
+      "srepid", // user login dari android (srep)
+      "paystatus",
+      "billstatus",
+      // "hostid",
+    ];
+    for (const row of require_data) {
+      if (!req.body[`${row}`]) {
+        data.error = true;
+        data.message = `${row} is required!`;
+        return response.response(data, res);
+      }
+    }
+
+    let bill_type = {
+      DI: "CUST_DEFAULT",
+      TA: "TAKEAWAY_CUST",
+    };
+    bill_type = bill_type[req.body.billtype];
+
+    // GET CUST DEFAULT TYPE
+    let bpid = await models.exec_store_procedure(`freg('${bill_type}') AS id`);
+    if (bpid.error || bpid.data.length != 1) {
+      data.error = true;
+      data.message = `${bill_type} not found!`;
+      return response.response(data, res);
+    }
+    req.body.bpid = bpid.data[0].id ?? null;
+    console.log(req.body);
+
+    // GET BILL NUMBER
+    let noid = await utils.generate_number("BILL");
+    if (!noid) {
+      data.error = true;
+      data.message = `Failed generate Bill No`;
+      return response.response(data, res);
+    }
+    let bill_no = noid.noid;
+    req.body.billno = bill_no;
+
+    // GET AVALAIBLE TABLE
+    if (req.body["hostid"] || req.body["billtype"] == "DI") {
+      var query = `SELECT * FROM host WHERE hostid = ${req.body.hostid} AND billno IS NULL AND hoststatuscode='KSNG' AND active IS TRUE`;
+      let exec = await models.exec_query(query);
+      if (exec.error || exec.data.length == 0) {
+        exec.error = true;
+        exec.message = "Meja tidak aktif atau sudah terisi";
+        return response.response(exec, res);
+      }
+    }
+
+    // INSERT BILL NUMBER
+    var insert_bill = models.generate_query_insert({
+      structure: structure_bill,
+      table: "bill",
+      values: req.body,
+    });
+    insert_bill += `\nSELECT spbill_new('${bill_no}');`; //Fixing bill new
+    insert_bill += `\nSELECT spfix_hoststatus('${bill_no}');`; // Fixing table status
+    insert_bill += `\n${await utils.generate_query_update_curno("BILL")}`;
+
+    var _res = await models.exec_query(insert_bill);
+    _res.data = [{ billno: bill_no }];
+    return response.response(_res, res);
+  } catch (error) {
+    data.error = true;
+    data.message = `${error}`;
+    return response.response(data, res);
+  }
+};
+
+exports.insertTakeAwayBill = async function (req, res) {
   var data = { data: req.body };
   try {
     perf.start();
@@ -191,7 +283,6 @@ exports.delete = async function (req, res) {
     LEFT JOIN sod AS d ON c.sono = d.sono
     WHERE a.billno = '${req.body.billno}'`;
     get_bill_detail = await models.exec_query(get_bill_detail);
-    console.log(get_bill_detail);
     let cancel = [];
     for (const it of get_bill_detail.data) {
       let sono = it.sono;

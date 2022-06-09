@@ -128,6 +128,7 @@ export default function OrderMenu(routes) {
         is_openmenu: it.is_openmenu ?? false,
         price1: it.price1 ?? 0,
         itemdesc: it.itemdesc ?? '',
+        itemdesc2: it.itemdesc2 ?? '',
       };
       items.push(item);
     }
@@ -139,7 +140,8 @@ export default function OrderMenu(routes) {
     setIsLoading(true);
     let exec = await createSo(body);
     if (exec) {
-      setItemForPrint(body);
+      let _print_data = exec[0];
+      setItemForPrint(_print_data);
       setModalPrint(true);
       resetField();
       closeModalCart();

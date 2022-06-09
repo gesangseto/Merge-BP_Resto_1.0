@@ -370,6 +370,8 @@ exports.insert = async function (req, res) {
     ${insert_so} 
     ${insert_sod}`;
     let _resp = await models.exec_query(all_query);
+    _resp.data = [{ billno: bill_no, sono: so_no }];
+    console.log(_resp);
     // return;
     return response.response(_resp, res);
   } catch (error) {
