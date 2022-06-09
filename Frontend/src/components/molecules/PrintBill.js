@@ -31,9 +31,10 @@ const PrintBill = React.forwardRef((props, ref) => {
   useEffect(() => {
     if (isOpen) {
       openModal();
-    } else {
-      closeModal();
     }
+    //  else {
+    //   closeModal();
+    // }
   }, [isOpen]);
 
   const getKitchenData = async item => {
@@ -111,6 +112,7 @@ const PrintBill = React.forwardRef((props, ref) => {
     <Portal>
       <Modalize
         ref={modalPrintKitchen}
+        modalHeight={300}
         onClosed={() => {
           if (onClose) {
             onClose();

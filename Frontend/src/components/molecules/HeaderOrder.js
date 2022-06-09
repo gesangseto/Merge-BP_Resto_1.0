@@ -113,6 +113,17 @@ const HeaderOrder = React.forwardRef((props, ref) => {
               onSubmitEditing={() => (onSearch ? onSearch(textSearch) : null)}
             />
           </View>
+          {textSearch ? (
+            <TouchableOpacity
+              style={{
+                justifyContent: 'center',
+                paddingHorizontal: 5,
+                flex: 1,
+              }}
+              onPress={() => handleChangeSearch('')}>
+              <MatComIcon name="close-circle-outline" size={20} color="grey" />
+            </TouchableOpacity>
+          ) : null}
         </View>
         <TouchableOpacity
           style={{justifyContent: 'center'}}

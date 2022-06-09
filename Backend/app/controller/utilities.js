@@ -226,9 +226,9 @@ exports.getKitchen = async function (req, res) {
       max(d.kitchenname) AS kitchenname,
       max(d.printername) AS printername 
       FROM billso as a 
-      left join sod as b on a.sono =b.sono 
-      left join itemkitchen as c on b.itemid = c.itemid 
-      left join kitchen as d on c.kitchenno = d.kitchenno 
+      right join sod as b on a.sono =b.sono 
+      right join itemkitchen as c on b.itemid = c.itemid 
+      right join kitchen as d on c.kitchenno = d.kitchenno 
       WHERE 1+1=2 `;
     for (const k in req.query) {
       if (k != "page" && k != "limit") {
@@ -244,6 +244,7 @@ exports.getKitchen = async function (req, res) {
       query += ` LIMIT ${start},${end} `;
     }
     query += ` GROUP BY d.kitchenno `;
+    // console.log(query);
     const _data = await models.exec_query(query);
 
     return response.response(_data, res);

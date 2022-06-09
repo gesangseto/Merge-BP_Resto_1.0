@@ -18,6 +18,7 @@ import {colors} from '../../constants';
 import {Toaster} from '../../helper';
 import {getBill, getMenu, getOpenMenu} from '../../models';
 import {cancelSo, createSo} from '../../models/so';
+import * as RootNavigation from '../../helper';
 
 let params = {
   prclvlid: '0',
@@ -175,7 +176,7 @@ export default function OrderMenu(routes) {
     }
   };
 
-  const resetField = () => {
+  const resetField = async () => {
     setSelectedMenus([]);
     setSelectedMenu({});
   };
@@ -294,7 +295,10 @@ export default function OrderMenu(routes) {
 
         <PrintBill
           isOpen={modalPrint}
-          onClose={() => setModalPrint(false)}
+          onClose={() => {
+            setModalPrint(false);
+            RootNavigation.navigateReplace('MainScreen');
+          }}
           item={itemForPrint}
         />
       </View>

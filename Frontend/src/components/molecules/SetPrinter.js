@@ -1,12 +1,9 @@
 import {Portal} from '@gorhom/portal';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Modal from 'react-native-modal';
-import {Cell, TableView} from 'react-native-tableview-simple';
 import {BLEPrinter} from 'react-native-thermal-receipt-printer';
 import {colors} from '../../constants';
-import {CoupleButton} from '../atoms';
 
 const heightForm = 45;
 

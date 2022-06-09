@@ -238,6 +238,7 @@ exports.insert = async function (req, res) {
       crcid: BILL.crcid,
       reftype: "PO",
       taxid: BILL.saletaxid,
+      srepid: BILL.srepid,
       whid: wh_id,
       custid: BILL.bpid,
       termtype: "R", //Default R artinya Credit
