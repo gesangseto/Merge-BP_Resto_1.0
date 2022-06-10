@@ -1,23 +1,18 @@
-import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import {Cell, Section, TableView} from 'react-native-tableview-simple';
-import {CoupleButton, PickerColor, SetPrinter} from '../../components';
-import {getHostStatus, updateHostStatus} from '../../models';
-import Modal from 'react-native-modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {useEffect, useState} from 'react';
+import {ScrollView, StyleSheet, View} from 'react-native';
+import {Cell, Section, TableView} from 'react-native-tableview-simple';
+import {PickerColor} from '../../components';
+import {getHostStatus, updateHostStatus} from '../../models';
 
 export default function ConfigurationScreen(props) {
   const [hostStatus, setHostStatus] = useState([]);
   const [openColor, setOpenColor] = useState(false);
-  const [openModalPrinter, setOpenModalPrinter] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
-  const [printer, setPrinter] = useState({});
 
   useEffect(() => {
     (async function () {
       await get_hostStatus();
-      let _printer = JSON.parse(await AsyncStorage.getItem('printer'));
-      if (_printer) setPrinter({..._printer});
     })();
   }, []);
 
@@ -36,12 +31,6 @@ export default function ConfigurationScreen(props) {
     }
     get_hostStatus();
     setSelectedItem({});
-  };
-
-  const handleSelectPrinter = async item => {
-    setOpenModalPrinter(false);
-    await AsyncStorage.setItem('printer', JSON.stringify(item));
-    setPrinter(item);
   };
 
   return (
@@ -94,22 +83,7 @@ export default function ConfigurationScreen(props) {
             );
           })}
         </Section>
-        <Section header="Printer Bluetooth Configuration">
-          <Cell
-            cellStyle="Subtitle"
-            title={printer.device_name ?? 'Not Set'}
-            detail={printer.inner_mac_address}
-            onPress={() => setOpenModalPrinter(true)}
-          />
-        </Section>
       </TableView>
-      {openModalPrinter && (
-        <SetPrinter
-          isOpen={openModalPrinter}
-          onCancel={() => setOpenModalPrinter(false)}
-          onSave={item => handleSelectPrinter(item)}
-        />
-      )}
     </ScrollView>
   );
 }

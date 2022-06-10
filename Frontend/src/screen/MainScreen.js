@@ -16,7 +16,8 @@ function Component(props) {
     </>
   );
 }
-export default function MainScreen() {
+export default function MainScreen(props) {
+  const {name} = props;
   const [profile, setProfile] = useState({});
 
   useEffect(() => {
@@ -37,7 +38,7 @@ export default function MainScreen() {
           },
         }}>
         <Drawer.Screen name="Dine In" component={DineInScreen} />
-        <Drawer.Screen name="Take Away" component={TakeAwayScreen} heade />
+        <Drawer.Screen name="Take Away" component={TakeAwayScreen} />
 
         {profile.hasOwnProperty('is_superadmin') && (
           <Drawer.Screen name="Configuration" component={ConfigurationScreen} />

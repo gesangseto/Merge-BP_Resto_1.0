@@ -1,24 +1,42 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 import React, {useEffect, useRef, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {FloatingAction} from 'react-native-floating-action';
 import {FlatGrid} from 'react-native-super-grid';
-import {ModalAlert} from '../../components';
-import {Toaster} from '../../helper';
+import {FormCancelBill, ModalAlert} from '../../components';
+import {isColorBrigthness, Toaster} from '../../helper';
 import {createBill, getBill, getKasirStatus} from '../../models';
 import * as RootNavigation from '../../helper';
+import {colors} from '../../constants';
+import {Cell, TableView} from 'react-native-tableview-simple';
+import {Portal} from '@gorhom/portal';
+import {Modalize} from 'react-native-modalize';
 
 const heightForm = 45;
 const boxDimension = 125;
 
+const default_color = {
+  CHECKIN: colors.lightGrey,
+  ORDER: colors.info,
+};
+
 export default function TakeAwayScreen() {
-  const [openModalTakeAway, setOpenMadalTakeAway] = useState(false);
   const floatingAction = useRef(null);
+  const modalizeMoreMenu = useRef(null);
+  const [openModalTakeAway, setOpenMadalTakeAway] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [profile, setProfile] = useState({});
   const [takeAwayData, setTakeAwayData] = useState([]);
   const [kasirStatus, setKasirStatus] = useState({});
+  const [selectedBill, setSelectedBill] = useState({});
 
   const get_bill = async () => {
     let param = {
@@ -33,7 +51,12 @@ export default function TakeAwayScreen() {
       setKasirStatus({...ksr_status[0]});
     }
     setIsLoading(false);
-    setTakeAwayData([..._data]);
+    let _n_data = [];
+    for (const it of _data) {
+      it.color = default_color[it.billstatus];
+      _n_data.push(it);
+    }
+    setTakeAwayData([..._n_data]);
   };
 
   const create_new_takeaway = async () => {
@@ -80,32 +103,61 @@ export default function TakeAwayScreen() {
     if (item.billno) {
       item.sourceScreen = 'TakeAwayScreen';
       RootNavigation.navigate('Order Menu', item);
-    } else {
-      setSelectedHost({...item});
-      openModal();
     }
   };
-  const handleLongClickBox = item => {
-    console.log(item);
+  const handleLongClickBox = async item => {
+    setIsLoading(true);
+    let detailBill = await getBill({billno: item.billno});
+    detailBill = detailBill[0];
+    item.can_cancel = detailBill.can_cancel;
+    setSelectedBill(item);
+    setIsLoading(false);
+    modalizeMoreMenu.current?.open();
   };
 
   const renderBox = item => {
-    let color = 'black';
+    let color = 'white';
+    if (isColorBrigthness(item.color)) {
+      color = 'black';
+    }
     return (
       <TouchableOpacity
-        key={item.billno}
-        onLongPress={() => handleLongClickBox(item)}
-        onPress={() => handleClickBox(item)}
         style={{
-          height: boxDimension,
-          borderRadius: 16,
-          backgroundColor: 'red',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text style={styles.textBoxBig}>{item.srepname}</Text>
-        <Text style={styles.textBoxSmall}>{item.billno}</Text>
-        <Text style={styles.textBoxBig}>{item.billstatus}</Text>
+          flexDirection: 'row',
+          alignSelf: 'center',
+        }}
+        onPress={() => handleClickBox(item)}
+        onLongPress={() => handleLongClickBox(item)}>
+        <View style={{flex: 1}}>
+          <Text
+            style={{
+              color: colors.darkGrey,
+              fontSize: 18,
+              fontWeight: 'bold',
+            }}>
+            {item.billno}
+          </Text>
+          <Text>
+            <Text style={{color: 'red'}}>({item.srepname}) </Text>
+            {moment(`${item.billdate}`).format('DD-MM-YY')}{' '}
+            {`${item.arrivetime ?? ''}`}
+          </Text>
+        </View>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'flex-end',
+            alignSelf: 'center',
+          }}>
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: 'bold',
+              color: colors.darkGrey,
+            }}>
+            {item.billstatus}
+          </Text>
+        </View>
       </TouchableOpacity>
     );
   };
@@ -117,15 +169,31 @@ export default function TakeAwayScreen() {
 
   return (
     <>
-      <FlatGrid
-        onRefresh={() => get_bill()}
-        refreshing={isLoading}
-        itemDimension={boxDimension}
-        data={takeAwayData}
-        style={styles.gridView}
-        spacing={10}
-        renderItem={({item}) => renderBox(item)}
-      />
+      <ScrollView
+        style={{marginVertical: 5}}
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={get_bill} />
+        }>
+        <TableView style={{flex: 1}}>
+          {takeAwayData.map((item, index) => {
+            return (
+              <Cell
+                contentContainerStyle={{
+                  alignItems: 'flex-start',
+                  height: 60,
+                  elevation: 2,
+                  borderColor: 'grey',
+                }}
+                cellContentView={renderBox(item)}
+                key={index}
+                cellStyle="Subtitle"
+                title={`#${item.billno}`}
+                detail={item.srepname}
+              />
+            );
+          })}
+        </TableView>
+      </ScrollView>
       <ModalAlert
         isOpen={openModalTakeAway}
         title={'Konfirmasi'}
@@ -140,6 +208,17 @@ export default function TakeAwayScreen() {
         ref={floatingAction}
         onOpen={() => setOpenMadalTakeAway(true)}
       />
+      <Portal>
+        <Modalize ref={modalizeMoreMenu} modalHeight={150}>
+          <FormCancelBill
+            selectedBill={selectedBill}
+            onCancelBill={() => {
+              modalizeMoreMenu.current?.close();
+              get_bill();
+            }}
+          />
+        </Modalize>
+      </Portal>
     </>
   );
 }

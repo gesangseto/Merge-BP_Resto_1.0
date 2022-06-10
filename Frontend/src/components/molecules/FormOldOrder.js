@@ -14,8 +14,15 @@ import PrintBill from './PrintBill';
 
 const boxDimension = 250;
 const FormOldOrder = React.forwardRef((props, ref) => {
-  const {host, dataItems, onChange, onSubmit, onCancel, onCancelOrder, isOpen} =
-    props;
+  const {
+    param,
+    dataItems,
+    onChange,
+    onSubmit,
+    onCancel,
+    onCancelOrder,
+    isOpen,
+  } = props;
   const [datas, setDatas] = useState([]);
   const [data, setData] = useState({});
   const [itemForPrint, setItemForPrint] = useState({});
@@ -84,35 +91,62 @@ const FormOldOrder = React.forwardRef((props, ref) => {
           ref={modalizeOldOrders}
           onClosed={() => handleCloseModal()}
           HeaderComponent={
-            <View
-              style={{
-                flexDirection: 'row',
-                backgroundColor: colors.lightGrey,
-                justifyContent: 'space-between',
-              }}>
+            <>
+              <View
+                style={{
+                  borderTopRightRadius: 15,
+                  borderTopLeftRadius: 15,
+                  flexDirection: 'row',
+                  backgroundColor: colors.lightGrey,
+                  justifyContent: 'space-between',
+                  paddingLeft: 10,
+                }}>
+                <View style={{flex: 1}}>
+                  <Text
+                    style={{
+                      fontSize: 22,
+                      fontWeight: 'bold',
+                    }}>
+                    {param.hostdesc ?? param.bpname}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      backgroundColor: colors.lightGrey,
+                    }}>
+                    {param.billno}
+                  </Text>
+                </View>
+                <Button
+                  color={colors.success}
+                  textColor={'white'}
+                  marginRight={10}
+                  height={30}
+                  title={'Print All'}
+                  onPress={() => {
+                    setItemForPrint(param);
+                    setModalPrint(true);
+                  }}
+                />
+              </View>
               <Text
                 style={{
-                  textAlign: 'center',
                   fontSize: 22,
                   fontWeight: 'bold',
-                  // borderTopLeftRadius: 15,
-                  // borderTopRightRadius: 15,
-                  backgroundColor: colors.lightGrey,
-                  padding: 10,
+                  paddingRight: 10,
+                  textAlign: 'right',
                 }}>
-                MEJA {host.hostdesc} : {host.billno}
+                Order Sebelumnya
               </Text>
-              <Button
-                color={colors.success}
-                marginRight={10}
-                height={30}
-                title={'Print All'}
-                onPress={() => {
-                  setItemForPrint(host);
-                  setModalPrint(true);
+              <View
+                style={{
+                  borderBottomColor: colors.lightGrey,
+                  borderBottomWidth: 1,
+                  elevation: 2,
                 }}
               />
-            </View>
+            </>
           }
           FooterComponent={
             <ButtonFooterModal
@@ -138,7 +172,7 @@ const FormOldOrder = React.forwardRef((props, ref) => {
             renderSectionHeader={({section}) => (
               <View
                 style={{
-                  marginVertical: 25,
+                  paddingLeft: 10,
                   flexDirection: 'row',
                   backgroundColor: colors.lightGrey,
                   justifyContent: 'space-between',
@@ -149,13 +183,14 @@ const FormOldOrder = React.forwardRef((props, ref) => {
                     fontSize: 18,
                     fontWeight: 'bold',
                     backgroundColor: colors.lightGrey,
-                    padding: 5,
+                    paddingVertical: 5,
                   }}>
                   {section.sono}
                 </Text>
 
                 <Button
                   color={colors.success}
+                  textColor={'white'}
                   marginRight={10}
                   height={30}
                   title={'Print SO'}

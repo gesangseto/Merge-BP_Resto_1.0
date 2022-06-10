@@ -31,7 +31,7 @@ export default function OrderMenu(routes) {
   const [hiddenDataMenu, setHiddenDataMenu] = useState([]);
   const [selectedMenus, setSelectedMenus] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState({});
-  const host = routes.route.params;
+  const param = routes.route.params;
   const boxDimension = 250;
   const [searchText, setSearchText] = useState('');
   const [filtering, setFiltering] = useState({});
@@ -84,7 +84,7 @@ export default function OrderMenu(routes) {
   };
 
   const get_old_bill = async () => {
-    let oldOrders = await getBill({billno: host.billno});
+    let oldOrders = await getBill({billno: param.billno});
     if (oldOrders[0].hasOwnProperty('so')) {
       setOldOrders([...oldOrders[0].so]);
     }
@@ -134,7 +134,7 @@ export default function OrderMenu(routes) {
     }
     // console.log(items);
     let body = {
-      billno: host.billno,
+      billno: param.billno,
       items: items,
     };
     setIsLoading(true);
@@ -233,7 +233,7 @@ export default function OrderMenu(routes) {
       <FormCart
         isLoading={isLoading}
         isOpen={modalCart}
-        host={host}
+        param={param}
         selectedItems={selectedMenus}
         onChange={item => handleChangeItemInCart(item)}
         onCancel={closeModalCart}
@@ -265,7 +265,7 @@ export default function OrderMenu(routes) {
 
       <FormOldOrder
         isOpen={modalOldOrder}
-        host={host}
+        param={param}
         dataItems={oldOrders}
         // onChange={items => handleChangeItemsInCart(items)}
         onCancel={() => setModalOldOrder(false)}
@@ -299,7 +299,7 @@ export default function OrderMenu(routes) {
           isOpen={modalPrint}
           onClose={() => {
             setModalPrint(false);
-            RootNavigation.navigateReplace('MainScreen');
+            RootNavigation.goBack();
           }}
           item={itemForPrint}
         />

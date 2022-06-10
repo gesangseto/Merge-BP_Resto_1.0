@@ -53,6 +53,7 @@ exports.get = async function (req, res) {
     SELECT  *
     FROM bill AS a
     LEFT JOIN srep AS b ON a.srepid = b.srepid
+    LEFT JOIN bp AS c ON a.bpid = c.bpid
     WHERE 1+1=2 `;
     for (const k in req.query) {
       if (k != "page" && k != "limit" && k != "hiddenso") {
@@ -60,7 +61,7 @@ exports.get = async function (req, res) {
       }
     }
     if (_req.hasOwnProperty("billtype") && _req["billtype"] == "TA") {
-      query += ` AND leavetime IS NULL AND (billstatus ='ORDER' OR billstatus ='CHECKIN')`;
+      query += ` AND leavetime IS NULL AND (billstatus ='ORDER' OR billstatus ='CHECKIN') ORDER BY billdate DESC, arrivetime DESC;`;
     }
     if (req.query.page || req.query.limit) {
       var start = 0;
@@ -70,7 +71,8 @@ exports.get = async function (req, res) {
       var end = parseInt(start) + parseInt(req.query.limit);
       query += ` LIMIT ${start},${end} `;
     }
-    var header = await models.get_query(query);
+    console.log(query);
+    var header = await models.exec_query(query);
     if (header.error || _req["hiddenso"]) {
       return response.response(header, res, false);
     }
@@ -142,6 +144,9 @@ exports.insertBill = async function (req, res) {
     let bill_type = {
       DI: "CUST_DEFAULT",
       TA: "TAKEAWAY_CUST",
+      DL: "DELIVERY_CUST",
+      // RS: "RESERVATION",
+      CC: "CASHNCARRY_CUST",
     };
     bill_type = bill_type[req.body.billtype];
 

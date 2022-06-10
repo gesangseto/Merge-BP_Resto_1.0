@@ -8,8 +8,15 @@ import FormNoteItem from './FormNoteItem';
 import FormNoteOpenItem from './FormNoteOpenItem';
 
 const FormCart = React.forwardRef((props, ref) => {
-  const {host, selectedItems, onChange, onSubmit, onCancel, isOpen, isLoading} =
-    props;
+  const {
+    param,
+    selectedItems,
+    onChange,
+    onSubmit,
+    onCancel,
+    isOpen,
+    isLoading,
+  } = props;
   const [selectedMenu, setSelectedMenu] = useState([]);
   const [total, setTotal] = useState(0);
   const [selectedItem, setSelectedItem] = useState({});
@@ -77,18 +84,47 @@ const FormCart = React.forwardRef((props, ref) => {
           ref={modalizeCart}
           onClosed={() => handleCloseModal()}
           HeaderComponent={
-            <Text
-              style={{
-                textAlign: 'center',
-                fontSize: 22,
-                fontWeight: 'bold',
-                borderTopLeftRadius: 15,
-                borderTopRightRadius: 15,
-                backgroundColor: colors.lightGrey,
-                padding: 10,
-              }}>
-              MEJA {host.hostdesc} : {host.billno}
-            </Text>
+            <>
+              <View
+                style={{
+                  borderTopRightRadius: 15,
+                  borderTopLeftRadius: 15,
+                  paddingHorizontal: 10,
+                  backgroundColor: colors.lightGrey,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 22,
+                    fontWeight: 'bold',
+                  }}>
+                  {param.hostdesc ?? param.bpname}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    backgroundColor: colors.lightGrey,
+                  }}>
+                  {param.billno}
+                </Text>
+              </View>
+              <Text
+                style={{
+                  fontSize: 22,
+                  fontWeight: 'bold',
+                  paddingRight: 10,
+                  textAlign: 'right',
+                }}>
+                Keranjang
+              </Text>
+              <View
+                style={{
+                  borderBottomColor: colors.lightGrey,
+                  borderBottomWidth: 1,
+                  elevation: 2,
+                }}
+              />
+            </>
           }
           FooterComponent={
             <ButtonFooterModal
