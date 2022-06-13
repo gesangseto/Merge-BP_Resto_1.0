@@ -161,6 +161,7 @@ const FormOldOrder = React.forwardRef((props, ref) => {
             sections={datas}
             renderItem={({item, index}) => (
               <Card
+                useAvailableInfo={false}
                 key={index}
                 item={item}
                 useDetail={true}

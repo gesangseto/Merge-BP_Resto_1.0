@@ -4,6 +4,7 @@ import {SafeAreaView, Text, View} from 'react-native';
 import {CustomDrawer, PrintBill} from '../components';
 import DineInScreen from './MainScreenPages/DineInScreen';
 import ConfigurationScreen from './MainScreenPages/ConfigurationScreen';
+import PengaturanMenu from './MainScreenPages/PengaturanMenu';
 import TakeAwayScreen from './MainScreenPages/TakeAwayScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -41,7 +42,13 @@ export default function MainScreen(props) {
         <Drawer.Screen name="Take Away" component={TakeAwayScreen} />
 
         {profile.hasOwnProperty('is_superadmin') && (
-          <Drawer.Screen name="Configuration" component={ConfigurationScreen} />
+          <>
+            <Drawer.Screen name="Pengaturan Menu" component={PengaturanMenu} />
+            <Drawer.Screen
+              name="Configuration"
+              component={ConfigurationScreen}
+            />
+          </>
         )}
       </Drawer.Navigator>
     </SafeAreaView>

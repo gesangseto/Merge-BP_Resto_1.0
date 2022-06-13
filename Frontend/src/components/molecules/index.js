@@ -10,6 +10,7 @@ import HeaderOrder from './HeaderOrder';
 import ModalAlert from './ModalAlert';
 import PrintBill from './PrintBill';
 import SetPrinter from './SetPrinter';
+import FormUpdateItem from './FormUpdateItem';
 
 export {
   FormDineIn,
@@ -24,4 +25,5 @@ export {
   SetPrinter,
   FormNoteOpenItem,
   FormCancelBill,
+  FormUpdateItem,
 };

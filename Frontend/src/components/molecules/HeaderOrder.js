@@ -16,6 +16,8 @@ const HeaderOrder = React.forwardRef((props, ref) => {
     onSearch,
     onChangeSearch,
     onChangeFilter,
+    useCart = true,
+    useBack = true,
   } = props;
   const [textSearch, setTextSearch] = useState('');
   const [viewModalFilter, setViewModalFilter] = useState(false);
@@ -75,18 +77,21 @@ const HeaderOrder = React.forwardRef((props, ref) => {
           flexWrap: 'wrap',
           borderRadius: 10,
           height: 50,
-          justifyContent: 'space-between',
+          justifyContent: 'space-around',
           backgroundColor: 'white',
           alignContent: 'center',
           alignItems: 'center',
         }}>
-        <TouchableOpacity
-          style={{justifyContent: 'center', paddingLeft: 15}}
-          onPress={() => handleBackButton()}>
-          <MatComIcon name="arrow-left" size={30} color="grey" />
-        </TouchableOpacity>
+        {useBack ? (
+          <TouchableOpacity
+            style={{justifyContent: 'center', marginLeft: 15}}
+            onPress={() => handleBackButton()}>
+            <MatComIcon name="arrow-left" size={30} color="grey" />
+          </TouchableOpacity>
+        ) : null}
         <View
           style={{
+            flex: 1,
             flexDirection: 'row',
             flexWrap: 'wrap',
             borderRadius: 10,
@@ -95,9 +100,10 @@ const HeaderOrder = React.forwardRef((props, ref) => {
             height: 35,
             // width: 170,
             borderRadius: 15,
+            marginLeft: 15,
             alignSelf: 'center',
           }}>
-          <View style={{justifyContent: 'center', paddingHorizontal: 5}}>
+          <View style={{justifyContent: 'center', marginHorizontal: 15}}>
             <MatComIcon name="magnify" size={30} color="grey" />
           </View>
           <View style={{justifyContent: 'center'}}>
@@ -126,7 +132,7 @@ const HeaderOrder = React.forwardRef((props, ref) => {
           ) : null}
         </View>
         <TouchableOpacity
-          style={{justifyContent: 'center'}}
+          style={{justifyContent: 'center', marginHorizontal: 15}}
           onPress={() => setViewModalFilter(true)}>
           <MatComIcon
             name={
@@ -138,11 +144,13 @@ const HeaderOrder = React.forwardRef((props, ref) => {
             color={filter.hasOwnProperty('itgrpid') ? colors.danger : 'grey'}
           />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={{justifyContent: 'center', paddingRight: 15}}
-          onPress={() => handleClickCart()}>
-          <IconWithBadge iconName="cart-variant" text={count} iconSize={30} />
-        </TouchableOpacity>
+        {useCart ? (
+          <TouchableOpacity
+            style={{justifyContent: 'center', paddingRight: 15}}
+            onPress={() => handleClickCart()}>
+            <IconWithBadge iconName="cart-variant" text={count} iconSize={30} />
+          </TouchableOpacity>
+        ) : null}
       </View>
       <FilterMenu
         isOpen={viewModalFilter}

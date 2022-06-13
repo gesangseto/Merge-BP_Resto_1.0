@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {colors} from '../../constants';
 import {curencyFormating, textTrimPerLine} from '../../helper';
@@ -16,8 +23,16 @@ const defaultItem = {
   unit1: '',
 };
 export default function Card(prop) {
-  const {item, selectedItems, onChangeItem, onPress, useDetail, useAddToCart} =
-    prop;
+  const {
+    item,
+    selectedItems,
+    onChangeItem,
+    onPress,
+    useDetail,
+    useAddToCart,
+    useCartInfo = true,
+    useAvailableInfo = true,
+  } = prop;
   const [itemData, setItemData] = useState(defaultItem);
 
   const handleAddToCart = type => {
@@ -66,11 +81,21 @@ export default function Card(prop) {
         }}>
         <View style={styles.imageContainer}>
           {itemData.link_picture ? (
-            <Image
+            <ImageBackground
               style={{height: 80}}
               resizeMode={'contain'}
-              source={{uri: `${itemData.link_picture}`}}
-            />
+              source={{uri: `${itemData.link_picture}`}}>
+              {!itemData.isavailable && useAvailableInfo ? (
+                <Text
+                  style={{
+                    fontWeight: 'bold',
+                    backgroundColor: 'white',
+                    textAlign: 'center',
+                  }}>
+                  Not Avalaible
+                </Text>
+              ) : null}
+            </ImageBackground>
           ) : null}
         </View>
         <View style={{flex: 1, paddingLeft: 10}}>
@@ -116,7 +141,12 @@ export default function Card(prop) {
                     <MatComIcon name="plus" color="white" />
                   </TouchableOpacity>
                 </View>
-              ) : (
+              ) : null}
+              {!itemData.isavailable && useAvailableInfo ? (
+                <Text style={{fontWeight: 'bold', paddingHorizontal: 15}}>
+                  Not Available
+                </Text>
+              ) : useCartInfo ? (
                 <View style={styles.containerPlusMinus}>
                   <View
                     style={{
@@ -130,7 +160,7 @@ export default function Card(prop) {
                   </View>
                   <MatComIcon name="cart-variant" size={20} color="grey" />
                 </View>
-              )}
+              ) : null}
             </View>
           </View>
           <View

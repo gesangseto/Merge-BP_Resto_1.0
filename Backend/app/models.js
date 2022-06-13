@@ -297,55 +297,6 @@ function isInt(value) {
   );
 }
 
-function generate_query_insert({ table, structure, values }) {
-  let column = "";
-  let datas = "";
-  let query = `INSERT INTO ${table} `;
-  if (typeof values === "object" && values !== null) {
-    for (const key_v in values) {
-      for (const key_s in structure) {
-        if (key_v === key_s) {
-          if (values[key_v]) {
-            column += ` ${key_v},`;
-            datas += ` '${values[key_v]}',`;
-          }
-        }
-      }
-    }
-    column = ` (${column.substring(0, column.length - 1)}) `;
-    datas = ` (${datas.substring(0, datas.length - 1)}) `;
-    query += ` ${column} VALUES ${datas} ;`;
-  }
-  return query;
-}
-
-function generate_query_update({ table, structure, values, key }) {
-  let column = "";
-  let query = `UPDATE ${table} SET`;
-  if (typeof values === "object" && values !== null) {
-    for (const key_v in values) {
-      for (const key_s in structure) {
-        if (key_v === key_s) {
-          if (values[key_v]) {
-            column += ` ${key_v}= '${values[key_v]}',`;
-          }
-        }
-      }
-    }
-    column = ` ${column.substring(0, column.length - 1)}`;
-    query += ` ${column} WHERE 1+1=2 `;
-    if (key.constructor.name == "Object") {
-      query += `AND ${key}= '${values[key]}';`;
-    } else {
-      for (const it of key) {
-        query += `AND ${it}= '${values[it]}'`;
-      }
-      query += ";";
-    }
-  }
-  return query;
-}
-
 async function rollback() {
   pool.query("ROLLBACK", function () {
     pool.end();
@@ -371,6 +322,69 @@ async function get_configuration({ regid = String }) {
     })
   );
 }
+
+async function generate_query_insert({ table, structure, values }) {
+  let get_structure = `select column_name, data_type, character_maximum_length, column_default, is_nullable
+  from INFORMATION_SCHEMA.COLUMNS where table_name = '${table}';`;
+  get_structure = await exec_query(get_structure);
+  let column = "";
+  let datas = "";
+  let query = `INSERT INTO ${table} `;
+  if (typeof values === "object" && values !== null) {
+    for (const key_v in values) {
+      for (const it of get_structure.data) {
+        let key = it.column_name;
+        if (key_v === key) {
+          if (values[key_v]) {
+            column += ` ${key_v},`;
+            datas += ` '${values[key_v]}',`;
+          }
+        }
+      }
+    }
+    column = ` (${column.substring(0, column.length - 1)}) `;
+    datas = ` (${datas.substring(0, datas.length - 1)}) `;
+    query += ` ${column} VALUES ${datas} ;`;
+  }
+  return query;
+}
+
+async function addColumnItem() {
+  let querty = `SELECT column_name 
+  FROM information_schema.columns 
+  WHERE table_name='item' and column_name='isavailable';`;
+  querty = await exec_query(querty);
+  if (!querty.error && querty.data.length === 0) {
+    let add_column = ` ALTER TABLE public.item ADD isavailable int2 NOT NULL DEFAULT 1;`;
+    await exec_query(add_column);
+    return true;
+  } else {
+    return true;
+  }
+}
+
+async function generate_query_update({ table, values, key }) {
+  let get_structure = `select column_name, data_type, character_maximum_length, column_default, is_nullable
+  from INFORMATION_SCHEMA.COLUMNS where table_name = '${table}';`;
+  get_structure = await exec_query(get_structure);
+  let column = "";
+  let query = `UPDATE ${table} SET`;
+  if (typeof values === "object" && values !== null) {
+    for (const key_v in values) {
+      for (const itm of get_structure.data) {
+        if (key_v === itm.column_name) {
+          if (values[key_v]) {
+            column += ` ${key_v}= '${values[key_v]}',`;
+          }
+        }
+      }
+    }
+    column = ` ${column.substring(0, column.length - 1)}`;
+    query += ` ${column} WHERE ${key} = '${values[key]}'; `;
+  }
+  return query;
+}
+
 module.exports = {
   get_configuration,
   exec_query,
@@ -383,4 +397,5 @@ module.exports = {
   generate_query_update,
   rollback,
   commit,
+  addColumnItem,
 };

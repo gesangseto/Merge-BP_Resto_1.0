@@ -179,8 +179,14 @@ export default function OrderMenu(routes) {
   };
 
   const resetField = async () => {
-    setSelectedMenus([]);
-    setSelectedMenu({});
+    let rm_menu = selectedMenus;
+    let i = 0;
+    for (const it of rm_menu) {
+      rm_menu[i].qty = 0;
+      rm_menu[i].sodnote = '';
+      i += 1;
+    }
+    updateSelectedMenu(rm_menu);
   };
 
   const handlePressMoreMenu = async name => {

@@ -16,6 +16,7 @@ const getDataField = async (request) => {
   LEFT JOIN so AS c ON b.sono = c.sono
   LEFT JOIN host AS d ON a.hostid = d.hostid
   LEFT JOIN srep AS e ON a.srepid = e.srepid
+  LEFT JOIN bp AS f ON a.bpid = f.bpid
   WHERE 1+1=2 `;
   for (const k in req.query) {
     if (k != "page" && k != "limit" && k != "kitchenno") {
@@ -31,12 +32,13 @@ const getDataField = async (request) => {
     query += ` LIMIT ${start},${end} `;
   }
   var header = await models.get_query(query);
-
   if (header.error) {
     return header;
   }
   let _field_header = {
     billno: null,
+    bpid: null,
+    bpname: null,
     grand_total: 0,
     crcid: null,
     custid: null,
@@ -80,6 +82,8 @@ const getDataField = async (request) => {
       parseInt(it.printcount) + 1
     }' WHERE sono='${it.sono}';\n`;
     _field_header.billno = it.billno;
+    _field_header.bpid = it.bpid;
+    _field_header.bpname = it.bpname;
     _field_header.grand_total += parseInt(it.total);
     _field_header.crcid = it.crcid;
     _field_header.custid = it.custid;
@@ -164,10 +168,10 @@ exports.printBill = async function (req, res) {
         if (utils.isInt(it[key])) {
           it[key] = parseInt(it[key]);
         }
-        if (key === "itemdesc2") {
-          let replace = it["itemdesc2"] ?? it["itemdesc"] ?? "";
-        }
         let replace = it[key] ?? "";
+        if (key === "itemdesc2") {
+          replace = it["itemdesc2"] ?? it["itemdesc"] ?? "";
+        }
         txt = replaceAll(txt, find, replace);
       }
       contents += txt;
@@ -177,6 +181,9 @@ exports.printBill = async function (req, res) {
     for (const key in _data) {
       let find = startField + key + endField;
       let replace = _data[key];
+      if (key === "hostdesc") {
+        replace = _data[key] ?? _data["bpname"];
+      }
       txtFile = replaceAll(txtFile, find, replace);
     }
 

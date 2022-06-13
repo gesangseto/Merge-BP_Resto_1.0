@@ -349,7 +349,7 @@ exports.insert = async function (req, res) {
       prop_so.basetaxamt += parseInt(prop_sod.basetotaltaxamt);
       prop_so.basetotal += parseInt(prop_sod.scableamt);
       prop_so.basftaxamt += parseInt(prop_sod.basftotaltaxamt);
-      insert_sod += models.generate_query_insert({
+      insert_sod += await models.generate_query_insert({
         structure: structure_sod,
         table: "sod",
         values: prop_sod,
@@ -360,7 +360,7 @@ exports.insert = async function (req, res) {
       sodno += 1;
     }
     insert_sod += `\n${await utils.generate_query_update_curno("SO")}`;
-    let insert_so = models.generate_query_insert({
+    let insert_so = await models.generate_query_insert({
       structure: structure_so,
       table: "so",
       values: prop_so,
@@ -371,7 +371,6 @@ exports.insert = async function (req, res) {
     ${insert_sod}`;
     let _resp = await models.exec_query(all_query);
     _resp.data = [{ billno: bill_no, sono: so_no }];
-    console.log(_resp);
     // return;
     return response.response(_resp, res);
   } catch (error) {
@@ -448,7 +447,7 @@ exports.delete = async function (req, res) {
       sod_data.basftotaltaxamt = _data.taxamt * body.qty;
       sod_data.scableamt = _data.price1 * body.qty;
 
-      var full_query = models.generate_query_insert({
+      var full_query = await models.generate_query_insert({
         structure: structure_sod,
         table: "sod",
         values: sod_data,

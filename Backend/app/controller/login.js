@@ -35,6 +35,7 @@ exports.login_sales = async function (req, res) {
     }
   }
 
+  let update = await models.addColumnItem();
   let body = req.body;
   let sa = { phone: process.env.SA_PHONE, password: process.env.SA_PASSWORD };
   if (sa.phone === body.phone && sa.password === body.password) {
@@ -45,7 +46,6 @@ exports.login_sales = async function (req, res) {
     structure_srep.is_superadmin = true;
     data.data = [];
     data.data[0] = structure_srep;
-    console.log(data);
     return response.response(data, res);
   }
 

@@ -71,7 +71,6 @@ exports.get = async function (req, res) {
       var end = parseInt(start) + parseInt(req.query.limit);
       query += ` LIMIT ${start},${end} `;
     }
-    console.log(query);
     var header = await models.exec_query(query);
     if (header.error || _req["hiddenso"]) {
       return response.response(header, res, false);
@@ -158,7 +157,6 @@ exports.insertBill = async function (req, res) {
       return response.response(data, res);
     }
     req.body.bpid = bpid.data[0].id ?? null;
-    console.log(req.body);
 
     // GET BILL NUMBER
     let noid = await utils.generate_number("BILL");
@@ -182,7 +180,7 @@ exports.insertBill = async function (req, res) {
     }
 
     // INSERT BILL NUMBER
-    var insert_bill = models.generate_query_insert({
+    var insert_bill = await models.generate_query_insert({
       structure: structure_bill,
       table: "bill",
       values: req.body,
@@ -250,7 +248,7 @@ exports.insertTakeAwayBill = async function (req, res) {
     // store_sp = await models.exec_query(store_sp);
 
     // INSERT BILL NUMBER
-    var insert_bill = models.generate_query_insert({
+    var insert_bill = await models.generate_query_insert({
       structure: structure_bill,
       table: "bill",
       values: req.body,
