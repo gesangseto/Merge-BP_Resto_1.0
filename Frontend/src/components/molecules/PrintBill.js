@@ -20,12 +20,12 @@ const PrintBill = React.forwardRef((props, ref) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (item.hasOwnProperty('billno')) {
-      getKitchenData({billno: item.billno});
-    }
     if (item.hasOwnProperty('sono')) {
       getKitchenData({sono: item.sono});
+    } else if (item.hasOwnProperty('billno')) {
+      getKitchenData({billno: item.billno});
     }
+    console.log(item);
   }, [item]);
 
   useEffect(() => {

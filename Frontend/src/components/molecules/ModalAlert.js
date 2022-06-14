@@ -46,17 +46,18 @@ const ModalAlert = React.forwardRef((props, ref) => {
           }}>
           <View style={{paddingVertical: 15, alignSelf: 'center'}}>
             <Text
-              style={{textAlign: 'center', fontSize: 18, fontWeight: 'bold'}}>
+              style={{textAlign: 'center', fontSize: 24, fontWeight: 'bold'}}>
               {title ?? 'No Title'}
             </Text>
           </View>
           <View style={{paddingVertical: 15, alignSelf: 'center'}}>
-            <Text style={{textAlign: 'center'}}>
+            <Text style={{textAlign: 'center', fontSize: 16}}>
               {message ?? 'Yakin ingin keluar halaman?'}
             </Text>
           </View>
           <View style={{height: 80}}>
             <CoupleButton
+              fullSize={true}
               titleSave="Ya"
               titleCancel="Tidak"
               onPressSave={() => (onSave ? onSave() : null)}

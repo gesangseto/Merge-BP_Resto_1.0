@@ -312,7 +312,7 @@ exports.insert = async function (req, res) {
         item.message = `"itemid" : "${it.itemid}" is empty stock`;
         return response.response(item, res);
       }
-
+      // Check Open Menu Price
       if (it.is_openmenu) {
         if (!it.price1 || !it.itemdesc) {
           data.error = true;
@@ -322,6 +322,21 @@ exports.insert = async function (req, res) {
         item.price1 = it.price1;
         item.itemdesc = it.itemdesc;
       }
+      // Check Item available
+      if (item.hasOwnProperty("isavailable") && !item.isavailable) {
+        let _req = req;
+        _req.query = { "a.itemid": item.itemid };
+        let query = models.queryQueryGetMenu(_req);
+        query = await models.exec_query(query);
+        item = query.data[0];
+        item.qty = it.qty;
+        data.error = true;
+        data.message = `Mohon maaf, ${item.itemdesc} sedang tidak tersedia.\nDimohon untuk hapus menu tersebut`;
+        data.data = [item];
+
+        return response.response(data, res);
+      }
+
       prop_sod.sodno = sodno;
       prop_sod.taxid = item.saletaxid;
       prop_sod.whid = wh_id;

@@ -100,7 +100,7 @@ const FormNoteItem = React.forwardRef((props, ref) => {
               onChange={val => {
                 setItemData({...itemData, qty: val});
               }}
-              minValue={1}
+              minValue={0}
             />
             <View>
               <Text style={{marginHorizontal: 25, fontWeight: 'bold'}}>

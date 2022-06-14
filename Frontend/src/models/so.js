@@ -16,10 +16,8 @@ export const createSo = async (property = {}, use_alert = true) => {
         result = result.data;
         if (result.error) {
           if (use_alert) Toaster({message: result.message, type: 'error'});
-          return resolve(false);
-        } else {
-          return resolve(result.data);
         }
+        return resolve(result);
       })
       .catch(e => {
         if (use_alert) Toaster({message: result.message, type: 'error'});

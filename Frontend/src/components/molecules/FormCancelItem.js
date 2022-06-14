@@ -71,7 +71,7 @@ const FormCancelItem = React.forwardRef((props, ref) => {
         }>
         <>
           <View style={{padding: 25}}>
-            <Card item={itemData} />
+            <Card item={itemData} useAvailableInfo={false} />
           </View>
           <View
             style={{

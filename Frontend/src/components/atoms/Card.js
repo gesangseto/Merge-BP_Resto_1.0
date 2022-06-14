@@ -89,8 +89,9 @@ export default function Card(prop) {
                 <Text
                   style={{
                     fontWeight: 'bold',
-                    backgroundColor: 'white',
+                    backgroundColor: 'red',
                     textAlign: 'center',
+                    color: 'white',
                   }}>
                   Not Avalaible
                 </Text>
@@ -142,11 +143,7 @@ export default function Card(prop) {
                   </TouchableOpacity>
                 </View>
               ) : null}
-              {!itemData.isavailable && useAvailableInfo ? (
-                <Text style={{fontWeight: 'bold', paddingHorizontal: 15}}>
-                  Not Available
-                </Text>
-              ) : useCartInfo ? (
+              {useCartInfo ? (
                 <View style={styles.containerPlusMinus}>
                   <View
                     style={{

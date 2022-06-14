@@ -385,6 +385,40 @@ async function generate_query_update({ table, values, key }) {
   return query;
 }
 
+const queryQueryGetMenu = (req) => {
+  let ip = req.connection.localAddress;
+  if (ip.substr(0, 7) == "::ffff:") {
+    ip = ip.substr(7);
+  }
+  let server_ip = `http://${ip}:${process.env.APP_PORT}`;
+
+  var query = `SELECT row_number() OVER() -1 AS index, *, '${server_ip}/api/master/picture?linkno=' || a.itemid AS link_picture 
+  FROM vwpricelistall as v 
+  left join item AS a on v.itemid =a.itemid 
+  left join itgrp as b on a.itgrpid =b.itgrpid
+  left join itemkitchen as c on a.itemid = c.itemid 
+  WHERE b.ispos is true and c.ispos is true and a.active is true
+  `;
+  for (const k in req.query) {
+    if (k != "page" && k != "limit" && k != "sort_by" && k != "sort_asc") {
+      query += ` AND ${k}='${req.query[k]}'`;
+    }
+  }
+  if (req.query.page || req.query.limit) {
+    var start = 0;
+    if (req.query.page > 1) {
+      start = parseInt((req.query.page - 1) * req.query.limit);
+    }
+    var end = parseInt(start) + parseInt(req.query.limit);
+    query += ` LIMIT ${end} OFFSET ${start} `;
+  }
+  if (req.query.sort_by) {
+    query += ` ORDER BY ${req.query.sort_by} `;
+    query += req.query.sort_asc ? ` ASC` : " DESC";
+  }
+  return query;
+};
+
 module.exports = {
   get_configuration,
   exec_query,
@@ -398,4 +432,5 @@ module.exports = {
   rollback,
   commit,
   addColumnItem,
+  queryQueryGetMenu,
 };

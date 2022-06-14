@@ -22,6 +22,8 @@ import * as RootNavigation from '../../helper';
 
 let params = {
   prclvlid: '0',
+  // sort_by: 'a.itgrpid',
+  // sort_asc: true,
 };
 export default function OrderMenu(routes) {
   const [isLoading, setIsLoading] = useState(false);
@@ -68,6 +70,9 @@ export default function OrderMenu(routes) {
     setModalCart(false);
   };
   const openModalNoted = item => {
+    if (item.hasOwnProperty('isavailable') && !item.isavailable) {
+      return Toaster({message: 'Untuk sementara menu tidak tersedia'});
+    }
     setSelectedMenu({...item});
     setModalNote(true);
   };
@@ -139,8 +144,15 @@ export default function OrderMenu(routes) {
     };
     setIsLoading(true);
     let exec = await createSo(body);
-    if (exec) {
-      let _print_data = exec[0];
+    setIsLoading(false);
+    if (exec.error) {
+      if (exec.data.length == 1) {
+        let _data = exec.data[0];
+        // handleChangeItemInCart(_data); BUAT BESOK
+      }
+      return;
+    } else {
+      let _print_data = exec.data[0];
       setItemForPrint(_print_data);
       setModalPrint(true);
       resetField();
@@ -148,7 +160,6 @@ export default function OrderMenu(routes) {
       Toaster({message: 'Berhasil order menu', type: 'success'});
       // RootNavigation.navigateReplace('MainScreen');
     }
-    setIsLoading(false);
   };
 
   useEffect(() => {
