@@ -137,8 +137,8 @@ export default function TakeAwayScreen() {
             }}>
             {item.billno}
           </Text>
+          <Text style={{color: 'red'}}>({item.srepname}) </Text>
           <Text>
-            <Text style={{color: 'red'}}>({item.srepname}) </Text>
             {moment(`${item.billdate}`).format('DD-MM-YY')}{' '}
             {`${item.arrivetime ?? ''}`}
           </Text>
@@ -180,7 +180,7 @@ export default function TakeAwayScreen() {
               <Cell
                 contentContainerStyle={{
                   alignItems: 'flex-start',
-                  height: 60,
+                  height: 75,
                   elevation: 2,
                   borderColor: 'grey',
                 }}

@@ -20,7 +20,7 @@ const heightForm = 45;
 const countries = ['Egypt', 'Canada', 'Australia', 'Ireland'];
 
 const FormNoteItem = React.forwardRef((props, ref) => {
-  const {item, selectedItems, onCancel, onSave, isOpen} = props;
+  const {item, selectedItems, onCancel, onSave, isOpen, isTakeAway} = props;
   const [itemData, setItemData] = useState({});
   const [listOption, setListOption] = useState([]);
   const [selectedList, setSelectedList] = useState({});
@@ -47,6 +47,9 @@ const FormNoteItem = React.forwardRef((props, ref) => {
           setItemData({...it});
         }
       }
+    }
+    if (isTakeAway) {
+      _item.ispacked = true;
     }
     setItemData({..._item});
   }, [item]);
@@ -117,7 +120,9 @@ const FormNoteItem = React.forwardRef((props, ref) => {
                 <CheckBox
                   value={itemData.ispacked}
                   onValueChange={val =>
-                    setItemData({...itemData, ispacked: val})
+                    isTakeAway
+                      ? null
+                      : setItemData({...itemData, ispacked: val})
                   }
                 />
               </View>

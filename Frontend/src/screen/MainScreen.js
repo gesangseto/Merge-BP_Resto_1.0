@@ -40,15 +40,9 @@ export default function MainScreen(props) {
         }}>
         <Drawer.Screen name="Dine In" component={DineInScreen} />
         <Drawer.Screen name="Take Away" component={TakeAwayScreen} />
-
+        <Drawer.Screen name="Pengaturan Menu" component={PengaturanMenu} />
         {profile.hasOwnProperty('is_superadmin') && (
-          <>
-            <Drawer.Screen name="Pengaturan Menu" component={PengaturanMenu} />
-            <Drawer.Screen
-              name="Configuration"
-              component={ConfigurationScreen}
-            />
-          </>
+          <Drawer.Screen name="Configuration" component={ConfigurationScreen} />
         )}
       </Drawer.Navigator>
     </SafeAreaView>

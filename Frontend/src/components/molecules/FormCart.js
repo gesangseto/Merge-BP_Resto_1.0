@@ -16,6 +16,7 @@ const FormCart = React.forwardRef((props, ref) => {
     onCancel,
     isOpen,
     isLoading,
+    isTakeAway,
   } = props;
   const [selectedMenu, setSelectedMenu] = useState([]);
   const [total, setTotal] = useState(0);
@@ -155,6 +156,7 @@ const FormCart = React.forwardRef((props, ref) => {
         </Modalize>
       </Portal>
       <FormNoteItem
+        isTakeAway={isTakeAway}
         isOpen={modalNote}
         item={selectedItem}
         index={selectedIndexItem}
@@ -165,6 +167,7 @@ const FormCart = React.forwardRef((props, ref) => {
         }}
       />
       <FormNoteOpenItem
+        isTakeAway={isTakeAway}
         isOpen={modalOpenNote}
         item={selectedItem}
         index={selectedIndexItem}

@@ -17,6 +17,7 @@ export default function PengaturanMenu(routes) {
   const [hiddenDataMenus, setHiddenDataMenus] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState([]);
   const [filtering, setFiltering] = useState({});
+  const [searchText, setSearchText] = useState('');
   const [openMenuUpdate, setOpenMenuUpdate] = useState(false);
 
   const get_menu = async () => {
@@ -24,6 +25,7 @@ export default function PengaturanMenu(routes) {
     let menu = await getMenu(params);
     setDataMenus([...menu]);
     setHiddenDataMenus([...menu]);
+    handleFiltering();
     // }
   };
 
@@ -47,8 +49,26 @@ export default function PengaturanMenu(routes) {
     })();
   }, []);
 
+  useEffect(() => {
+    handleFiltering();
+  }, [searchText, filtering]);
+
+  const handleFiltering = menu => {
+    let text = searchText;
+    let filter = filtering;
+    let mn = menu ?? hiddenDataMenus;
+    mn = mn.filter(function (it) {
+      return it.itemdesc.toLowerCase().includes(text.toLowerCase());
+    });
+    if (filter.hasOwnProperty('itgrpid')) {
+      mn = mn.filter(function (it) {
+        return it.itgrpid === filter.itgrpid;
+      });
+    }
+    setDataMenus([...mn]);
+  };
+
   const handleClickCart = item => {
-    console.log('Open editor');
     setSelectedMenu({...item});
     setOpenMenuUpdate(true);
   };
@@ -61,8 +81,8 @@ export default function PengaturanMenu(routes) {
         selectedItem={[]}
         filter={filtering}
         onClickCart={() => openModalCart()}
-        onChangeSearch={txt => console.log(txt)}
-        onChangeFilter={item => console.log(item)}
+        onChangeSearch={txt => setSearchText(txt)}
+        onChangeFilter={item => setFiltering({...item})}
       />
       <FlatGrid
         onRefresh={() => get_menu()}

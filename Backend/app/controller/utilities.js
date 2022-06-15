@@ -7,7 +7,7 @@ const fs = require("fs");
 const moment = require("moment");
 var path = require("path");
 
-const getDataField = async (request) => {
+const getDataField = async (request, updatePrintCount) => {
   let req = request;
   var query = `SELECT 
   *
@@ -39,6 +39,7 @@ const getDataField = async (request) => {
     billno: null,
     bpid: null,
     bpname: null,
+    dapur: [],
     grand_total: 0,
     crcid: null,
     custid: null,
@@ -99,9 +100,11 @@ const getDataField = async (request) => {
     _field_header.srepname = it.srepname ?? "";
     let get_sod = `
     SELECT 
+    *,
     CASE WHEN (ispacked IS TRUE) THEN 'Bks' ELSE '-' END AS bungkus,
     CASE WHEN (iscancel IS TRUE) THEN '0' ELSE qty END AS quantity,
-    * 
+    a.itemdesc as itemdesc ,
+    b.itemdesc2 as itemdesc2
     FROM sod AS a
     LEFT JOIN item AS b ON a.itemid = b.itemid 
     LEFT JOIN itemkitchen AS c ON b.itemid = c.itemid
@@ -112,6 +115,7 @@ const getDataField = async (request) => {
     }
     get_sod = await models.exec_query(get_sod);
     for (const ch of get_sod.data) {
+      _field_header.dapur.push(ch.kitchenname);
       _field_header.content.push(ch);
       _field_header.total_variant += parseInt(ch.quantity > 0 ? 1 : 0);
       _field_header.total_quantity += parseInt(ch.quantity);
@@ -123,8 +127,13 @@ const getDataField = async (request) => {
   if (_field_header.content.length === 0) {
     return false;
   }
-  // data.data = [_field_header];
-  await models.exec_query(_update_printcount);
+
+  let dapur = [...new Set(_field_header.dapur)];
+  _field_header.dapur = JSON.stringify(dapur).replace(/['"]+/g, "");
+
+  if (updatePrintCount == "true") {
+    await models.exec_query(_update_printcount);
+  }
   return _field_header;
 };
 
@@ -143,7 +152,12 @@ exports.printBill = async function (req, res) {
       data.message = `Billno or Sono is required!`;
       return response.response(data, res);
     }
-    let _data = await getDataField(req);
+    let update_print_count = false;
+    if (req.query.update_print_count) {
+      update_print_count = req.query.update_print_count;
+      delete req.query.update_print_count;
+    }
+    let _data = await getDataField(req, update_print_count);
     if (!_data) {
       data.error = true;
       data.message = `Query: ${JSON.stringify(req.query)} tidak ditemukan`;

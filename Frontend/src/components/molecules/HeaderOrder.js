@@ -95,22 +95,20 @@ const HeaderOrder = React.forwardRef((props, ref) => {
             flexDirection: 'row',
             flexWrap: 'wrap',
             borderRadius: 10,
-            justifyContent: 'flex-start',
+            // justifyContent: 'flex-start',
             backgroundColor: colors.lightGrey,
             height: 35,
-            // width: 170,
             borderRadius: 15,
             marginLeft: 15,
-            alignSelf: 'center',
+            // alignSelf: 'center',
           }}>
           <View style={{justifyContent: 'center', marginHorizontal: 15}}>
             <MatComIcon name="magnify" size={30} color="grey" />
           </View>
-          <View style={{justifyContent: 'center'}}>
+          <View style={{justifyContent: 'center', flex: 1}}>
             <TextInput
               style={{
                 backgroundColor: colors.lightGrey,
-                width: 140,
                 height: 35,
                 borderRadius: 15,
               }}

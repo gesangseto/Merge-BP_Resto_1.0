@@ -2,6 +2,7 @@
 
 
 
+[C]<b>$SF$dapur$EF$</b>
 [C]<font size='big'>$SF$hostdesc$EF$</font>
 [C]<font size='normal'>Time: $SF$billdate$EF$, $SF$arrivetime$EF$</font>
 [R]<font size='normal'>Total Variant: $SF$total_variant$EF$</font>

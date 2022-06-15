@@ -15,13 +15,13 @@ import {loginSales} from '../models';
 import {login_image} from '../assets';
 import {colors} from '../constants';
 const req = {
-  phone: false,
+  mobile: false,
   password: false,
 };
 
 const LoginScreen = ({}) => {
   const [data, setData] = React.useState({
-    phone: '',
+    mobile: '',
     password: '',
   });
   const [err, setErr] = React.useState(req);
@@ -36,8 +36,8 @@ const LoginScreen = ({}) => {
   const validation = () => {
     let rq = JSON.parse(JSON.stringify(req));
     let _ret = true;
-    if (!validatePhone(data.phone)) {
-      rq.phone = true;
+    if (!validatePhone(data.mobile)) {
+      rq.mobile = true;
       _ret = false;
     }
     if (!data.password) {
@@ -51,7 +51,7 @@ const LoginScreen = ({}) => {
   const loginHandle = async () => {
     setInitialLoad(false);
     let body = {
-      phone: data.phone,
+      mobile: data.mobile,
       password: data.password,
     };
     if (!validation()) {
@@ -67,10 +67,13 @@ const LoginScreen = ({}) => {
     return;
   };
 
-  const validatePhone = phone => {
-    if (phone)
-      if (phone.match(/\d/g).length <= 15 && phone.match(/\d/g).length >= 10) {
-        return String(phone).match(
+  const validatePhone = mobile => {
+    if (mobile)
+      if (
+        mobile.match(/\d/g).length <= 15 &&
+        mobile.match(/\d/g).length >= 10
+      ) {
+        return String(mobile).match(
           /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,8}$/im,
         );
       } else {
@@ -90,13 +93,13 @@ const LoginScreen = ({}) => {
         <Text style={styles.inputext}>Welcome</Text>
         <TextInput
           keyboardType="numeric"
-          value={data.phone}
-          onChangeText={val => setData({...data, phone: val})}
+          value={data.mobile}
+          onChangeText={val => setData({...data, mobile: val})}
           placeholder="Nomor HP"
           style={styles.input}
           maxLength={14}
         />
-        <RequiredText show={err.phone} message={'Nomor HP salah'} />
+        <RequiredText show={err.mobile} message={'Nomor HP salah'} />
 
         <TextInput
           value={data.password}

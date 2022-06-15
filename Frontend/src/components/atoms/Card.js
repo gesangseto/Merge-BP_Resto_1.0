@@ -92,8 +92,9 @@ export default function Card(prop) {
                     backgroundColor: 'red',
                     textAlign: 'center',
                     color: 'white',
+                    fontSize: 16,
                   }}>
-                  Not Avalaible
+                  KOSONG
                 </Text>
               ) : null}
             </ImageBackground>

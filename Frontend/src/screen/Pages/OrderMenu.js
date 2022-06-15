@@ -148,7 +148,7 @@ export default function OrderMenu(routes) {
     if (exec.error) {
       if (exec.data.length == 1) {
         let _data = exec.data[0];
-        // handleChangeItemInCart(_data); BUAT BESOK
+        handleChangeItemInCart(_data);
       }
       return;
     } else {
@@ -248,6 +248,7 @@ export default function OrderMenu(routes) {
       ) : null}
 
       <FormCart
+        isTakeAway={param.billtype == 'TA' ? true : false}
         isLoading={isLoading}
         isOpen={modalCart}
         param={param}
@@ -258,6 +259,7 @@ export default function OrderMenu(routes) {
       />
 
       <FormNoteItem
+        isTakeAway={param.billtype == 'TA' ? true : false}
         isOpen={modalNote}
         item={selectedMenu}
         selectedItems={selectedMenus}
@@ -268,6 +270,7 @@ export default function OrderMenu(routes) {
         }}
       />
       <FormNoteOpenItem
+        isTakeAway={param.billtype == 'TA' ? true : false}
         isOpen={modalOpenNote}
         item={openMenu}
         onCancel={() => {

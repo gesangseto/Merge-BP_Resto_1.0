@@ -58,16 +58,18 @@ const PrintBill = React.forwardRef((props, ref) => {
     modalPrintKitchen.current?.close();
   };
 
-  const print = async ({billno, sono, kitchenno}) => {
+  const print = async ({billno, sono, kitchenno, update}) => {
     try {
       let param = {
         billno: billno ?? null,
         sono: sono ?? null,
         kitchenno: kitchenno ?? null,
+        update_print_count: update ?? false,
       };
       param = Object.fromEntries(
         Object.entries(param).filter(([_, v]) => v != null),
       );
+      console.log(param);
       let _txt = await getPrint(param);
       if (!_txt) {
         return;
@@ -89,14 +91,17 @@ const PrintBill = React.forwardRef((props, ref) => {
 
   const printBill = async () => {
     setIsLoading(true);
+    let i = 1;
     for (const it of listKitchen) {
       if (it.selected) {
         await print({
           billno: item.billno,
           sono: item.sono,
           kitchenno: it.kitchenno,
+          update: listKitchen.length == i,
         });
       }
+      i += 1;
     }
     setIsLoading(false);
     closeModal();
