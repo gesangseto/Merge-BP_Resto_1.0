@@ -195,7 +195,7 @@ export default function DineInScreen() {
         onRefresh={() => get_host()}
         refreshing={isLoading}
         itemDimension={boxDimension}
-        data={data}
+        data={data ?? []}
         style={styles.gridView}
         spacing={10}
         renderItem={({item}) => renderBox(item)}
@@ -208,24 +208,32 @@ export default function DineInScreen() {
     return (
       <View style={styles.tabBar}>
         {props.navigationState.routes.map((route, i) => {
-          // const opacity = props.position.interpolate({
-          //   inputRange,
-          //   outputRange: inputRange.map(inputIndex =>
-          //     inputIndex === i ? 1 : 0.5,
-          //   ),
-          // });
+          let opacity = 1;
+          if (Array.isArray(opacity) && inputRange.length > 1) {
+            opacity = props.position.interpolate({
+              inputRange,
+              outputRange: inputRange.map(inputIndex =>
+                inputIndex === i ? 1 : 0.3,
+              ),
+            });
+          }
+          let pos = props.navigationState.index;
           return (
             <TouchableOpacity
               key={i}
-              style={styles.tabItem}
+              style={{
+                ...styles.tabItem,
+                borderBottomColor: 'green',
+                borderBottomWidth: pos === i ? 1 : 0,
+              }}
               onPress={() => {
                 setIndex(i);
               }}>
               <Animated.Text
                 style={{
-                  color: props.position == i ? colors.darkGrey : 'black',
-                  textAlignVertical: 'center',
-                  fontSize: 24,
+                  opacity,
+                  color: 'white',
+                  fontSize: 18,
                   fontWeight: 'bold',
                 }}>
                 {route.title}
@@ -249,7 +257,7 @@ export default function DineInScreen() {
         />
       ) : (
         <TabView
-          // renderTabBar={_renderTabBar}
+          renderTabBar={_renderTabBar}
           navigationState={{index, routes}}
           renderScene={renderScene}
           onIndexChange={setIndex}
@@ -385,11 +393,19 @@ const styles = StyleSheet.create({
     marginTop: 10,
     flex: 1,
   },
+  tabBar: {
+    flexDirection: 'row',
+  },
+  bottomTabItem: {
+    borderBottomColor: 'green',
+    borderBottomWidth: 1,
+  },
   tabItem: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     height: 50,
-    backgroundColor: colors.lightGreen,
+    backgroundColor: '#61a646',
   },
   itemContainer: {
     justifyContent: 'flex-end',
