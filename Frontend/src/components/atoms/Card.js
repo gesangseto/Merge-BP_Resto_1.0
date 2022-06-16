@@ -82,7 +82,7 @@ export default function Card(prop) {
         <View style={styles.imageContainer}>
           {itemData.link_picture ? (
             <ImageBackground
-              style={{height: 80}}
+              style={{height: 80, justifyContent: 'center'}}
               resizeMode={'contain'}
               source={{uri: `${itemData.link_picture}`}}>
               {!itemData.isavailable && useAvailableInfo ? (
@@ -93,6 +93,7 @@ export default function Card(prop) {
                     textAlign: 'center',
                     color: 'white',
                     fontSize: 16,
+                    paddingVertical: 10,
                   }}>
                   KOSONG
                 </Text>
@@ -102,7 +103,7 @@ export default function Card(prop) {
         </View>
         <View style={{flex: 1, paddingLeft: 10}}>
           <View style={{flex: 1, marginTop: 5}}>
-            <Text style={{fontWeight: 'bold', fontSize: 14}}>
+            <Text style={{fontWeight: 'bold', fontSize: 18}}>
               {itemData.itemdesc}
             </Text>
           </View>
@@ -152,7 +153,11 @@ export default function Card(prop) {
                       paddingHorizontal: 7,
                     }}>
                     <Text
-                      style={{color: itemData.qty ? colors.danger : 'grey'}}>
+                      style={{
+                        color: itemData.qty ? colors.danger : 'grey',
+                        fontSize: 14,
+                        // fontWeight: 'bold',
+                      }}>
                       {parseInt(itemData.qty ?? 0)} x
                     </Text>
                   </View>

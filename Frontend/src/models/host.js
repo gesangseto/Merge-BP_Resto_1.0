@@ -21,6 +21,7 @@ export const getHost = async (property = {}, use_alert = true) => {
         }
       })
       .catch(e => {
+        if (use_alert) Toaster({message: e.message, type: 'error'});
         return resolve(false);
       });
   });
@@ -41,6 +42,7 @@ export const getHostStatus = async (property = {}, use_alert = true) => {
         }
       })
       .catch(e => {
+        if (use_alert) Toaster({message: e.message, type: 'error'});
         return resolve(false);
       });
   });
@@ -62,7 +64,7 @@ export const updateHostStatus = async (property = {}, use_alert = true) => {
         }
       })
       .catch(e => {
-        if (use_alert) Toaster({message: result.message, type: 'error'});
+        if (use_alert) Toaster({message: e.message, type: 'error'});
         return resolve(false);
       });
   });

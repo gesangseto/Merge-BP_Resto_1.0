@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   ImageBackground,
   StyleSheet,
@@ -20,6 +20,8 @@ const req = {
 };
 
 const LoginScreen = ({}) => {
+  const ref_input1 = useRef();
+  const ref_input2 = useRef();
   const [data, setData] = React.useState({
     mobile: '',
     password: '',
@@ -92,21 +94,26 @@ const LoginScreen = ({}) => {
         }}>
         <Text style={styles.inputext}>Welcome</Text>
         <TextInput
+          ref={ref_input1}
           keyboardType="numeric"
           value={data.mobile}
           onChangeText={val => setData({...data, mobile: val})}
           placeholder="Nomor HP"
           style={styles.input}
           maxLength={14}
+          onSubmitEditing={() => ref_input2.current.focus()}
+          blurOnSubmit={false}
         />
         <RequiredText show={err.mobile} message={'Nomor HP salah'} />
 
         <TextInput
+          ref={ref_input2}
           value={data.password}
           onChangeText={val => setData({...data, password: val})}
           placeholder="Kata sandi"
           secureTextEntry={true}
           style={styles.input}
+          onSubmitEditing={() => loginHandle()}
         />
         <RequiredText show={err.password} title={'Kata sandi'} />
 

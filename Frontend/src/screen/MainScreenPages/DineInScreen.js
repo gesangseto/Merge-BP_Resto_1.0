@@ -1,5 +1,6 @@
 import {Portal} from '@gorhom/portal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import moment from 'moment';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   Dimensions,
@@ -8,6 +9,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Animated,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import {Modalize} from 'react-native-modalize';
@@ -18,7 +20,6 @@ import {CoupleButton, FormDineIn, RequiredText} from '../../components';
 import {colors} from '../../constants';
 import * as RootNavigation from '../../helper';
 import {groupingArray, isColorBrigthness, Toaster} from '../../helper';
-import moment from 'moment';
 import {
   cancelBill,
   createBill,
@@ -38,8 +39,8 @@ export default function DineInScreen() {
   const [kasirStatus, setKasirStatus] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [visibleModalEdit, setVisibleModalEdit] = useState(false);
+  const [visibleModalDineIn, setVisibleModalDineIn] = useState(false);
   const [profile, setProfile] = useState(null);
-  const modalizeRef = useRef(null);
   const modalizeMoreMenu = useRef(null);
 
   const openModalMoreMenu = () => {
@@ -49,19 +50,15 @@ export default function DineInScreen() {
     modalizeMoreMenu.current?.close();
   };
 
-  const openModal = () => {
-    modalizeRef.current?.open();
-  };
-  const closeModal = () => {
-    modalizeRef.current?.close();
-  };
   const get_host = async () => {
     let prop = {active: true};
     setIsLoading(true);
     let exec = await getHost(prop);
     let ksr_status = await getKasirStatus();
     setIsLoading(false);
+    if (!exec || !ksr_status) return;
     let grouping = groupingArray(exec, 'hostlocationdesc');
+    console.log(grouping);
     setTabData({...grouping});
     if (ksr_status) {
       setKasirStatus({...ksr_status[0]});
@@ -75,11 +72,14 @@ export default function DineInScreen() {
   };
 
   useEffect(() => {
+    let abortController;
     (async function () {
+      abortController = new AbortController();
       await get_host();
       let prfl = JSON.parse(await AsyncStorage.getItem('profile'));
       setProfile({...prfl});
     })();
+    return () => abortController.abort();
   }, []);
 
   const checkKasir = () => {
@@ -110,7 +110,7 @@ export default function DineInScreen() {
       RootNavigation.navigate('Order Menu', item);
     } else {
       setSelectedHost({...item});
-      openModal();
+      setVisibleModalDineIn(true);
     }
   };
 
@@ -138,7 +138,6 @@ export default function DineInScreen() {
     if (!process) {
       return;
     }
-    closeModal();
     await get_host();
   };
 
@@ -172,20 +171,16 @@ export default function DineInScreen() {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Text
-          style={{
-            fontWeight: 'bold',
-            fontSize: 24,
-            color: color,
-          }}>
+        <Text style={{fontWeight: 'bold', fontSize: 24, color: color}}>
           {item.hostdesc}
         </Text>
-        <Text
-          style={{
-            color: color,
-          }}>
-          {item.hoststatusdesc}
-        </Text>
+        <Text style={{color: color}}> {item.hoststatusdesc}</Text>
+        {item.srepname ? (
+          <Text style={{color: color, fontWeight: 'bold'}}>
+            ({item.srepname})
+          </Text>
+        ) : null}
+
         {item.hoststatusicon && (
           <MatComIcon name={item.hoststatusicon} size={20} color={color} />
         )}
@@ -207,23 +202,72 @@ export default function DineInScreen() {
       />
     );
   };
+  const _renderTabBar = props => {
+    const inputRange = props.navigationState.routes.map((x, i) => i);
+
+    return (
+      <View style={styles.tabBar}>
+        {props.navigationState.routes.map((route, i) => {
+          // const opacity = props.position.interpolate({
+          //   inputRange,
+          //   outputRange: inputRange.map(inputIndex =>
+          //     inputIndex === i ? 1 : 0.5,
+          //   ),
+          // });
+          return (
+            <TouchableOpacity
+              key={i}
+              style={styles.tabItem}
+              onPress={() => {
+                setIndex(i);
+              }}>
+              <Animated.Text
+                style={{
+                  color: props.position == i ? colors.darkGrey : 'black',
+                  textAlignVertical: 'center',
+                  fontSize: 24,
+                  fontWeight: 'bold',
+                }}>
+                {route.title}
+              </Animated.Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    );
+  };
 
   return (
     <>
-      <TabView
-        navigationState={{index, routes}}
-        renderScene={renderScene}
-        onIndexChange={setIndex}
-        initialLayout={{width: Dimensions.width}}
-      />
+      {Object.keys(tabData).length === 0 ? (
+        <FlatGrid
+          onRefresh={() => get_host()}
+          refreshing={isLoading}
+          data={[]}
+          style={styles.gridView}
+          renderItem={({item}) => renderBox(item)}
+        />
+      ) : (
+        <TabView
+          // renderTabBar={_renderTabBar}
+          navigationState={{index, routes}}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={{width: Dimensions.width}}
+        />
+      )}
       <Portal>
-        <Modalize ref={modalizeRef}>
+        {visibleModalDineIn ? (
           <FormDineIn
+            isOpen={visibleModalDineIn}
+            onCancel={() => setVisibleModalDineIn(false)}
             host={selectedHost}
-            onCancel={() => closeModal()}
-            onSave={formData => createNewBill(formData)}
+            onSave={formData => {
+              createNewBill(formData);
+              setVisibleModalDineIn(false);
+            }}
           />
-        </Modalize>
+        ) : null}
 
         <Modalize ref={modalizeMoreMenu} modalHeight={150}>
           <View
@@ -326,6 +370,7 @@ const ModalCancelTable = props => {
         </View>
         <View style={{height: 80}}>
           <CoupleButton
+            fullSize={true}
             onPressSave={() => handleConfirmCancel()}
             onPressCancel={() => (onCancel ? onCancel() : null)}
           />
@@ -339,6 +384,12 @@ const styles = StyleSheet.create({
   gridView: {
     marginTop: 10,
     flex: 1,
+  },
+  tabItem: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
+    backgroundColor: colors.lightGreen,
   },
   itemContainer: {
     justifyContent: 'flex-end',

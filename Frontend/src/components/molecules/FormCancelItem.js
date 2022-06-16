@@ -1,16 +1,11 @@
 import {Portal} from '@gorhom/portal';
 import CheckBox from '@react-native-community/checkbox';
 import React, {useEffect, useRef, useState} from 'react';
-import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, Text, TextInput, View} from 'react-native';
+import Modal from 'react-native-modal';
 import {Modalize} from 'react-native-modalize';
 import {colors} from '../../constants';
+import {isInt, Toaster} from '../../helper';
 import {
   ButtonFooterModal,
   Card,
@@ -18,8 +13,6 @@ import {
   InputPlusMinus,
   RequiredText,
 } from '../atoms';
-import Modal from 'react-native-modal';
-import {isInt, Toaster} from '../../helper';
 
 const heightForm = 45;
 
@@ -27,7 +20,7 @@ const FormCancelItem = React.forwardRef((props, ref) => {
   const {item, onCancel, onSave, isOpen} = props;
   const [visibleModal, setVisibleModal] = useState(false);
   const [itemData, setItemData] = useState(item);
-  const modalizeNote = useRef(null);
+  const modalCancelItem = useRef(null);
 
   useEffect(() => {
     item.qty = item.qty ? item.qty : 1;
@@ -36,9 +29,9 @@ const FormCancelItem = React.forwardRef((props, ref) => {
 
   useEffect(() => {
     if (isOpen) {
-      modalizeNote.current?.open();
+      modalCancelItem.current?.open();
     } else {
-      modalizeNote.current?.close();
+      modalCancelItem.current?.close();
     }
   }, [isOpen]);
 
@@ -58,7 +51,7 @@ const FormCancelItem = React.forwardRef((props, ref) => {
   return (
     <Portal>
       <Modalize
-        ref={modalizeNote}
+        ref={modalCancelItem}
         onClosed={() => handleCloseModal()}
         modalHeight={500}
         FooterComponent={
@@ -234,6 +227,7 @@ const ModalCancel = props => {
       </View>
       <View style={{height: 80}}>
         <CoupleButton
+          fullSize={true}
           onPressSave={() => handleConfirmCancel()}
           onPressCancel={() => (onCancel ? onCancel() : null)}
         />

@@ -1,20 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  TextInput,
-} from 'react-native';
-import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {colors} from '../../constants';
 import moment from 'moment';
-import {Button, InputPlusMinus, InputText} from '../atoms';
+import React, {useEffect, useRef, useState} from 'react';
+import {Text, View, TextInput} from 'react-native';
+import {Modalize} from 'react-native-modalize';
+import {colors} from '../../constants';
+import {ButtonFooterModal, InputPlusMinus, InputText} from '../atoms';
 
 const heightForm = 45;
 
 const FormDineIn = React.forwardRef((props, ref) => {
-  const {host, onCancel, onSave} = props;
+  const {isOpen, host, onCancel, onSave, onChange} = props;
+  const modalOpenDineIn = useRef(null);
   const [formData, setFormData] = useState({
     bpid: 'CASH',
     billtype: 'DI',
@@ -34,14 +29,19 @@ const FormDineIn = React.forwardRef((props, ref) => {
 
   const validationForm = () => {
     let newError = errorForm;
+    let have_error = false;
     for (const key in errorForm) {
       if (!formData[key]) {
+        have_error = true;
         newError[key] = true;
       } else {
         newError[key] = false;
       }
     }
     seterrorForm({...newError});
+    if (!have_error && onChange) {
+      onChange(formData);
+    }
   };
 
   const handleCancel = () => {
@@ -63,49 +63,68 @@ const FormDineIn = React.forwardRef((props, ref) => {
     setFormData({...formData, hostid: host.hostid});
   }, [host]);
 
+  useEffect(() => {
+    if (isOpen) {
+      modalOpenDineIn.current?.open();
+    } else {
+      modalOpenDineIn.current?.close();
+    }
+  }, [isOpen]);
+
   return (
-    <View style={{flex: 1, paddingVertical: 15}}>
-      <Text style={{textAlign: 'center', fontSize: 22, fontWeight: 'bold'}}>
-        MEJA {host.hostdesc}
-      </Text>
-      <InputText
-        editable={false}
-        title="Kedatangan"
-        value={`${formData.billdate} (${formData.arrivetime})`}
-      />
-      <View style={{margin: 10}}>
-        <InputPlusMinus
-          title="Jumlah Tamu"
-          value={`${formData.pax}`}
-          onChange={val => {
-            setFormData({...formData, pax: val});
+    <Modalize
+      ref={modalOpenDineIn}
+      modalHeight={450}
+      onClosed={handleCancel}
+      FooterComponent={
+        <ButtonFooterModal
+          buttonTittle={'Simpan'}
+          useTotal={false}
+          onClickSubmit={() => handleSave(formData)}
+        />
+      }
+      HeaderComponent={
+        <Text
+          style={{
+            textAlign: 'center',
+            fontSize: 22,
+            fontWeight: 'bold',
+            paddingVertical: 10,
+          }}>
+          MEJA {host.hostdesc}
+        </Text>
+      }>
+      <View style={{flex: 1, paddingVertical: 15}}>
+        <InputText
+          editable={false}
+          title="Kedatangan"
+          value={`${formData.billdate} (${formData.arrivetime})`}
+        />
+        <View style={{margin: 10}}>
+          <InputPlusMinus
+            title="Jumlah Tamu"
+            value={`${formData.pax}`}
+            onChange={val => {
+              setFormData({...formData, pax: val});
+            }}
+            isError={errorForm.pax}
+          />
+        </View>
+        <TextInput
+          style={{
+            height: heightForm * 2,
+            textAlignVertical: 'top',
+            backgroundColor: colors.lightGrey,
+            borderRadius: 10,
+            marginVertical: 5,
+            marginHorizontal: 10,
           }}
-          isError={errorForm.pax}
+          value={`${formData.billnote ?? ''}`}
+          onChangeText={txt => setFormData({...formData, billnote: txt})}
+          multiline={true}
         />
       </View>
-      <InputText
-        title="Keterangan"
-        value={formData.billnote}
-        onChangeText={txt => setFormData({...formData, billnote: txt})}
-      />
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-          marginTop: 20,
-        }}>
-        <Button
-          onPress={() => handleCancel()}
-          title="Batal"
-          color={colors.danger}
-          textColor={'white'}></Button>
-        <Button
-          onPress={() => handleSave()}
-          title="Simpan"
-          color={colors.success}
-          textColor={'white'}></Button>
-      </View>
-    </View>
+    </Modalize>
   );
 });
 

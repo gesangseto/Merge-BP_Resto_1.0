@@ -23,11 +23,12 @@ export const getBill = async (property = {}, use_alert = true) => {
         }
       })
       .catch(e => {
-        if (use_alert) Toaster({message: result.message, type: 'error'});
+        if (use_alert) Toaster({message: e.message, type: 'error'});
         return resolve(false);
       });
   });
 };
+
 export const createBill = async (property = {}, use_alert = true) => {
   let url = `/api/transaction/bill`;
   return new Promise(resolve => {
@@ -43,11 +44,12 @@ export const createBill = async (property = {}, use_alert = true) => {
         }
       })
       .catch(e => {
-        if (use_alert) Toaster({message: result.message, type: 'error'});
+        if (use_alert) Toaster({message: e.message, type: 'error'});
         return resolve(false);
       });
   });
 };
+
 export const cancelBill = async (property = {}, use_alert = true) => {
   let url = `/api/transaction/bill`;
   return new Promise(resolve => {
@@ -63,7 +65,7 @@ export const cancelBill = async (property = {}, use_alert = true) => {
         }
       })
       .catch(e => {
-        if (use_alert) Toaster({message: result.message, type: 'error'});
+        if (use_alert) Toaster({message: e.message, type: 'error'});
         return resolve(false);
       });
   });

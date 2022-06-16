@@ -9,8 +9,8 @@ import FormOldOrder from './FormOldOrder';
 import HeaderOrder from './HeaderOrder';
 import ModalAlert from './ModalAlert';
 import PrintBill from './PrintBill';
-import SetPrinter from './SetPrinter';
 import FormUpdateItem from './FormUpdateItem';
+import FilterAvailableMenu from './FilterAvailableMenu';
 
 export {
   FormDineIn,
@@ -22,8 +22,8 @@ export {
   CustomDrawer,
   ModalAlert,
   PrintBill,
-  SetPrinter,
   FormNoteOpenItem,
   FormCancelBill,
   FormUpdateItem,
+  FilterAvailableMenu,
 };

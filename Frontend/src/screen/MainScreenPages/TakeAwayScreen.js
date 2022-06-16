@@ -47,10 +47,13 @@ export default function TakeAwayScreen() {
     setIsLoading(true);
     let _data = await getBill(param);
     let ksr_status = await getKasirStatus();
+    setIsLoading(false);
+    if (!_data || !ksr_status) {
+      return;
+    }
     if (ksr_status) {
       setKasirStatus({...ksr_status[0]});
     }
-    setIsLoading(false);
     let _n_data = [];
     for (const it of _data) {
       it.color = default_color[it.billstatus];

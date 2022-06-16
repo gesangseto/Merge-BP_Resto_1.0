@@ -17,16 +17,21 @@ export default function PengaturanMenu(routes) {
   const [hiddenDataMenus, setHiddenDataMenus] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState([]);
   const [filtering, setFiltering] = useState({});
+  const [availableFilter, setAvailableFilter] = useState({});
   const [searchText, setSearchText] = useState('');
   const [openMenuUpdate, setOpenMenuUpdate] = useState(false);
 
-  const get_menu = async () => {
-    // if (hiddenDataMenus.length == 0) {
-    let menu = await getMenu(params);
-    setDataMenus([...menu]);
-    setHiddenDataMenus([...menu]);
-    handleFiltering();
-    // }
+  const get_menu = async force_update => {
+    if (hiddenDataMenus.length == 0 || force_update) {
+      console.log('====================1');
+      let menu = await getMenu(params);
+      if (!menu) {
+        console.log('====================2');
+        return;
+      }
+      setHiddenDataMenus([...menu]);
+      setDataMenus([...menu]);
+    }
   };
 
   const handleUpdate = async item => {
@@ -37,7 +42,7 @@ export default function PengaturanMenu(routes) {
     };
     setOpenMenuUpdate(false);
     await updateMenu(body);
-    get_menu();
+    await get_menu(true);
     setIsLoading(false);
   };
 
@@ -50,22 +55,34 @@ export default function PengaturanMenu(routes) {
   }, []);
 
   useEffect(() => {
-    handleFiltering();
-  }, [searchText, filtering]);
-
-  const handleFiltering = menu => {
-    let text = searchText;
-    let filter = filtering;
-    let mn = menu ?? hiddenDataMenus;
-    mn = mn.filter(function (it) {
-      return it.itemdesc.toLowerCase().includes(text.toLowerCase());
-    });
-    if (filter.hasOwnProperty('itgrpid')) {
-      mn = mn.filter(function (it) {
-        return it.itgrpid === filter.itgrpid;
-      });
+    if (hiddenDataMenus.length > 0) {
+      handleFiltering();
     }
-    setDataMenus([...mn]);
+  }, [searchText, filtering, availableFilter, hiddenDataMenus]);
+
+  const handleFiltering = async () => {
+    if (hiddenDataMenus.length > 0) {
+      setIsLoading(true);
+      let text = searchText;
+      let filter = filtering;
+      let avail = availableFilter;
+      let mn = hiddenDataMenus;
+      mn = mn.filter(function (it) {
+        return it.itemdesc.toLowerCase().includes(text.toLowerCase());
+      });
+      if (filter.hasOwnProperty('itgrpid')) {
+        mn = mn.filter(function (it) {
+          return it.itgrpid === filter.itgrpid;
+        });
+      }
+      if (avail.isavailable == 0 || avail.isavailable == 1) {
+        mn = mn.filter(function (it) {
+          return it.isavailable === avail.isavailable;
+        });
+      }
+      setDataMenus([...mn]);
+      setIsLoading(false);
+    }
   };
 
   const handleClickCart = item => {
@@ -76,6 +93,8 @@ export default function PengaturanMenu(routes) {
   return (
     <>
       <HeaderOrder
+        filterAvailable={true}
+        onChangeFilterAvailable={item => setAvailableFilter({...item})}
         useBack={false}
         useCart={false}
         selectedItem={[]}
@@ -85,7 +104,7 @@ export default function PengaturanMenu(routes) {
         onChangeFilter={item => setFiltering({...item})}
       />
       <FlatGrid
-        onRefresh={() => get_menu()}
+        onRefresh={() => get_menu(true)}
         refreshing={isLoading}
         itemDimension={boxDimension}
         data={dataMenus}

@@ -9,12 +9,11 @@ import {
   View,
 } from 'react-native';
 import {Modalize} from 'react-native-modalize';
+import SelectDropdown from 'react-native-select-dropdown';
 import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {colors} from '../../constants';
-import {isInt} from '../../helper';
-import {ButtonFooterModal, Card, InputPlusMinus} from '../atoms';
-import SelectDropdown from 'react-native-select-dropdown';
 import {getNote} from '../../models';
+import {ButtonFooterModal, Card, InputPlusMinus} from '../atoms';
 
 const heightForm = 45;
 const countries = ['Egypt', 'Canada', 'Australia', 'Ireland'];
@@ -24,7 +23,7 @@ const FormNoteItem = React.forwardRef((props, ref) => {
   const [itemData, setItemData] = useState({});
   const [listOption, setListOption] = useState([]);
   const [selectedList, setSelectedList] = useState({});
-  const modalizeNote = useRef(null);
+  const modalizeNoteItem = useRef(null);
   const dropdownRef = useRef({});
 
   const get_note = async id => {
@@ -56,9 +55,9 @@ const FormNoteItem = React.forwardRef((props, ref) => {
 
   useEffect(() => {
     if (isOpen) {
-      modalizeNote.current?.open();
+      modalizeNoteItem.current?.open();
     } else {
-      modalizeNote.current?.close();
+      modalizeNoteItem.current?.close();
     }
   }, [isOpen]);
 
@@ -77,7 +76,7 @@ const FormNoteItem = React.forwardRef((props, ref) => {
   return (
     <Portal>
       <Modalize
-        ref={modalizeNote}
+        ref={modalizeNoteItem}
         onClosed={() => handleCloseModal()}
         FooterComponent={
           <ButtonFooterModal

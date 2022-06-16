@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Text, TextInput, View, StyleSheet} from 'react-native';
+import {StyleSheet, Text, TextInput, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {colors} from '../../constants';
 import Modal from 'react-native-modal';
-import {CoupleButton, RequiredText} from '../atoms';
-import {cancelBill} from '../../models';
+import {colors} from '../../constants';
 import {Toaster} from '../../helper';
+import {cancelBill} from '../../models';
+import {CoupleButton, RequiredText} from '../atoms';
 const heightForm = 45;
 const boxDimension = 125;
 
@@ -134,6 +134,7 @@ const ModalCancelTable = props => {
         </View>
         <View style={{height: 80}}>
           <CoupleButton
+            fullSize={true}
             onPressSave={() => handleConfirmCancel()}
             onPressCancel={() => (onCancel ? onCancel() : null)}
           />

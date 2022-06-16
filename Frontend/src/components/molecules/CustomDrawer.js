@@ -61,7 +61,7 @@ const CustomDrawer = props => {
                 fontFamily: 'Roboto-Regular',
                 marginRight: 5,
               }}>
-              {profile.email}
+              {profile.mobile}
             </Text>
             <FontAwesome5 name="coins" size={14} color="#fff" />
           </View>

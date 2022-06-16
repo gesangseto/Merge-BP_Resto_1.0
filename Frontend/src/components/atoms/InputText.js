@@ -4,7 +4,7 @@ import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {colors} from '../../constants';
 
 const InputText = React.forwardRef((props, ref) => {
-  const {title, required, isError, bgColor} = props;
+  const {title, required, isError, bgColor, styleInput} = props;
 
   useEffect(() => {}, []);
 
@@ -22,6 +22,7 @@ const InputText = React.forwardRef((props, ref) => {
           borderRadius: 10,
           height: 45,
           padding: 10,
+          ...styleInput,
         }}
         {...props}
       />

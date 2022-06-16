@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {TextInput, View, BackHandler} from 'react-native';
+import {BackHandler, TextInput, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {colors} from '../../constants';
 import * as RootNavigation from '../../helper';
 import {IconWithBadge} from '../atoms/IconWithBadge';
+import FilterAvailableMenu from './FilterAvailableMenu';
 import FilterMenu from './FilterMenu';
 import ModalAlert from './ModalAlert';
 
@@ -18,9 +19,14 @@ const HeaderOrder = React.forwardRef((props, ref) => {
     onChangeFilter,
     useCart = true,
     useBack = true,
+    filterAvailable = false,
+    onChangeFilterAvailable,
+    isLoading,
   } = props;
   const [textSearch, setTextSearch] = useState('');
   const [viewModalFilter, setViewModalFilter] = useState(false);
+  const [viewModalAvailable, setViewModalAvailable] = useState(false);
+  const [availableFilter, setAvailableFilter] = useState({});
   const [count, setCount] = useState(0);
   const [alertBack, setAlertBack] = useState(false);
 
@@ -89,6 +95,21 @@ const HeaderOrder = React.forwardRef((props, ref) => {
             <MatComIcon name="arrow-left" size={30} color="grey" />
           </TouchableOpacity>
         ) : null}
+        {filterAvailable ? (
+          <TouchableOpacity
+            style={{justifyContent: 'center', marginLeft: 15}}
+            onPress={() => setViewModalAvailable(true)}>
+            <MatComIcon
+              name={
+                availableFilter.isavailable == null
+                  ? 'filter-off-outline'
+                  : 'filter-outline'
+              }
+              size={30}
+              color="grey"
+            />
+          </TouchableOpacity>
+        ) : null}
         <View
           style={{
             flex: 1,
@@ -154,6 +175,15 @@ const HeaderOrder = React.forwardRef((props, ref) => {
         isOpen={viewModalFilter}
         onClose={() => setViewModalFilter(false)}
         onClickSubmit={item => (onChangeFilter ? onChangeFilter(item) : null)}
+      />
+      <FilterAvailableMenu
+        isLoading={isLoading}
+        isOpen={viewModalAvailable}
+        onClose={() => setViewModalAvailable(false)}
+        onClickSubmit={item => {
+          onChangeFilterAvailable ? onChangeFilterAvailable(item) : null;
+          setAvailableFilter({...item});
+        }}
       />
       <ModalAlert
         title={'Konfirmasi'}

@@ -1,4 +1,5 @@
 import $axios from '../Api';
+import {Toaster} from '../helper';
 
 /*
  VERSI 2 API
@@ -21,6 +22,7 @@ export const getMenu = async (property = {}, use_alert = true) => {
         }
       })
       .catch(e => {
+        if (use_alert) Toaster({message: e.message, type: 'error'});
         return resolve(false);
       });
   });
@@ -40,6 +42,7 @@ export const getOpenMenu = async (property = {}, use_alert = true) => {
         }
       })
       .catch(e => {
+        if (use_alert) Toaster({message: e.message, type: 'error'});
         return resolve(false);
       });
   });
@@ -60,6 +63,7 @@ export const getGroupMenu = async (property = {}, use_alert = true) => {
         }
       })
       .catch(e => {
+        if (use_alert) Toaster({message: e.message, type: 'error'});
         return resolve(false);
       });
   });
@@ -81,7 +85,7 @@ export const updateMenu = async (property = {}, use_alert = true) => {
         }
       })
       .catch(e => {
-        if (use_alert) Toaster({message: result.message, type: 'error'});
+        if (use_alert) Toaster({message: e.message, type: 'error'});
         return resolve(false);
       });
   });

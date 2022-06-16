@@ -1,21 +1,19 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, {useEffect, useRef, useState} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
-import {Toaster} from '../../helper';
-import {getKitchen, getPrint} from '../../models';
-import ThermalPrinterModule from 'react-native-thermal-printer';
 import {Portal} from '@gorhom/portal';
+import React, {useEffect, useRef, useState} from 'react';
 import {Modalize} from 'react-native-modalize';
 import {Cell, Section, TableView} from 'react-native-tableview-simple';
+import ThermalPrinterModule from 'react-native-thermal-printer';
 import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {ButtonFooterModal} from '../atoms';
 import {colors} from '../../constants';
+import {Toaster} from '../../helper';
+import {getKitchen, getPrint} from '../../models';
+import {ButtonFooterModal} from '../atoms';
 
 const heightForm = 45;
 
 const PrintBill = React.forwardRef((props, ref) => {
   const {isOpen, title, item = Object, onClose} = props;
-  const modalPrintKitchen = useRef(null);
+  const modalPrintBill = useRef(null);
   const [listKitchen, setListKitchen] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -49,13 +47,13 @@ const PrintBill = React.forwardRef((props, ref) => {
   };
 
   const openModal = () => {
-    modalPrintKitchen.current?.open();
+    modalPrintBill.current?.open();
   };
   const closeModal = () => {
     if (onClose) {
       onClose();
     }
-    modalPrintKitchen.current?.close();
+    modalPrintBill.current?.close();
   };
 
   const print = async ({billno, sono, kitchenno, update}) => {
@@ -116,7 +114,7 @@ const PrintBill = React.forwardRef((props, ref) => {
   return (
     <Portal>
       <Modalize
-        ref={modalPrintKitchen}
+        ref={modalPrintBill}
         modalHeight={300}
         onClosed={() => {
           if (onClose) {

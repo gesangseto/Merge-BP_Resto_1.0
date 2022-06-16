@@ -51,6 +51,7 @@ const FilterMenu = forwardRef((props, ref) => {
         <Modalize
           ref={modalFilter}
           onClosed={() => handleCloseModal()}
+          modalHeight={650}
           HeaderComponent={
             <View
               style={{
@@ -58,8 +59,10 @@ const FilterMenu = forwardRef((props, ref) => {
                 justifyContent: 'space-between',
                 paddingVertical: 2,
                 backgroundColor: 'white',
+                borderTopRightRadius: 15,
+                borderTopLeftRadius: 15,
               }}>
-              <Text style={styles.textHeader}>FILTER</Text>
+              <Text style={styles.textHeader}>Filter</Text>
 
               {selectedFilter.hasOwnProperty('itgrpid') && (
                 <TouchableOpacity

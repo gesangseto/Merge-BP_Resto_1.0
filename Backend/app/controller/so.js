@@ -317,7 +317,7 @@ exports.insert = async function (req, res) {
         if (!it.price1 || !it.itemdesc) {
           data.error = true;
           data.message = "Open menu must fill price or item desc";
-          return response.response(_resp, res);
+          return response.response(data, res);
         }
         item.price1 = it.price1;
         item.itemdesc = it.itemdesc;
@@ -331,7 +331,7 @@ exports.insert = async function (req, res) {
         item = query.data[0];
         item.qty = it.qty;
         data.error = true;
-        data.message = `Mohon maaf, ${item.itemdesc} sedang tidak tersedia.\nDimohon untuk hapus menu tersebut`;
+        data.message = `Ada menu yang sedang KOSONG."\n "Silahkan hapus dulu menu yang KOSONG dari keranjang.`;
         data.data = [item];
 
         return response.response(data, res);

@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 const $axios = axios.create();
-$axios.defaults.timeout = 120000;
+$axios.defaults.timeout = 5000;
 $axios.interceptors.request.use(
   async config => {
     let url = `${await AsyncStorage.getItem('ENDPOINT_API')}`;

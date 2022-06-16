@@ -1,13 +1,9 @@
 import {Portal} from '@gorhom/portal';
 import React, {useEffect, useRef, useState} from 'react';
 import {LogBox, StyleSheet, Text, View} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Modalize} from 'react-native-modalize';
 import {SectionGrid} from 'react-native-super-grid';
 import {colors} from '../../constants';
-import {Toaster} from '../../helper';
-import {getBill} from '../../models';
-import {cancelSo} from '../../models/so';
 import {Button, ButtonFooterModal, Card} from '../atoms';
 import FormCancelItem from './FormCancelItem';
 import PrintBill from './PrintBill';
@@ -29,7 +25,7 @@ const FormOldOrder = React.forwardRef((props, ref) => {
   const [modalPrint, setModalPrint] = useState(false);
   const [total, setTotal] = useState(0);
   const [modalCancelItem, setModalCancelItem] = useState(false);
-  const modalizeOldOrders = useRef(null);
+  const modalizeOldOrder = useRef(null);
 
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
@@ -37,9 +33,9 @@ const FormOldOrder = React.forwardRef((props, ref) => {
 
   useEffect(() => {
     if (isOpen) {
-      modalizeOldOrders.current?.open();
+      modalizeOldOrder.current?.open();
     } else {
-      modalizeOldOrders.current?.close();
+      modalizeOldOrder.current?.close();
     }
   }, [isOpen]);
 
@@ -88,7 +84,7 @@ const FormOldOrder = React.forwardRef((props, ref) => {
     <>
       <Portal>
         <Modalize
-          ref={modalizeOldOrders}
+          ref={modalizeOldOrder}
           onClosed={() => handleCloseModal()}
           HeaderComponent={
             <>

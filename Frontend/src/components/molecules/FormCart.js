@@ -2,6 +2,7 @@ import {Portal} from '@gorhom/portal';
 import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Modalize} from 'react-native-modalize';
+import {ModalAlert} from '.';
 import {colors} from '../../constants';
 import {ButtonFooterModal, Card} from '../atoms';
 import FormNoteItem from './FormNoteItem';
@@ -20,10 +21,12 @@ const FormCart = React.forwardRef((props, ref) => {
   } = props;
   const [selectedMenu, setSelectedMenu] = useState([]);
   const [total, setTotal] = useState(0);
+  const [quantity, setQuantity] = useState(0);
   const [selectedItem, setSelectedItem] = useState({});
   const [selectedIndexItem, setSelectedIndexItem] = useState(null);
   const [modalNote, setModalNote] = useState(false);
   const [modalOpenNote, setModalOpenNote] = useState(false);
+  const [alertSubmit, setAlertSubmit] = useState(false);
   const modalizeCart = useRef(null);
 
   useEffect(() => {
@@ -66,9 +69,12 @@ const FormCart = React.forwardRef((props, ref) => {
   useEffect(() => {
     setSelectedMenu([...selectedItems]);
     let ttl = 0;
+    let qty = 0;
     for (const it of selectedItems) {
       ttl += it.qty * it.price1;
+      qty += it.qty;
     }
+    setQuantity(qty);
     setTotal(ttl);
   }, [selectedItems]);
 
@@ -93,21 +99,42 @@ const FormCart = React.forwardRef((props, ref) => {
                   paddingHorizontal: 10,
                   backgroundColor: colors.lightGrey,
                 }}>
-                <Text
+                <View
                   style={{
-                    fontSize: 22,
-                    fontWeight: 'bold',
-                  }}>
-                  {param.hostdesc ?? param.bpname}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 18,
-                    fontWeight: 'bold',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
                     backgroundColor: colors.lightGrey,
                   }}>
-                  {param.billno}
-                </Text>
+                  <Text style={{fontSize: 22, fontWeight: 'bold'}}>
+                    {param.hostdesc ?? param.bpname}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: 'bold',
+                      textAlignVertical: 'center',
+                    }}>
+                    Item Menu: {selectedMenu.length}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    backgroundColor: colors.lightGrey,
+                  }}>
+                  <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                    {param.billno}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: 'bold',
+                      textAlignVertical: 'center',
+                    }}>
+                    Jml Porsi: {quantity}
+                  </Text>
+                </View>
               </View>
               <Text
                 style={{
@@ -131,7 +158,7 @@ const FormCart = React.forwardRef((props, ref) => {
             <ButtonFooterModal
               isLoading={isLoading}
               totalText={total}
-              onClickSubmit={() => (onSubmit ? onSubmit(selectedMenu) : null)}
+              onClickSubmit={() => setAlertSubmit(true)}
             />
           }>
           <View style={{flex: 1, paddingVertical: 15}}>
@@ -154,6 +181,16 @@ const FormCart = React.forwardRef((props, ref) => {
             })}
           </View>
         </Modalize>
+        <ModalAlert
+          title={'Konfirmasi'}
+          message={'Apakah Anda yakin mau mengirimkan order ini?'}
+          isOpen={alertSubmit}
+          onCancel={() => setAlertSubmit(false)}
+          onSave={() => {
+            setAlertSubmit(false);
+            onSubmit ? onSubmit(selectedMenu) : null;
+          }}
+        />
       </Portal>
       <FormNoteItem
         isTakeAway={isTakeAway}

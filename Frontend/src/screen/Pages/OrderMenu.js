@@ -83,6 +83,9 @@ export default function OrderMenu(routes) {
   const get_menu = async () => {
     if (hiddenDataMenu.length == 0) {
       let menu = await getMenu(params);
+      if (!menu) {
+        return;
+      }
       setDataMenu([...menu]);
       setHiddenDataMenu([...menu]);
     }

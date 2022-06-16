@@ -51,12 +51,14 @@ exports.get = async function (req, res) {
   var data = { data: req.query };
   try {
     perf.start();
-    var query = `
-    SELECT  a.*,b.*,c.*,d.hostlocationdesc
-    FROM host AS a 
-    left join hoststatus as b on a.hoststatuscode = b.hoststatuscode 
-    left join hostcategory as c on a.hostcategoryid= c.hostcategoryid 
-    left join hostlocation as d on a.hostlocationid= d.hostlocationid 
+    var query = ` 
+    SELECT  a.*,b.*,c.*,d.hostlocationdesc,f.*
+    FROM host AS a
+    left join hoststatus as b on a.hoststatuscode = b.hoststatuscode
+    left join hostcategory as c on a.hostcategoryid= c.hostcategoryid
+    left join hostlocation as d on a.hostlocationid= d.hostlocationid
+    left join bill as e on a.billno = e.billno
+    left join srep as f on e.srepid =f.srepid 
     WHERE 1+1=2 `;
     for (const k in req.query) {
       if (k != "page" && k != "limit") {
