@@ -81,14 +81,14 @@ export default function OrderMenu(routes) {
   };
 
   const get_menu = async () => {
-    // if (hiddenDataMenu.length == 0) {
-    let menu = await getMenu(params);
-    if (!menu) {
-      return;
+    if (hiddenDataMenu.length == 0) {
+      let menu = await getMenu(params);
+      if (!menu) {
+        return;
+      }
+      setDataMenu([...menu]);
+      setHiddenDataMenu([...menu]);
     }
-    setDataMenu([...menu]);
-    setHiddenDataMenu([...menu]);
-    // }
   };
 
   const get_old_bill = async () => {
@@ -108,6 +108,7 @@ export default function OrderMenu(routes) {
   }, []);
 
   const handleChangeItemInCart = async item => {
+    // MASALAHANYA DISINI
     let menu = hiddenDataMenu;
     let index = menu.findIndex(x => x.itemid === item.itemid);
     menu[index] = item;
