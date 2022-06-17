@@ -23,7 +23,6 @@ const PrintBill = React.forwardRef((props, ref) => {
     } else if (item.hasOwnProperty('billno')) {
       getKitchenData({billno: item.billno});
     }
-    console.log(item);
   }, [item]);
 
   useEffect(() => {
@@ -67,7 +66,6 @@ const PrintBill = React.forwardRef((props, ref) => {
       param = Object.fromEntries(
         Object.entries(param).filter(([_, v]) => v != null),
       );
-      console.log(param);
       let _txt = await getPrint(param);
       if (!_txt) {
         return;

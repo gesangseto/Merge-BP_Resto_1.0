@@ -19,6 +19,7 @@ import {colors} from '../../constants';
 import {Cell, TableView} from 'react-native-tableview-simple';
 import {Portal} from '@gorhom/portal';
 import {Modalize} from 'react-native-modalize';
+import {useIsFocused} from '@react-navigation/native';
 
 const heightForm = 45;
 const boxDimension = 125;
@@ -29,6 +30,7 @@ const default_color = {
 };
 
 export default function TakeAwayScreen() {
+  const isFocused = useIsFocused();
   const floatingAction = useRef(null);
   const modalizeMoreMenu = useRef(null);
   const [openModalTakeAway, setOpenMadalTakeAway] = useState(false);
@@ -84,6 +86,10 @@ export default function TakeAwayScreen() {
       setProfile({...prfl});
     })();
   }, []);
+
+  useEffect(() => {
+    if (isFocused) get_bill();
+  }, [isFocused]);
 
   const checkKasir = () => {
     let msg = 'Untuk melanjutkan transaksi mohon buka kasir terlebih dahulu';

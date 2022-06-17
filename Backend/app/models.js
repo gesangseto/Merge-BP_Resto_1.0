@@ -380,8 +380,17 @@ async function generate_query_update({ table, values, key }) {
       }
     }
     column = ` ${column.substring(0, column.length - 1)}`;
-    query += ` ${column} WHERE ${key} = '${values[key]}'; `;
+    query += `${column}  WHERE 1+1 = 2 `;
+    if (Array.isArray(key)) {
+      for (const it of key) {
+        console.log(key);
+        query += ` AND ${it} = '${values[it]}'`;
+      }
+    } else {
+      query += ` AND ${key} = '${values[key]}'`;
+    }
   }
+  query += `;`;
   return query;
 }
 

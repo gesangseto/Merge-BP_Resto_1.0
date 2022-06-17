@@ -292,7 +292,7 @@ exports.insert = async function (req, res) {
 
     let sodno = 1;
     let insert_sod = "";
-    let no = 0;
+    let list_not_available = [];
     for (const it of req.body.items) {
       query = `SELECT * FROM vwpricelistall as a 
       left join vwstock as b on a.itemid =b.itemid 
@@ -324,17 +324,14 @@ exports.insert = async function (req, res) {
       }
       // Check Item available
       if (item.hasOwnProperty("isavailable") && !item.isavailable) {
+        it.price1 = 0;
+        it.isavailable = 0;
         let _req = req;
         _req.query = { "a.itemid": item.itemid };
-        let query = models.queryQueryGetMenu(_req);
-        query = await models.exec_query(query);
-        item = query.data[0];
-        item.qty = it.qty;
-        data.error = true;
-        data.message = `Ada menu yang sedang KOSONG.\nSilahkan hapus dulu menu yang KOSONG dari keranjang.`;
-        data.data = [item];
-
-        return response.response(data, res);
+        _req = models.queryQueryGetMenu(_req);
+        _req = await models.exec_query(_req);
+        let _dt = { ..._req.data[0], ...it };
+        list_not_available.push(_dt);
       }
 
       prop_sod.sodno = sodno;
@@ -374,6 +371,14 @@ exports.insert = async function (req, res) {
       insert_sod += `\nSELECT spso_new('${so_no}','${bill_no}');`;
       sodno += 1;
     }
+
+    if (list_not_available.length > 0) {
+      data.error = true;
+      data.message = `Ada menu yang sedang KOSONG.\nSilahkan hapus dulu menu yang KOSONG dari keranjang.`;
+      data.data = list_not_available;
+      return response.response(data, res);
+    }
+
     insert_sod += `\n${await utils.generate_query_update_curno("SO")}`;
     let insert_so = await models.generate_query_insert({
       structure: structure_so,
@@ -480,7 +485,7 @@ exports.delete = async function (req, res) {
       upd_sod.basftotaltaxamt = _data.taxamt * qty;
       upd_sod.scableamt = _data.price1 * qty;
 
-      full_query += models.generate_query_update({
+      full_query += await models.generate_query_update({
         structure: structure_sod,
         table: "sod",
         values: upd_sod,

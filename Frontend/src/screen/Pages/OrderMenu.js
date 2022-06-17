@@ -81,14 +81,14 @@ export default function OrderMenu(routes) {
   };
 
   const get_menu = async () => {
-    if (hiddenDataMenu.length == 0) {
-      let menu = await getMenu(params);
-      if (!menu) {
-        return;
-      }
-      setDataMenu([...menu]);
-      setHiddenDataMenu([...menu]);
+    // if (hiddenDataMenu.length == 0) {
+    let menu = await getMenu(params);
+    if (!menu) {
+      return;
     }
+    setDataMenu([...menu]);
+    setHiddenDataMenu([...menu]);
+    // }
   };
 
   const get_old_bill = async () => {
@@ -107,7 +107,7 @@ export default function OrderMenu(routes) {
     })();
   }, []);
 
-  const handleChangeItemInCart = item => {
+  const handleChangeItemInCart = async item => {
     let menu = hiddenDataMenu;
     let index = menu.findIndex(x => x.itemid === item.itemid);
     menu[index] = item;
@@ -149,10 +149,10 @@ export default function OrderMenu(routes) {
     let exec = await createSo(body);
     setIsLoading(false);
     if (exec.error) {
-      if (exec.data.length == 1) {
-        let _data = exec.data[0];
-        handleChangeItemInCart(_data);
+      for (const it of exec.data) {
+        await handleChangeItemInCart(it);
       }
+      get_menu();
       return;
     } else {
       let _print_data = exec.data[0];
@@ -167,7 +167,7 @@ export default function OrderMenu(routes) {
 
   useEffect(() => {
     handleFiltering();
-  }, [searchText, filtering]);
+  }, [searchText, filtering, hiddenDataMenu]);
 
   const handleFiltering = menu => {
     let text = searchText;

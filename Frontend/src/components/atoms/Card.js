@@ -175,12 +175,12 @@ export default function Card(prop) {
                 justifyContent: 'space-between',
               }}>
               <View style={styles.containerPlusMinus}>
-                {itemData.ispacked && (
+                {itemData.ispacked ? (
                   <>
                     <MatComIcon name={'package-variant'} size={20} />
                     <Text> Bungkus</Text>
                   </>
-                )}
+                ) : null}
               </View>
               <View style={styles.containerPlusMinus}>
                 {useDetail ? (

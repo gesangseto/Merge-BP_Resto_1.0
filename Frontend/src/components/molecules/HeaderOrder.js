@@ -66,7 +66,6 @@ const HeaderOrder = React.forwardRef((props, ref) => {
   };
 
   const handleBackButton = () => {
-    console.log(selectedItem);
     if (selectedItem.length > 0) {
       setAlertBack(true);
       return false;

@@ -1,3 +1,4 @@
+import {useIsFocused} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {FlatGrid} from 'react-native-super-grid';
@@ -12,6 +13,7 @@ let params = {
 };
 const boxDimension = 250;
 export default function PengaturanMenu(routes) {
+  const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(false);
   const [dataMenus, setDataMenus] = useState([]);
   const [hiddenDataMenus, setHiddenDataMenus] = useState([]);
@@ -23,10 +25,8 @@ export default function PengaturanMenu(routes) {
 
   const get_menu = async force_update => {
     if (hiddenDataMenus.length == 0 || force_update) {
-      console.log('====================1');
       let menu = await getMenu(params);
       if (!menu) {
-        console.log('====================2');
         return;
       }
       setHiddenDataMenus([...menu]);
@@ -53,6 +53,10 @@ export default function PengaturanMenu(routes) {
       setIsLoading(false);
     })();
   }, []);
+
+  useEffect(() => {
+    if (isFocused) get_menu();
+  }, [isFocused]);
 
   useEffect(() => {
     if (hiddenDataMenus.length > 0) {

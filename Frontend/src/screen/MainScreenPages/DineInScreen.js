@@ -1,5 +1,6 @@
 import {Portal} from '@gorhom/portal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useIsFocused} from '@react-navigation/native';
 import moment from 'moment';
 import React, {useEffect, useRef, useState} from 'react';
 import {
@@ -32,6 +33,7 @@ const heightForm = 45;
 const boxDimension = 125;
 
 export default function DineInScreen() {
+  const isFocused = useIsFocused();
   const [index, setIndex] = useState(0);
   const [tabData, setTabData] = useState({});
   const [routes, setRoutes] = useState([]);
@@ -58,7 +60,6 @@ export default function DineInScreen() {
     setIsLoading(false);
     if (!exec || !ksr_status) return;
     let grouping = groupingArray(exec, 'hostlocationdesc');
-    console.log(grouping);
     setTabData({...grouping});
     if (ksr_status) {
       setKasirStatus({...ksr_status[0]});
@@ -82,6 +83,10 @@ export default function DineInScreen() {
     return () => abortController.abort();
   }, []);
 
+  useEffect(() => {
+    if (isFocused) get_host();
+  }, [isFocused]);
+
   const checkKasir = () => {
     let msg = 'Untuk melanjutkan transaksi mohon buka kasir terlebih dahulu';
     if (kasirStatus.hasOwnProperty('starttime')) {
@@ -102,9 +107,9 @@ export default function DineInScreen() {
   };
 
   const handleClickTable = item => {
-    // if (!checkKasir()) {
-    //   return;
-    // }
+    if (!checkKasir()) {
+      return;
+    }
     if (item.billno) {
       item.sourceScreen = 'DineInScreen';
       RootNavigation.navigate('Order Menu', item);
