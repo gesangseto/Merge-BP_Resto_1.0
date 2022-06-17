@@ -115,7 +115,7 @@ export default function Card(prop) {
                 flexWrap: 'wrap',
                 justifyContent: 'space-between',
               }}>
-              <Text style={{color: colors.danger}}>
+              <Text style={{color: colors.danger, fontSize: 12}}>
                 Rp.{' '}
                 {itemData.price1
                   ? curencyFormating(itemData.price1)
@@ -155,7 +155,7 @@ export default function Card(prop) {
                     <Text
                       style={{
                         color: itemData.qty ? colors.danger : 'grey',
-                        fontSize: 14,
+                        fontSize: 16,
                         // fontWeight: 'bold',
                       }}>
                       {parseInt(itemData.qty ?? 0)} x
@@ -189,7 +189,7 @@ export default function Card(prop) {
                       color: itemData.qty ? colors.danger : 'grey',
                       fontWeight: 'bold',
                     }}>
-                    RP.{' '}
+                    Rp.{' '}
                     {curencyFormating(
                       itemData.qty * (itemData.price1 ?? itemData.listprice),
                     )}

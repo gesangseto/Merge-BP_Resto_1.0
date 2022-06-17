@@ -29,7 +29,7 @@ const ButtonHeaderModal = React.forwardRef((props, ref) => {
         }}>
         <Text>Grand Total</Text>
         <Text style={{fontWeight: 'bold'}}>
-          RP. {curencyFormating(totalText ? totalText : 0)}
+          Rp. {curencyFormating(totalText ? totalText : 0)}
         </Text>
       </View>
       {useButton ? (

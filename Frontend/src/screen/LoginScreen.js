@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useEffect, useState, useRef} from 'react';
 import {
+  ActivityIndicator,
   ImageBackground,
   StyleSheet,
   Text,
@@ -22,6 +23,7 @@ const req = {
 const LoginScreen = ({}) => {
   const ref_input1 = useRef();
   const ref_input2 = useRef();
+  const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = React.useState({
     mobile: '',
     password: '',
@@ -59,7 +61,9 @@ const LoginScreen = ({}) => {
     if (!validation()) {
       return;
     }
+    setIsLoading(true);
     let check = await loginSales(body);
+    setIsLoading(false);
     if (!check) {
       return;
     }
@@ -120,7 +124,11 @@ const LoginScreen = ({}) => {
         <TouchableOpacity
           style={styles.buttonLogin}
           onPress={() => loginHandle()}>
-          <Text style={{color: 'white', fontSize: 18}}>Login</Text>
+          {isLoading ? (
+            <ActivityIndicator name={'refresh'} size={30} color={'white'} />
+          ) : (
+            <Text style={{color: 'white', fontSize: 18}}>Login</Text>
+          )}
         </TouchableOpacity>
       </View>
     </ImageBackground>
@@ -149,8 +157,6 @@ const styles = StyleSheet.create({
     width: 200,
     height: 50,
     padding: 10,
-    borderWidth: 1,
-    borderColor: 'black',
     borderRadius: 10,
     justifyContent: 'center',
     alignContent: 'center',
@@ -167,6 +173,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     // borderWidth: 1,
     borderColor: 'black',
-    marginBottom: 25,
   },
 });

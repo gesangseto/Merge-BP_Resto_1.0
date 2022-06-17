@@ -228,6 +228,8 @@ const ModalCancel = props => {
       <View style={{height: 80}}>
         <CoupleButton
           fullSize={true}
+          titleSave={'Batalkan'}
+          titleCancel={'Tutup'}
           onPressSave={() => handleConfirmCancel()}
           onPressCancel={() => (onCancel ? onCancel() : null)}
         />

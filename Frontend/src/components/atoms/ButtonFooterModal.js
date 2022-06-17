@@ -33,7 +33,7 @@ const ButtonFooterModal = React.forwardRef((props, ref) => {
           <>
             <Text>Grand Total</Text>
             <Text style={{fontWeight: 'bold'}}>
-              RP. {curencyFormating(totalText ? totalText : 0)}
+              Rp. {curencyFormating(totalText ? totalText : 0)}
             </Text>
           </>
         ) : null}

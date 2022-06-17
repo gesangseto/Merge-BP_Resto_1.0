@@ -19,6 +19,7 @@ export const Toaster = ({message = ' ', type = 'error'}) => {
 
 export const curencyFormating = num => {
   num = parseFloat(num);
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   return num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
 };
 

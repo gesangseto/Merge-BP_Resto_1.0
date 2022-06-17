@@ -331,7 +331,7 @@ exports.insert = async function (req, res) {
         item = query.data[0];
         item.qty = it.qty;
         data.error = true;
-        data.message = `Ada menu yang sedang KOSONG."\n "Silahkan hapus dulu menu yang KOSONG dari keranjang.`;
+        data.message = `Ada menu yang sedang KOSONG.\nSilahkan hapus dulu menu yang KOSONG dari keranjang.`;
         data.data = [item];
 
         return response.response(data, res);

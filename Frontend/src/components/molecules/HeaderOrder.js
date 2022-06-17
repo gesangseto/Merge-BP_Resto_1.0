@@ -82,7 +82,7 @@ const HeaderOrder = React.forwardRef((props, ref) => {
           flexDirection: 'row',
           flexWrap: 'wrap',
           borderRadius: 10,
-          height: 50,
+          height: 60,
           justifyContent: 'space-around',
           backgroundColor: 'white',
           alignContent: 'center',
@@ -118,19 +118,19 @@ const HeaderOrder = React.forwardRef((props, ref) => {
             borderRadius: 10,
             // justifyContent: 'flex-start',
             backgroundColor: colors.lightGrey,
-            height: 35,
+            height: 40,
             borderRadius: 15,
             marginLeft: 15,
             // alignSelf: 'center',
           }}>
-          <View style={{justifyContent: 'center', marginHorizontal: 15}}>
+          <View style={{justifyContent: 'center', marginLeft: 15}}>
             <MatComIcon name="magnify" size={30} color="grey" />
           </View>
           <View style={{justifyContent: 'center', flex: 1}}>
             <TextInput
               style={{
                 backgroundColor: colors.lightGrey,
-                height: 35,
+                height: 40,
                 borderRadius: 15,
               }}
               value={textSearch}
@@ -142,11 +142,11 @@ const HeaderOrder = React.forwardRef((props, ref) => {
             <TouchableOpacity
               style={{
                 justifyContent: 'center',
-                paddingHorizontal: 5,
+                marginRight: 15,
                 flex: 1,
               }}
               onPress={() => handleChangeSearch('')}>
-              <MatComIcon name="close-circle-outline" size={20} color="grey" />
+              <MatComIcon name="close-circle-outline" size={22} color="grey" />
             </TouchableOpacity>
           ) : null}
         </View>

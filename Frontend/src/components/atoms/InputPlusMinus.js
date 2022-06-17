@@ -73,7 +73,15 @@ const InputPlusMinus = React.forwardRef((props, ref) => {
         <TouchableOpacity
           style={styles.containerMinus}
           onPress={() => handleChangeQty('remove')}>
-          <MatComIcon name="minus" color={colors.danger} />
+          <Text
+            style={{
+              color: colors.danger,
+              fontSize: 28,
+              fontWeight: 'bold',
+            }}>
+            -
+          </Text>
+          {/* <MatComIcon name="minus" color={colors.danger} /> */}
         </TouchableOpacity>
         <TextInput
           keyboardType="numeric"
@@ -90,7 +98,16 @@ const InputPlusMinus = React.forwardRef((props, ref) => {
         <TouchableOpacity
           style={styles.containerPlus}
           onPress={() => handleChangeQty('add')}>
-          <MatComIcon name="plus" color="white" />
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 28,
+              fontWeight: 'bold',
+              textAlignVertical: 'center',
+            }}>
+            +
+          </Text>
+          {/* <MatComIcon name="plus" color="white" /> */}
         </TouchableOpacity>
       </View>
 
@@ -105,7 +122,7 @@ const styles = StyleSheet.create({
   containerMinus: {
     height: heightForm,
     width: 45,
-    justifyContent: 'center',
+    // justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
     borderColor: colors.danger,

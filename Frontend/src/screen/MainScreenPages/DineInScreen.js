@@ -102,9 +102,9 @@ export default function DineInScreen() {
   };
 
   const handleClickTable = item => {
-    if (!checkKasir()) {
-      return;
-    }
+    // if (!checkKasir()) {
+    //   return;
+    // }
     if (item.billno) {
       item.sourceScreen = 'DineInScreen';
       RootNavigation.navigate('Order Menu', item);
@@ -213,7 +213,7 @@ export default function DineInScreen() {
             opacity = props.position.interpolate({
               inputRange,
               outputRange: inputRange.map(inputIndex =>
-                inputIndex === i ? 1 : 0.3,
+                inputIndex === i ? 1 : 0.1,
               ),
             });
           }
@@ -223,7 +223,7 @@ export default function DineInScreen() {
               key={i}
               style={{
                 ...styles.tabItem,
-                borderBottomColor: 'green',
+                borderBottomColor: 'red',
                 borderBottomWidth: pos === i ? 1 : 0,
               }}
               onPress={() => {
@@ -232,6 +232,7 @@ export default function DineInScreen() {
               <Animated.Text
                 style={{
                   opacity,
+                  // color: pos === i ? 'white' : 'grey',
                   color: 'white',
                   fontSize: 18,
                   fontWeight: 'bold',
@@ -406,6 +407,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 50,
     backgroundColor: '#61a646',
+    borderBottomWidth: 3,
   },
   itemContainer: {
     justifyContent: 'flex-end',
