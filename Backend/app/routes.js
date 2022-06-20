@@ -44,4 +44,5 @@ module.exports = function (app) {
   app.route("/api/utilities/print-field").get(utilities.printField);
   app.route("/api/utilities/kasir-status").get(utilities.getKasirStatus);
   app.route("/api/utilities/kitchen").get(utilities.getKitchen);
+  app.route("/api/utilities/kitchen").post(utilities.updateKitchen);
 };

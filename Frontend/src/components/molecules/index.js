@@ -11,6 +11,7 @@ import ModalAlert from './ModalAlert';
 import PrintBill from './PrintBill';
 import FormUpdateItem from './FormUpdateItem';
 import FilterAvailableMenu from './FilterAvailableMenu';
+import FormSetPrinter from './FormSetPrinter';
 
 export {
   FormDineIn,
@@ -26,4 +27,5 @@ export {
   FormCancelBill,
   FormUpdateItem,
   FilterAvailableMenu,
+  FormSetPrinter,
 };

@@ -55,13 +55,13 @@ const PrintBill = React.forwardRef((props, ref) => {
     modalPrintBill.current?.close();
   };
 
-  const print = async ({billno, sono, kitchenno, update}) => {
+  const print = async property => {
     try {
       let param = {
-        billno: billno ?? null,
-        sono: sono ?? null,
-        kitchenno: kitchenno ?? null,
-        update_print_count: update ?? false,
+        billno: property.billno ?? null,
+        sono: property.sono ?? null,
+        kitchenno: property.kitchenno ?? null,
+        update_print_count: property.update ?? false,
       };
       param = Object.fromEntries(
         Object.entries(param).filter(([_, v]) => v != null),
@@ -70,10 +70,21 @@ const PrintBill = React.forwardRef((props, ref) => {
       if (!_txt) {
         return;
       }
-      await ThermalPrinterModule.printBluetooth({
-        payload: _txt,
-        timeout: 5000, // in milliseconds (version >= 2.2.0)
-      });
+      if (
+        property.hasOwnProperty('printerbtaddress') &&
+        property.printerbtaddress
+      ) {
+        await ThermalPrinterModule.printBluetooth({
+          macAddress: property.printerbtaddress,
+          payload: _txt,
+          timeout: 5000, // in milliseconds (version >= 2.2.0)
+        });
+      } else {
+        await ThermalPrinterModule.printBluetooth({
+          payload: _txt,
+          timeout: 5000, // in milliseconds (version >= 2.2.0)
+        });
+      }
       Toaster({
         message: `Success print ${billno ?? ''} ${sono ?? ''} ${
           kitchenno ?? ''
@@ -90,12 +101,7 @@ const PrintBill = React.forwardRef((props, ref) => {
     let i = 1;
     for (const it of listKitchen) {
       if (it.selected) {
-        await print({
-          billno: item.billno,
-          sono: item.sono,
-          kitchenno: it.kitchenno,
-          update: listKitchen.length == i,
-        });
+        await print({...item, ...it, update: listKitchen.length == i});
       }
       i += 1;
     }

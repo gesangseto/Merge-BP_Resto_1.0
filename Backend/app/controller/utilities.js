@@ -269,15 +269,17 @@ exports.getKasirStatus = async function (req, res) {
 exports.getKitchen = async function (req, res) {
   var data = { data: req.query };
   try {
-    if (!req.query["billno"] && !req.query["sono"]) {
-      data.error = true;
-      data.message = `Billno or Sono is required!`;
-      return response.response(data, res);
-    }
+    // if (!req.query["billno"] && !req.query["sono"]) {
+    //   data.error = true;
+    //   data.message = `Billno or Sono is required!`;
+    //   return response.response(data, res);
+    // }
     var query = `SELECT 
       max(d.kitchenno) AS kitchenno,
       max(d.kitchenname) AS kitchenname,
-      max(d.printername) AS printername 
+      max(d.printername) AS printername, 
+      max(d.printerbtname) AS printerbtname,
+      max(d.printerbtaddress) AS printerbtaddress 
       FROM billso as a 
       right join sod as b on a.sono =b.sono 
       right join itemkitchen as c on b.itemid = c.itemid 
@@ -301,6 +303,37 @@ exports.getKitchen = async function (req, res) {
     const _data = await models.exec_query(query);
 
     return response.response(_data, res);
+  } catch (error) {
+    data.error = true;
+    data.message = `${error}`;
+    return response.response(data, res);
+  }
+};
+
+exports.updateKitchen = async function (req, res) {
+  var data = { data: req.body };
+  try {
+    perf.start();
+    const require_data = [
+      "kitchenno",
+      "kitchenname",
+      "printerbtname",
+      "printerbtaddress",
+    ];
+    for (const row of require_data) {
+      if (!req.body[`${row}`]) {
+        data.error = true;
+        data.message = `${row} is required!`;
+        return response.response(data, res);
+      }
+    }
+    let _update = await models.generate_query_update({
+      table: "kitchen",
+      values: req.body,
+      key: "kitchenno",
+    });
+    let _res = await models.exec_query(_update);
+    return response.response(_res, res);
   } catch (error) {
     data.error = true;
     data.message = `${error}`;

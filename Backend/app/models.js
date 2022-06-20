@@ -350,12 +350,28 @@ async function generate_query_insert({ table, structure, values }) {
 }
 
 async function addColumnItem() {
-  let querty = `SELECT column_name 
+  let query = `SELECT column_name 
   FROM information_schema.columns 
   WHERE table_name='item' and column_name='isavailable';`;
-  querty = await exec_query(querty);
-  if (!querty.error && querty.data.length === 0) {
+  query = await exec_query(query);
+  if (!query.error && query.data.length === 0) {
     let add_column = ` ALTER TABLE public.item ADD isavailable int2 NOT NULL DEFAULT 1;`;
+    await exec_query(add_column);
+    return true;
+  } else {
+    return true;
+  }
+}
+
+async function addColumnToKitchen() {
+  let query = `SELECT column_name 
+  FROM information_schema.columns 
+  WHERE table_name='kitchen' and column_name='printerbtname';`;
+  query = await exec_query(query);
+  if (!query.error && query.data.length === 0) {
+    let add_column = `  
+    ALTER TABLE public.kitchen ADD printerbtname varchar NULL;
+    ALTER TABLE public.kitchen ADD printerbtaddress varchar NULL;`;
     await exec_query(add_column);
     return true;
   } else {
@@ -442,4 +458,5 @@ module.exports = {
   commit,
   addColumnItem,
   queryQueryGetMenu,
+  addColumnToKitchen,
 };

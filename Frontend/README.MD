@@ -11,6 +11,10 @@ Running Development:
 2. cd ios && pod install && cd ..
    react-native run-ios --simulator="iPhone 8 Plus"
 
+# Give Sound On Thermal printer
+
+https://github.com/AllInOneYT/react-native-thermal-printer/issues/34
+
 Change Icon
 
 # npm i @bam.tech/react-native-make
