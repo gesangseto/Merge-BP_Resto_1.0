@@ -72,7 +72,7 @@ const FormCart = React.forwardRef((props, ref) => {
     let qty = 0;
     for (const it of selectedItems) {
       ttl += it.qty * it.price1;
-      qty += it.qty;
+      qty += parseInt(it.qty);
     }
     setQuantity(qty);
     setTotal(ttl);
@@ -169,11 +169,13 @@ const FormCart = React.forwardRef((props, ref) => {
                     item={item}
                     useDetail={true}
                     useAddToCart={false}
-                    onPress={item =>
-                      item.hasOwnProperty('is_openmenu')
+                    onPress={item => {
+                      console.log(item);
+                      item.hasOwnProperty('is_openmenu') &&
+                      item.is_openmenu == true
                         ? openModalOpenNoted(item)
-                        : openModalNoted(item)
-                    }
+                        : openModalNoted(item);
+                    }}
                     onChangeItem={item => handleChangeItemInCart(item)}
                   />
                 </View>

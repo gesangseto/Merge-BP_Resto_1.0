@@ -19,11 +19,13 @@ const req = {
   mobile: false,
   password: false,
 };
+import MatComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const LoginScreen = ({}) => {
   const ref_input1 = useRef();
   const ref_input2 = useRef();
   const [isLoading, setIsLoading] = useState(false);
+  const [visiblePassword, setVisiblePassword] = useState(false);
   const [data, setData] = React.useState({
     mobile: '',
     password: '',
@@ -110,17 +112,50 @@ const LoginScreen = ({}) => {
         />
         <RequiredText show={err.mobile} message={'Nomor HP salah'} />
 
-        <TextInput
-          ref={ref_input2}
-          value={data.password}
-          onChangeText={val => setData({...data, password: val})}
-          placeholder="Kata sandi"
-          secureTextEntry={true}
-          style={styles.input}
-          onSubmitEditing={() => loginHandle()}
-        />
-        <RequiredText show={err.password} title={'Kata sandi'} />
+        <View
+          style={{
+            ...styles.input,
+            flexDirection: 'row',
+            alignContent: 'center',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <TextInput
+            ref={ref_input2}
+            value={data.password}
+            onChangeText={val => setData({...data, password: val})}
+            placeholder="Kata sandi"
+            secureTextEntry={!visiblePassword}
+            style={{...styles.input, width: 165}}
+            onSubmitEditing={() => loginHandle()}
+          />
+          <TouchableOpacity
+            style={{
+              justifyContent: 'center',
+              height: 40,
+              marginTop: 10,
+            }}
+            onPress={() => setVisiblePassword(!visiblePassword)}>
+            {!visiblePassword ? (
+              <MatComIcon
+                name="eye-off-outline"
+                size={25}
+                color={'grey'}
+                style={{justifyContent: 'center'}}
+              />
+            ) : (
+              <MatComIcon
+                name="eye-outline"
+                size={25}
+                color={'grey'}
+                style={{justifyContent: 'center'}}
+              />
+            )}
+          </TouchableOpacity>
+        </View>
 
+        <RequiredText show={err.password} title={'Kata sandi'} />
         <TouchableOpacity
           style={styles.buttonLogin}
           onPress={() => loginHandle()}>

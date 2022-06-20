@@ -36,7 +36,7 @@ const HeaderOrder = React.forwardRef((props, ref) => {
   useEffect(() => {
     let count = 0;
     for (const it of selectedItem) {
-      count += it.qty;
+      count += parseInt(it.qty);
     }
     setCount(count);
 
