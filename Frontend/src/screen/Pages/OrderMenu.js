@@ -80,14 +80,32 @@ export default function OrderMenu(routes) {
     setModalNote(false);
   };
 
-  const get_menu = async () => {
-    if (hiddenDataMenu.length == 0) {
+  const get_menu = async (force = false) => {
+    if (hiddenDataMenu.length == 0 || force) {
       let menu = await getMenu(params);
       if (!menu) {
         return;
       }
-      setDataMenu([...menu]);
-      setHiddenDataMenu([...menu]);
+      if (selectedMenus.length > 0) {
+        let merge_menu = [];
+        for (const mn of menu) {
+          let _menu = mn;
+          for (const it of selectedMenus) {
+            if (mn.itemid == it.itemid) {
+              _menu.qty = it.qty;
+              _menu.sodnote = it.sodnote;
+              _menu.itemdecs = it.itemdecs;
+              break;
+            }
+          }
+          merge_menu.push(_menu);
+        }
+        setDataMenu([...merge_menu]);
+        setHiddenDataMenu([...merge_menu]);
+      } else {
+        setDataMenu([...menu]);
+        setHiddenDataMenu([...menu]);
+      }
     }
   };
 
@@ -153,7 +171,7 @@ export default function OrderMenu(routes) {
       for (const it of exec.data) {
         await handleChangeItemInCart(it);
       }
-      get_menu();
+      await get_menu(true);
       return;
     } else {
       let _print_data = exec.data[0];
@@ -228,7 +246,7 @@ export default function OrderMenu(routes) {
         onChangeFilter={item => setFiltering({...item})}
       />
       <FlatGrid
-        onRefresh={() => get_menu()}
+        onRefresh={() => get_menu(true)}
         refreshing={isLoading}
         itemDimension={boxDimension}
         data={dataMenu}

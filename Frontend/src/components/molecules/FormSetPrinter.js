@@ -4,7 +4,6 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Modal from 'react-native-modal';
 import ThermalPrinterModule from 'react-native-thermal-printer';
 import {colors} from '../../constants';
-import {updateKitchen} from '../../models';
 
 const heightForm = 45;
 
@@ -20,12 +19,16 @@ const FormSetPrinter = React.forwardRef((props, ref) => {
   }, []);
 
   const refreshBluetooth = async () => {
-    let device = await ThermalPrinterModule.getBluetoothDeviceList();
-    if (device.length === 0) {
-      setIsError(true);
-      return;
+    try {
+      let device = await ThermalPrinterModule.getBluetoothDeviceList();
+      if (device.length === 0) {
+        setIsError(true);
+        return;
+      }
+      setListPrinter([...device]);
+    } catch (error) {
+      console.log(error);
     }
-    setListPrinter([...device]);
   };
 
   useEffect(() => {

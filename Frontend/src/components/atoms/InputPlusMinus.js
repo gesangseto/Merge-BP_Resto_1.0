@@ -42,9 +42,6 @@ const InputPlusMinus = React.forwardRef((props, ref) => {
   };
 
   const roleChangeQty = val => {
-    console.log(val);
-    console.log(minValue);
-    console.log('=================');
     let qty = val;
     if (minValue || maxValue || minValue == 0) {
       if ((minValue || minValue == 0) && val < minValue) {

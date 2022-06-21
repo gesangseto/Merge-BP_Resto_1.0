@@ -170,7 +170,6 @@ const FormCart = React.forwardRef((props, ref) => {
                     useDetail={true}
                     useAddToCart={false}
                     onPress={item => {
-                      console.log(item);
                       item.hasOwnProperty('is_openmenu') &&
                       item.is_openmenu == true
                         ? openModalOpenNoted(item)

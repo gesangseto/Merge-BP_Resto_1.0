@@ -76,7 +76,6 @@ export default function TakeAwayScreen() {
     };
     let process = await createBill(param);
     await get_bill();
-    console.log(process);
   };
 
   useEffect(() => {
