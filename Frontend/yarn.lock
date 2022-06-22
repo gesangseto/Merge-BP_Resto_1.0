@@ -6250,7 +6250,7 @@
     "rn-color-matrices" "^4.1.0"
     "ts-tiny-invariant" "0.0.3"
 
-"react-native-modal@^13.0.1":
+"react-native-modal@^11.1.0", "react-native-modal@^13.0.1":
   "integrity" "sha512-UB+mjmUtf+miaG/sDhOikRfBOv0gJdBU2ZE1HtFWp6UixW9jCk/bhGdHUgmZljbPpp0RaO/6YiMmQSSK3kkMaw=="
   "resolved" "https://registry.npmjs.org/react-native-modal/-/react-native-modal-13.0.1.tgz"
   "version" "13.0.1"
@@ -6313,6 +6313,11 @@
   "resolved" "https://registry.npmjs.org/react-native-select-dropdown/-/react-native-select-dropdown-1.13.0.tgz"
   "version" "1.13.0"
 
+"react-native-select-two@^1.1.0":
+  "integrity" "sha512-lYZKwQI8qkxn/82Z9P0fIeH8YtozQT8+u2jqbC6nPRqCUzdVqSr945InMuoVl3/jJHgyrNaIksdEjXLuAikbcg=="
+  "resolved" "https://registry.npmjs.org/react-native-select-two/-/react-native-select-two-1.1.0.tgz"
+  "version" "1.1.0"
+
 "react-native-super-grid@^4.4.0":
   "integrity" "sha512-0msesnKyrOuT0xtlmFzQMgbRLBKnQel/AgJWWh/4UZAnRtLgQufzuVvnuQnyFQQb0ioQa3GkfMwr2ayFn5BHoA=="
   "resolved" "https://registry.npmjs.org/react-native-super-grid/-/react-native-super-grid-4.4.0.tgz"
@@ -6340,7 +6345,7 @@
   "resolved" "https://registry.npmjs.org/react-native-toast-notifications/-/react-native-toast-notifications-3.2.3.tgz"
   "version" "3.2.3"
 
-"react-native-vector-icons@^9.1.0":
+"react-native-vector-icons@^4.2.0", "react-native-vector-icons@^9.1.0":
   "integrity" "sha512-2AHZ/h9d/+rC0odz+OwbGNlc1Lik/pHhSixn4HfC8RtQ8CxfSBZ6gg7bTLcZhdSvZN+ZEGi30Fj+ZnOSQy+smg=="
   "resolved" "https://registry.npmjs.org/react-native-vector-icons/-/react-native-vector-icons-9.1.0.tgz"
   "version" "9.1.0"

@@ -4,6 +4,7 @@ import {StyleSheet} from 'react-native';
 import {FlatGrid} from 'react-native-super-grid';
 import {Card, FormUpdateItem, HeaderOrder} from '../../components';
 import {colors} from '../../constants';
+import {filterItemGroup} from '../../helper';
 import {getMenu, updateMenu} from '../../models';
 
 let params = {
@@ -64,6 +65,22 @@ export default function PengaturanMenu(routes) {
     }
   }, [searchText, filtering, availableFilter, hiddenDataMenus]);
 
+  function getItemGroup(_filter, menu) {
+    let _menu = [];
+    if (_filter.hasOwnProperty('children') && _filter.children.length > 0) {
+      for (const it of _filter.children) {
+        _menu = [..._menu, ...getItemGroup(it, menu)];
+      }
+    } else if (_filter.hasOwnProperty('itgrpid')) {
+      for (const it of menu) {
+        if (it.itgrpid === _filter.itgrpid) {
+          _menu.push(it);
+        }
+      }
+    }
+    return _menu;
+  }
+
   const handleFiltering = async () => {
     if (hiddenDataMenus.length > 0) {
       setIsLoading(true);
@@ -75,9 +92,7 @@ export default function PengaturanMenu(routes) {
         return it.itemdesc.toLowerCase().includes(text.toLowerCase());
       });
       if (filter.hasOwnProperty('itgrpid')) {
-        mn = mn.filter(function (it) {
-          return it.itgrpid === filter.itgrpid;
-        });
+        mn = filterItemGroup(filter, mn);
       }
       if (avail.isavailable == 0 || avail.isavailable == 1) {
         mn = mn.filter(function (it) {

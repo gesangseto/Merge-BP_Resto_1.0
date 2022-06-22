@@ -29,6 +29,22 @@ export const textTrim = (string, length) => {
   else return string;
 };
 
+export const filterItemGroup = (_filter, menu) => {
+  let _menu = [];
+  if (_filter.hasOwnProperty('children') && _filter.children.length > 0) {
+    for (const it of _filter.children) {
+      _menu = [..._menu, ...filterItemGroup(it, menu)];
+    }
+  } else if (_filter.hasOwnProperty('itgrpid')) {
+    for (const it of menu) {
+      if (it.itgrpid === _filter.itgrpid) {
+        _menu.push(it);
+      }
+    }
+  }
+  return _menu;
+};
+
 export const textTrimPerLine = (string, length) => {
   if (!string) {
     return;

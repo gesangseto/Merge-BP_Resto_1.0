@@ -12,8 +12,8 @@ const FilterMenu = forwardRef((props, ref) => {
   const {isOpen, onClose, onClickSubmit} = props;
   const modalFilter = useRef(null);
   const [filters, setFilters] = useState([]);
-  const [filter, setFilter] = useState({});
   const [selectedFilter, setSelectedFilter] = useState({});
+  const [selectedSubFilter, setSelectedSubFilter] = useState({});
 
   useEffect(() => {
     if (isOpen) {
@@ -30,11 +30,15 @@ const FilterMenu = forwardRef((props, ref) => {
     })();
   }, []);
 
-  useEffect(() => {}, [selectedFilter]);
+  useEffect(() => {}, [selectedSubFilter]);
 
   const handleClickSubmit = () => {
     if (onClickSubmit) {
-      onClickSubmit(selectedFilter);
+      if (selectedSubFilter.hasOwnProperty('itgrpid')) {
+        onClickSubmit(selectedSubFilter);
+      } else {
+        onClickSubmit(selectedFilter);
+      }
     }
     handleCloseModal();
   };
@@ -64,7 +68,8 @@ const FilterMenu = forwardRef((props, ref) => {
               }}>
               <Text style={styles.textHeader}>Filter</Text>
 
-              {selectedFilter.hasOwnProperty('itgrpid') && (
+              {selectedSubFilter.hasOwnProperty('itgrpid') ||
+              selectedFilter.hasOwnProperty('itgrpid') ? (
                 <TouchableOpacity
                   style={{
                     backgroundColor: colors.danger,
@@ -72,10 +77,13 @@ const FilterMenu = forwardRef((props, ref) => {
                     marginHorizontal: 10,
                     borderRadius: 5,
                   }}
-                  onPress={() => setSelectedFilter({...null})}>
+                  onPress={() => {
+                    setSelectedSubFilter({...null});
+                    setSelectedFilter({...null});
+                  }}>
                   <Text style={styles.buttonHeader}>Reset</Text>
                 </TouchableOpacity>
-              )}
+              ) : null}
             </View>
           }
           FooterComponent={
@@ -94,34 +102,35 @@ const FilterMenu = forwardRef((props, ref) => {
                     style={{
                       padding: 20,
                       borderBottomWidth: 1,
-                      borderRightWidth: filter.itgrpid === item.itgrpid ? 0 : 1,
+                      borderRightWidth:
+                        selectedFilter.itgrpid === item.itgrpid ? 0 : 1,
                       backgroundColor:
-                        filter.itgrpid === item.itgrpid
+                        selectedFilter.itgrpid === item.itgrpid
                           ? 'white'
                           : colors.darkGrey,
                       borderColor: colors.black,
                     }}
-                    onPress={() => setFilter({...item})}>
+                    onPress={() => setSelectedFilter({...item})}>
                     <Text>{item.itgrpname}</Text>
                   </TouchableOpacity>
                 );
               })}
             </View>
             <View style={styles.rightContainer}>
-              {filter.hasOwnProperty('children') &&
-                filter.children.map((item, index) => {
+              {selectedFilter.hasOwnProperty('children') &&
+                selectedFilter.children.map((item, index) => {
                   return (
                     <TouchableOpacity
                       key={index}
                       style={styles.boxRigthcontainer}
-                      onPress={() => setSelectedFilter({...item})}>
+                      onPress={() => setSelectedSubFilter({...item})}>
                       <View style={{paddingVertical: 20, paddingLeft: 10}}>
                         <Text>{item.itgrpname}</Text>
                       </View>
                       <View style={{paddingVertical: 20, paddingRight: 10}}>
                         <MatComIcon
                           name={
-                            selectedFilter.itgrpid === item.itgrpid
+                            selectedSubFilter.itgrpid === item.itgrpid
                               ? 'checkbox-blank-circle'
                               : 'checkbox-blank-circle-outline'
                           }

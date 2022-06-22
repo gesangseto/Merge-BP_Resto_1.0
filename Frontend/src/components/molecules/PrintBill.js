@@ -65,15 +65,11 @@ const PrintBill = React.forwardRef((props, ref) => {
     param = Object.fromEntries(
       Object.entries(param).filter(([_, v]) => v != null),
     );
-    let _txt = await getPrint(param);
-    if (!_txt) {
+    let _config = await getPrint(param);
+    if (!_config) {
       return;
     }
-    await new Promise(resolve => setTimeout(resolve, _txt.length * 10));
-    let _print = await sendCommandToPrinter({
-      payload: _txt,
-      device: property.printerbtaddress,
-    });
+    let _print = await sendCommandToPrinter({config: _config});
     if (_print)
       Toaster({
         message: `Success print ${param.billno ?? ''} ${param.sono ?? ''} ${
@@ -81,29 +77,21 @@ const PrintBill = React.forwardRef((props, ref) => {
         }`,
         type: 'success',
       });
+    await new Promise(resolve =>
+      setTimeout(resolve, _config.payload.length * 10),
+    );
+    return;
   };
 
-  const sendCommandToPrinter = async ({
-    payload,
-    device = null,
-    loop = true,
-  }) => {
-    if (!payload) return false;
-    let config = {
-      macAddress: device,
-      payload: payload,
-      timeout: 5000, // in milliseconds (version >= 2.2.0)
-    };
-    if (!device) delete config.macAddress;
+  const sendCommandToPrinter = async ({config = Object, loop = true}) => {
     try {
       await ThermalPrinterModule.printBluetooth(config);
       return true;
     } catch (error) {
-      if (error.message === 'Bluetooth Device Not Found' && loop) {
-        let reprint = await sendCommandToPrinter({
-          payload: payload,
-          loop: false,
-        });
+      // if (error.message === 'Bluetooth Device Not Found' && loop) {
+      if (loop) {
+        delete config.macAddress;
+        let reprint = await sendCommandToPrinter({config: config, loop: false});
         return reprint;
       } else {
         Toaster({message: error.message, type: 'error'});

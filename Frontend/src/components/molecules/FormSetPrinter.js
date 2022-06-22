@@ -1,30 +1,39 @@
 import {Portal} from '@gorhom/portal';
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import Modal from 'react-native-modal';
+import React, {useEffect, useRef, useState} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import {Modalize} from 'react-native-modalize';
 import ThermalPrinterModule from 'react-native-thermal-printer';
 import {colors} from '../../constants';
+import {ButtonFooterModal, SelectOption} from '../atoms';
 
 const heightForm = 45;
-
 const FormSetPrinter = React.forwardRef((props, ref) => {
-  const {item, onCancel, onSave, isOpen, title, message} = props;
-  const [visibleModal, setVisibleModal] = useState(false);
-  const [itemData, setItemData] = useState(item);
+  const {item, onCancel, onSave, isOpen, isLoading} = props;
+  const [formData, setFormData] = useState({});
   const [listPrinter, setListPrinter] = useState([]);
-  const [isError, setIsError] = useState(false);
+  const [listWidthPrinter, setListWidthPrinter] = useState([
+    {id: '80', name: '80 MM'},
+    {id: '58', name: '58 MM'},
+  ]);
 
-  useEffect(() => {
-    refreshBluetooth();
-  }, []);
+  const [isError, setIsError] = useState({printer: false, width: false});
+  const modalizeSetPrinter = useRef(null);
 
   const refreshBluetooth = async () => {
     try {
       let device = await ThermalPrinterModule.getBluetoothDeviceList();
       if (device.length === 0) {
-        setIsError(true);
+        setIsError({
+          ...isError,
+          printer: `Bluetooth devices won't connect, it's likely because bluetooth does not turn on,\nor aren't in pairing mode, or the devices are out of range`,
+        });
         return;
       }
+      setIsError(false);
+      device.map(opt => ({label: opt.macAddress, value: opt.deviceName}));
+      device = device.map(function (it, index) {
+        return {printerbtaddress: it.macAddress, printerbtname: it.deviceName};
+      });
       setListPrinter([...device]);
     } catch (error) {
       console.log(error);
@@ -33,20 +42,119 @@ const FormSetPrinter = React.forwardRef((props, ref) => {
 
   useEffect(() => {
     if (isOpen) {
-      setVisibleModal(true);
+      refreshBluetooth();
+      modalizeSetPrinter.current?.open();
     } else {
-      setVisibleModal(false);
+      modalizeSetPrinter.current?.close();
     }
   }, [isOpen]);
 
-  const handleSelectPrinter = async item => {
-    if (onSave) {
-      onSave(item);
+  useEffect(() => {
+    setFormData({...item});
+  }, [item]);
+
+  const handleCancel = () => {
+    if (onCancel) {
+      onCancel();
     }
   };
+
+  const handleSelectPrinter = id => {
+    let _data = formData;
+    for (const it of listPrinter) {
+      if (id[0] === it.printerbtaddress) {
+        _data.printerbtaddress = it.printerbtaddress;
+        _data.printerbtname = it.printerbtname;
+      }
+    }
+    if (id.length === 0) {
+      setFormData({});
+    } else {
+      setFormData({..._data});
+    }
+  };
+
+  useEffect(() => {
+    validation();
+  }, [formData]);
+
+  const validation = () => {
+    let _err = {printer: false, width: false};
+    if (!formData.printerbtaddress || !formData.printerbtwidth) {
+      _err.printer = !formData.printerbtaddress ? true : false;
+      _err.width = !formData.printerbtwidth ? true : false;
+      setIsError({..._err});
+      return false;
+    } else {
+      setIsError({..._err});
+      return true;
+    }
+  };
+
+  const handleSubmit = () => {
+    if (!validation()) {
+      return;
+    }
+    if (onSave) {
+      onSave(formData);
+    }
+  };
+
   return (
     <Portal>
-      <Modal
+      <Modalize
+        ref={modalizeSetPrinter}
+        onClosed={() => handleCancel()}
+        modalHeight={325}
+        FooterComponent={
+          <ButtonFooterModal
+            useTotal={false}
+            isLoading={isLoading}
+            // buttonColor={itemData.isavailable ? colors.danger : colors.success}
+            buttonTittle={'Save'}
+            onClickSubmit={() => handleSubmit()}
+          />
+        }>
+        <View
+          style={{
+            backgroundColor: 'white',
+            borderRadius: 15,
+          }}>
+          <Text
+            style={{
+              fontSize: 18,
+              textAlign: 'center',
+              fontWeight: 'bold',
+              paddingTop: 20,
+            }}>
+            {formData.kitchenname}
+          </Text>
+          <SelectOption
+            title={'Printer'}
+            isError={isError.printer}
+            showSearchBox={false}
+            options={listPrinter}
+            value={formData.printerbtaddress}
+            valueId={'printerbtaddress'}
+            valueName={'printerbtname'}
+            onSelect={id => handleSelectPrinter(id)}
+          />
+          <SelectOption
+            title={'Width'}
+            isError={isError.width}
+            showSearchBox={false}
+            options={listWidthPrinter}
+            value={formData.printerbtwidth}
+            onSelect={id =>
+              setFormData({
+                ...formData,
+                printerbtwidth: id[0],
+              })
+            }
+          />
+        </View>
+      </Modalize>
+      {/* <Modal
         isVisible={visibleModal}
         onBackButtonPress={() => {
           setVisibleModal(false);
@@ -56,53 +164,8 @@ const FormSetPrinter = React.forwardRef((props, ref) => {
           setVisibleModal(false);
           onCancel ? onCancel() : null;
         }}>
-        <View
-          style={{
-            backgroundColor: 'white',
-            borderRadius: 15,
-          }}>
-          <View style={{paddingVertical: 15, alignSelf: 'center'}}>
-            <Text
-              style={{textAlign: 'center', fontSize: 18, fontWeight: 'bold'}}>
-              Select Bluetooth Printer
-            </Text>
-            {isError && (
-              <Text style={{textAlign: 'center', color: 'red', padding: 5}}>
-                Bluetooth devices won't connect, it's likely because bluetooth
-                does not turn on, or aren't in pairing mode, or the devices are
-                out of range
-              </Text>
-            )}
-          </View>
-          <View style={{paddingVertical: 15, alignSelf: 'center'}}>
-            {listPrinter.map((item, index) => {
-              return (
-                <TouchableOpacity
-                  key={index}
-                  style={styles.boxDevice}
-                  onPress={() => handleSelectPrinter(item)}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <Text> {item.macAddress}</Text>
-                    <Text>{item.deviceName}</Text>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-          {/* <View style={{height: 80}}>
-            <CoupleButton
-              titleSave="Ya"
-              titleCancel="Tidak"
-              onPressSave={() => (onSave ? onSave() : null)}
-              onPressCancel={() => (onCancel ? onCancel() : null)}
-            />
-          </View> */}
-        </View>
-      </Modal>
+        
+      </Modal> */}
     </Portal>
   );
 });

@@ -10,6 +10,7 @@ import Card from './Card';
 import ButtonFooterModal from './ButtonFooterModal';
 import InputPlusMinus from './InputPlusMinus';
 import RequiredText from './RequiredText';
+import SelectOption from './SelectOption';
 
 export {
   InputText,
@@ -24,4 +25,5 @@ export {
   Card,
   InputPlusMinus,
   RequiredText,
+  SelectOption,
 };

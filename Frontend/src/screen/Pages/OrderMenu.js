@@ -15,7 +15,7 @@ import {
 } from '../../components';
 import FooterOrder from '../../components/molecules/FooterOrder';
 import {colors} from '../../constants';
-import {Toaster} from '../../helper';
+import {filterItemGroup, Toaster} from '../../helper';
 import {getBill, getMenu, getOpenMenu} from '../../models';
 import {cancelSo, createSo} from '../../models/so';
 import * as RootNavigation from '../../helper';
@@ -196,10 +196,9 @@ export default function OrderMenu(routes) {
       return it.itemdesc.toLowerCase().includes(text.toLowerCase());
     });
     if (filter.hasOwnProperty('itgrpid')) {
-      mn = mn.filter(function (it) {
-        return it.itgrpid === filter.itgrpid;
-      });
+      mn = filterItemGroup(filter, mn);
     }
+
     setDataMenu([...mn]);
   };
 

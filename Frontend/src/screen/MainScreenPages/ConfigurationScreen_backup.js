@@ -1,7 +1,7 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, Text, View, Image} from 'react-native';
+import {ScrollView, StyleSheet, View, Text} from 'react-native';
 import {Cell, Section, TableView} from 'react-native-tableview-simple';
-import {home_logo} from '../../assets';
 import {PickerColor} from '../../components';
 import FormSetPrinter from '../../components/molecules/FormSetPrinter';
 import {colors} from '../../constants';
@@ -15,7 +15,6 @@ import {
 export default function ConfigurationScreen(props) {
   const [hostStatus, setHostStatus] = useState([]);
   const [listKitchen, setListKitchen] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [openColor, setOpenColor] = useState(false);
   const [openModalPrinter, setOpenModalPrinter] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
@@ -23,10 +22,8 @@ export default function ConfigurationScreen(props) {
 
   useEffect(() => {
     (async function () {
-      setIsLoading(true);
       await get_hostStatus();
       await get_listKitchen();
-      setIsLoading(false);
     })();
   }, []);
 
@@ -58,14 +55,11 @@ export default function ConfigurationScreen(props) {
   const handleSelectPrinter = async item => {
     let body = {
       ...selectedKitchen,
-      printerbtname: item.printerbtname,
-      printerbtaddress: item.printerbtaddress,
-      printerbtwidth: item.printerbtwidth,
+      printerbtname: item.deviceName,
+      printerbtaddress: item.macAddress,
     };
-    setIsLoading(true);
     await updateKitchen(body);
     get_listKitchen();
-    setIsLoading(false);
     setOpenModalPrinter(false);
   };
   return (
@@ -77,9 +71,13 @@ export default function ConfigurationScreen(props) {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        <Image
-          source={home_logo}
-          style={{height: 80, width: 80, borderRadius: 40, marginBottom: 10}}
+        <View
+          style={{
+            backgroundColor: '#ffc107',
+            width: 80,
+            height: 80,
+            borderRadius: 10,
+          }}
         />
       </View>
       <PickerColor
@@ -121,10 +119,7 @@ export default function ConfigurationScreen(props) {
                 key={index}
                 cellStyle="Subtitle"
                 cellAccessoryView={
-                  <Text>
-                    {item.printerbtname ?? 'Not Set'}
-                    {item.printerbtwidth ? `: ${item.printerbtwidth} MM` : ''}
-                  </Text>
+                  <Text>{item.printerbtname ?? 'Not Set'}</Text>
                 }
                 title={item.kitchenname}
                 detail={item.printerbtaddress}
@@ -137,13 +132,13 @@ export default function ConfigurationScreen(props) {
           })}
         </Section>
       </TableView>
-      <FormSetPrinter
-        isLoading={isLoading}
-        isOpen={openModalPrinter}
-        onCancel={() => setOpenModalPrinter(false)}
-        onSave={item => handleSelectPrinter(item)}
-        item={selectedKitchen}
-      />
+      {openModalPrinter && (
+        <FormSetPrinter
+          isOpen={openModalPrinter}
+          onCancel={() => setOpenModalPrinter(false)}
+          onSave={item => handleSelectPrinter(item)}
+        />
+      )}
     </ScrollView>
   );
 }

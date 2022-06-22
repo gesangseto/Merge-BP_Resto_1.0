@@ -69,12 +69,12 @@ export default function TakeAwayScreen() {
       srepid: profile.srepid,
       billtype: 'TA',
       billstatus: 'ORDER',
-      billdate: moment().format('DD-MM-YYYY'),
-      arrivetime: moment().format('hh:mm:ss'),
+      billdate: `${moment().format('YYYY-MM-DD')}`,
+      arrivetime: `${moment().format('HH:mm:ss')}`,
       pax: 2,
       paystatus: 'N',
     };
-    let process = await createBill(param);
+    await createBill(param);
     await get_bill();
   };
 
@@ -175,6 +175,12 @@ export default function TakeAwayScreen() {
     floatingAction.current?.reset();
   };
 
+  const handleAddTakeAway = () => {
+    if (!checkKasir()) {
+      return;
+    }
+    setOpenMadalTakeAway(true);
+  };
   return (
     <>
       <ScrollView
@@ -212,10 +218,7 @@ export default function TakeAwayScreen() {
           closeModalTakeAway();
         }}
       />
-      <FloatingAction
-        ref={floatingAction}
-        onOpen={() => setOpenMadalTakeAway(true)}
-      />
+      <FloatingAction ref={floatingAction} onOpen={() => handleAddTakeAway()} />
       <Portal>
         <Modalize ref={modalizeMoreMenu} modalHeight={150}>
           <FormCancelBill
