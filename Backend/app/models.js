@@ -349,11 +349,12 @@ async function generate_query_insert({ table, structure, values }) {
   return query;
 }
 
-async function addColumnItem() {
+async function addColumnToItem() {
   let query = `SELECT column_name 
   FROM information_schema.columns 
   WHERE table_name='item' and column_name='isavailable';`;
   query = await exec_query(query);
+  console.log(query.message, "addColumnToItem");
   if (!query.error && query.data.length === 0) {
     let add_column = ` ALTER TABLE public.item ADD isavailable int2 NOT NULL DEFAULT 1;`;
     await exec_query(add_column);
@@ -364,19 +365,35 @@ async function addColumnItem() {
 }
 
 async function addColumnToKitchen() {
+  let column = [
+    { name: "printerbtname", type: "varchar", default: null },
+    { name: "printerbtaddress", type: "varchar", default: null },
+    { name: "printerbtwidth", type: "int", default: "80" },
+  ];
   let query = `SELECT column_name 
   FROM information_schema.columns 
-  WHERE table_name='kitchen' and column_name='printerbtname';`;
+  WHERE table_name='kitchen' ;`;
   query = await exec_query(query);
-  if (!query.error && query.data.length === 0) {
-    let add_column = `  
-    ALTER TABLE public.kitchen ADD printerbtname varchar NULL;
-    ALTER TABLE public.kitchen ADD printerbtaddress varchar NULL;`;
-    await exec_query(add_column);
-    return true;
-  } else {
-    return true;
+  let add_column = ``;
+  if (!query.error) {
+    for (const col of column) {
+      let isDone = false;
+      for (const it of query.data) {
+        if (it.column_name == col.name) {
+          isDone = true;
+        }
+      }
+      if (!isDone) {
+        add_column += ` ALTER TABLE public.kitchen ADD ${col.name} ${
+          col.type
+        } ${col.default ? `DEFAULT ${col.default}` : "NULL"};`;
+      }
+    }
   }
+  if (add_column) {
+    await exec_query(add_column);
+  }
+  return true;
 }
 
 async function generate_query_update({ table, values, key }) {
@@ -422,7 +439,7 @@ const queryQueryGetMenu = (req) => {
   left join item AS a on v.itemid =a.itemid 
   left join itgrp as b on a.itgrpid =b.itgrpid
   left join itemkitchen as c on a.itemid = c.itemid 
-  WHERE b.ispos is true and c.ispos is true and a.active is true
+  WHERE b.ispos is true AND c.ispos is true AND a.active is true AND a.issale is true
   `;
   for (const k in req.query) {
     if (k != "page" && k != "limit" && k != "sort_by" && k != "sort_asc") {
@@ -437,10 +454,12 @@ const queryQueryGetMenu = (req) => {
     var end = parseInt(start) + parseInt(req.query.limit);
     query += ` LIMIT ${end} OFFSET ${start} `;
   }
+  query += ` ORDER BY `;
   if (req.query.sort_by) {
-    query += ` ORDER BY ${req.query.sort_by} `;
-    query += req.query.sort_asc ? ` ASC` : " DESC";
+    query += ` ${req.query.sort_by} `;
+    query += req.query.sort_asc ? ` ASC, ` : " DESC, ";
   }
+  query += ` a.itgrpid ASC, a.itemdesc ASC`;
   return query;
 };
 
@@ -456,7 +475,7 @@ module.exports = {
   generate_query_update,
   rollback,
   commit,
-  addColumnItem,
+  addColumnToItem,
   queryQueryGetMenu,
   addColumnToKitchen,
 };

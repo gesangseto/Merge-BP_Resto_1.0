@@ -1,3 +1,0 @@
-[L]<font size='tall'><b>$SF$quantity$EF$  $SF$itemdesc2$EF$</font> </b> [R]$SF$bungkus$EF$
-[L]     $SF$sodnote$EF$
-[L]-----------------------------------------

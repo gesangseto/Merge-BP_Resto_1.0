@@ -34,8 +34,6 @@ exports.login_sales = async function (req, res) {
       return response.response(data, res);
     }
   }
-  await models.addColumnItem();
-  await models.addColumnToKitchen();
   let body = req.body;
   let sa = { mobile: process.env.SA_MOBILE, password: process.env.SA_PASSWORD };
   if (sa.mobile === body.mobile && sa.password === body.password) {

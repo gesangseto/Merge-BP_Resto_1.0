@@ -9,4 +9,4 @@
 [R]<font size='normal'>Jumlah Porsi: $SF$total_quantity$EF$</font>
 
 [L]Qty  Menu [R]Ket
-[C]==========================================
+[C]================================

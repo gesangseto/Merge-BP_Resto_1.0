@@ -55,6 +55,21 @@ app.use(async function (req, res, next) {
 
 var routes = require("./app/routes");
 routes(app);
-
 app.listen(port);
+
+// INITIAL FUNCTION BEFORE RUN SERVER
+const {
+  addColumnToItem,
+  addColumnToKitchen,
+  exec_query,
+} = require("./app/models");
+async function initialFunction() {
+  let setFormat = await exec_query("SET datestyle = dmy;");
+  console.log(setFormat.message, "datestyle = dmy");
+  await addColumnToItem();
+  await addColumnToKitchen();
+}
+initialFunction();
+// INITIAL FUNCTION BEFORE RUN SERVER
+
 console.log(`${process.env.APP_NAME} started on port: ${port}`);

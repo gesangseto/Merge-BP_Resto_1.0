@@ -40,6 +40,9 @@ const getDataField = async (request, updatePrintCount) => {
     bpid: null,
     bpname: null,
     dapur: [],
+    printerbtname: null,
+    printerbtaddress: null,
+    printerbtwidth: null,
     grand_total: 0,
     crcid: null,
     custid: null,
@@ -116,6 +119,9 @@ const getDataField = async (request, updatePrintCount) => {
     get_sod = await models.exec_query(get_sod);
     for (const ch of get_sod.data) {
       _field_header.dapur.push(ch.kitchenname);
+      _field_header.printerbtaddress = ch.printerbtaddress;
+      _field_header.printerbtname = ch.printerbtname;
+      _field_header.printerbtwidth = ch.printerbtwidth;
       _field_header.content.push(ch);
       _field_header.total_variant += parseInt(ch.quantity > 0 ? 1 : 0);
       _field_header.total_quantity += parseInt(ch.quantity);
@@ -140,6 +146,7 @@ const getDataField = async (request, updatePrintCount) => {
 function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 }
+
 function replaceAll(str, find, replace) {
   return str.replace(new RegExp(escapeRegExp(find), "g"), replace);
 }
@@ -163,10 +170,11 @@ exports.printBill = async function (req, res) {
       data.message = `Query: ${JSON.stringify(req.query)} tidak ditemukan`;
       return response.response(data, res, false);
     }
-    // console.log(_data);
-    let header = "printer_template/" + process.env.CONF_PRINT_HEADER;
-    let content = "printer_template/" + process.env.CONF_PRINT_CONTENT;
-    let footer = "printer_template/" + process.env.CONF_PRINT_FOOTER;
+    let _w = _data.printerbtwidth ?? "80";
+    let path = `printer_template/printer_template_${_w}/`;
+    let header = path + process.env.CONF_PRINT_HEADER;
+    let content = path + process.env.CONF_PRINT_CONTENT;
+    let footer = path + process.env.CONF_PRINT_FOOTER;
     let startField = process.env.CONF_PRINT_START_FIELD;
     let endField = process.env.CONF_PRINT_END_FIELD;
     header = await utils.getFileContent(header);
@@ -202,7 +210,19 @@ exports.printBill = async function (req, res) {
     }
 
     // HEADER
-    data.data = txtFile;
+    let _config = {
+      macAddress: _data.printerbtaddress,
+      printerWidthMM: _data.printerbtwidth,
+      printerNbrCharactersPerLine: _data.printerbtwidth != 80 ? 32 : null,
+      timeout: 5000,
+      payload: txtFile,
+    };
+
+    _config = Object.fromEntries(
+      Object.entries(_config).filter(([_, v]) => v != null)
+    );
+
+    data.data = _config;
     return response.response(data, res);
   } catch (error) {
     data.error = true;
@@ -279,7 +299,8 @@ exports.getKitchen = async function (req, res) {
       max(d.kitchenname) AS kitchenname,
       max(d.printername) AS printername, 
       max(d.printerbtname) AS printerbtname,
-      max(d.printerbtaddress) AS printerbtaddress 
+      max(d.printerbtaddress) AS printerbtaddress, 
+      max(d.printerbtwidth) AS printerbtwidth 
       FROM billso as a 
       right join sod as b on a.sono =b.sono 
       right join itemkitchen as c on b.itemid = c.itemid 
@@ -319,6 +340,7 @@ exports.updateKitchen = async function (req, res) {
       "kitchenname",
       "printerbtname",
       "printerbtaddress",
+      "printerbtwidth",
     ];
     for (const row of require_data) {
       if (!req.body[`${row}`]) {

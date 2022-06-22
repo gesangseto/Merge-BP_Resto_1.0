@@ -75,7 +75,6 @@ exports.update = async function (req, res) {
         return response.response(data, res);
       }
     }
-    await models.addColumnItem();
     let _update = await models.generate_query_update({
       table: "item",
       values: req.body,
